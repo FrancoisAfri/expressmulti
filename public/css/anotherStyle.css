@@ -1,0 +1,60 @@
+.pricing-box {
+    background: red;
+    padding: 25px
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
+.toggles-switch {
+    cursor: pointer;
+    background-color: gray;
+    display: inline-block;
+    border: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.toggles-switch input {
+    display: none;
+}
+
+.toggles-switch,
+.toggles-switch span {
+    border-radius: 35px;
+    border-style: solid;
+    border-color: transparent;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+
+.toggles-switch span {
+    border-width: 2px;
+    padding-left: .75rem;
+    padding-right: .75rem;
+}
+
+.toggles-switch input:checked + span + span,
+.toggles-switch input + span {
+    border-color: #444;
+    background-color: white;
+}
+
+.toggles-switch input + span + span,
+.toggles-switch input:checked + span {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+

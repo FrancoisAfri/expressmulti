@@ -1,0 +1,27 @@
+
+comment: >
+  This issue was closed because it does not fulfill the issue template
+  (for example, if it had no [reduced test case](https://fullcalendar.io/reduced-test-cases)).
+  Please create a **new** issue and follow the instructions more carefully.
+  If this is a question, please visit the [StackOverflow fullcalendar tag](https://stackoverflow.com/questions/tagged/fullcalendar).
+
+issueConfigs:
+- content:
+  - "Reduced Test Case"
+  - "http"
+  - "Bug Description"
+- content:
+  - "Reduced Test Case"
+  - "not reproducible with a link"
+  - "Bug Description"
+- content:
+  - "I've already searched through"
+  - "Other people will find this feature useful"
+- content:
+  - "I love FullCalendar"
+
+caseInsensitive: true
+
+exception:
+  - arshaw
+  - acerix
