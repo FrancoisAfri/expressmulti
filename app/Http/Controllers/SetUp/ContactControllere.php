@@ -8,6 +8,7 @@ use App\Mail\PatientsCommunicationEmail;
 use App\Models\CompanyIdentity;
 use App\Models\HRPerson;
 use App\Models\Patient;
+use App\Models\ContactPerson;
 use App\Models\SmS_Configuration;
 use App\Models\SmsTracker;
 use App\Notifications\SmsAddedNotification;
@@ -151,10 +152,10 @@ class ContactControllere extends Controller
             'Send Manage'
         );
 
-        $data['SmSConfiguration'] = SmS_Configuration::first();
-        $data['SmsTracker'] = SmsTracker::first();
-        $data['users'] = Patient::getPatientInfo();
-        return view('patients.send_message')->with($data);
+        //$data['SmSConfiguration'] = SmS_Configuration::first();
+       // $data['SmsTracker'] = SmsTracker::first();
+        $data['contacts'] = ContactPerson::getContactInfo();
+        return view('client.send_message')->with($data);
     }
 
 

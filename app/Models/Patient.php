@@ -21,24 +21,22 @@ class Patient extends Model
         Notifiable,
         LogsActivity;
 
-    protected $table = 'members';
+    protected $table = 'companies';
 
     protected $fillable = [
-        'title', 'first_name', 'initial', 'surname', 'email', 'cell_number', 'phone_number',
-        'id_number', 'res_address', 'res_suburb', 'res_city', 'res_postal_code', 'res_province_id',
-        'passport_number', 'passport_origin_country_id', 'date_of_birth', 'gender',
-        'profile_pic', 'is_active', 'is_employed', 'occupation', 'employee_number', 'employee_phone',
-        'postal_address', 'postal_suburb', 'postal_city', 'postal_postal_code', 'postal_province_id',
-        'payment_details', 'payment_method','is_active','is_accepted'
+        'name', 'email', 'cell_number', 'phone_number', 'res_address', 'post_address',
+        'date_joined', 'client_logo', 'is_active', 'payment_method', 'payment_status'
+		, 'package_id',
     ];
+	
 
-    protected static $logName = 'Members  Details';
+    protected static $logName = 'Client Profile';
 
     protected $appends = ['full_name'];
 
     protected function getDescriptionForEvent(string $eventName): string
     {
-        return "Members Details {$eventName} ";
+        return "Client Profile {$eventName} ";
     }
 
 
@@ -52,7 +50,10 @@ class Patient extends Model
         $this->notify(new BookingNotification($user,$name, $date));
     }
 
-
+	public function contacts(): HasMany
+    {
+        return $this->hasMany(ContactPerson::class);
+    }
     /**
      * @return HasMany
      */
@@ -60,60 +61,6 @@ class Patient extends Model
     {
         return $this->hasMany(EmergencyContact::class);
     }
-
-    /**
-     * @return HasMany
-     */
-    public function medicalAid(): HasMany
-    {
-        return $this->hasMany(MedicalAid::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function doctor(): HasMany
-    {
-        return $this->hasMany(Doctor::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function guarantor(): HasMany
-    {
-        return $this->hasMany(Guarantor::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function employer(): HasMany
-    {
-        return $this->hasMany(Employer::class);
-    }
-
-    public function mainMember(): HasMany
-    {
-        return $this->hasMany(MainMember::class);
-    }
-
-
-
-    public static function getPatientGender()
-    {
-        return [
-            1 => 'Male',
-            2 => 'Female'
-        ];
-    }
-
-
-    public function addDoctor($doctor)
-    {
-       return $this->doctor()->save();
-    }
-
 
     /**
      * @param $id
@@ -188,6 +135,21 @@ class Patient extends Model
 
     public static function getDetailsById($id){
         return Patient::where('id',  $id)->first();
+    }
+	
+	 public static function isPackageExist($id){
+
+        $packages =  Patient::where('package_id', $id)->first();
+
+        $isPackagesExist = 0;
+        if (isset($packages) === True){
+            $isPackagesExist = 1;
+        }
+        else{
+              $isPackagesExist = 0;
+        }
+
+        return $isPackagesExist;
     }
 
 }

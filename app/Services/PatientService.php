@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Accounts;
+use App\Models\Packages;
 use App\Models\Dependencies;
 use App\Models\Doctor;
 use App\Models\EmergencyContact;
@@ -207,6 +208,14 @@ class PatientService
         $patient['is_active'] = $status;
         $patient->update();
     }
+	// deactivate/ activate package
+	public function activatePackage($package)
+    {
+		
+		$package['status'] == 1 ? $status = 0 : $status = 1;
+		$package['status'] = $status;
+		$package->update();
+    }
 
 
     /**
@@ -219,12 +228,43 @@ class PatientService
 
             DB::beginTransaction();
 
-            if (isset($request['dependency_date_of_birth'])) {
-                $request['dependency_date_of_birth'] = str_replace('/', '-', $request['dependency_date_of_birth']);
-                $request['dependency_date_of_birth'] = strtotime($request['dependency_date_of_birth']);
-            }
+            Packages::create([
+                'package_name' => $request['package_name'],
+                'no_table' => $request['no_table'],
+                'status' => 1,
+            ]);
 
-            Dependencies::create([
+            DB::commit();
+
+        }catch (Exception $ex){
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+
+            return response()->json(['message' => $ex], 400);
+        }
+    }
+	// update package
+	 public function updatePackage($request, $package){
+
+        try {
+
+			$package['package_name'] = !empty($request['package_name']) ? $request['package_name'] : '';
+			$package['no_table'] = !empty($request['no_table']) ? $request['no_table'] : '';
+			$package->update();
+
+        }catch (Exception $ex){
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+
+            return response()->json(['message' => $ex], 400);
+        }
+    }
+	//save contact person
+	public function persistContactPerson($request){
+
+        try {
+
+            DB::beginTransaction();
+
+            Packages::create([
                 'patient_id' => $request['patient_id'],
                 'dependency_first_name' => $request['dependency_first_name'],
                 'dependency_surname' => $request['dependency_surname'],

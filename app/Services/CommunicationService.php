@@ -179,8 +179,7 @@ class CommunicationService
 
         foreach ($emails as $key => $email_address) {
 
-
-            $detail = Patient::getUserDetailsByEmail($email_address);
+            $detail = ContactPerson::getUserDetailsByEmail($email_address);
 
             $body = $this->str_fix($request['details']);
 
@@ -219,7 +218,7 @@ class CommunicationService
     private function getAllUsersEmails(): Collection
     {
         $user = collect([]);
-        $UserEmails = $this->patient::select('email')->get();
+        $UserEmails = $this->ContactPerson::select('email')->get();
         foreach ($UserEmails as $key => $users) {
             $user->push($users['email']);
         }

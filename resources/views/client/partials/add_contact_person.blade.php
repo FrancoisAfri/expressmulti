@@ -1,16 +1,12 @@
 <!-- Signup modal content -->
-<div id="add-new-dependencies-modal" class="modal fade" tabindex="-1" role="dialog"
+<div id="add-new-contact-modal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="scrollableModalTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">
         <div class="modal-content">
-
             <div class="modal-body">
-
-
-                <form class="needs-validation" novalidate method="Post" name="add-dependencies-form">
+                <form class="needs-validation" novalidate method="Post" name="add-contact-form">
                     {{ csrf_field() }}
-
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -20,12 +16,10 @@
                             </ul>
                         </div>
                     @endif
-
                     <div class="modal-header bg-light">
-                        <h4 class="modal-title" id="myCenterModalLabel">Add Dependencies User</h4>
+                        <h4 class="modal-title" id="myCenterModalLabel">Add Contact Person</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
-
                     <div class="modal-body">
                         <div id="invalid-input-alert"></div>
                         <div id="success-alert"></div>
@@ -54,7 +48,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -62,14 +55,11 @@
                                         <input type="text" id="my_datepicker" name="dependency_date_of_birth"
                                                value=""
                                                class="form-control" placeholder="Pick a date">
-
                                         <div class="invalid-feedback">
                                             Please provide Date of Birth.
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="passport_number"> Age </label>
@@ -78,10 +68,7 @@
                                                placeholder="" disabled>
                                     </div>
                                 </div>
-
-
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -94,12 +81,9 @@
                                         <span class="form-text text-muted"></span>
                                     </div>
                                 </div>
-
                             </div>
-
                             <div class="row d-flex justify-content-center">
                                 <br>
-
                                 <div class="radio radio-info form-check-inline">
                                     <input type="radio" id="radio" value="d_id_number" name="d_radioInline" checked>
                                     <label for="inlineRadio1"> ID NUMBER <span class="text-danger">*</span></label>
@@ -111,7 +95,6 @@
                                 </div>
                             </div>
                             <br>
-
                             <div id="d-id_number">
                                 <div class="row id_number box">
 
@@ -121,15 +104,12 @@
                                             <input type="text" class="form-control" id="id_number"
                                                    maxlength="13" value="" name="dependency_id_number"
                                                    placeholder="Enter ID Number">
-
                                         </div>
                                     </div> <!-- end col -->
                                 </div>
                             </div>
-
                             <input type="hidden" id="patient_id"  name="patient_id"
                                    value=" {{ (!empty($patient->id)) ?  $patient->id : ''}}">
-
                             <div id="d_passport">
                                 <div class="row passport box">
                                     <div class="col-md-6">
@@ -139,38 +119,18 @@
                                                    name="dependency_passport_number" value=""
                                                    placeholder="Enter Passport Number (optional)" maxlength="10">
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="heard"> Country of Origin <span class="text-danger">*</span></label>
-                                            <select class="form-control" id="passport_origin_country_id"
-                                                    name="dependency_passport_origin_country_id"
-                                                    data-toggle="select2"
-                                                    class="form-control" required="">
-                                                <option value="0">Select Country</option>
-                                                @foreach($country as $countries)
-                                                    <option
-                                                        value="{{ $countries->id }}">{{ $countries->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div> <!-- end col -->
+                                    </div><!-- end col -->
                                 </div>
                             </div>
-
-
                             <div class="form-group text-center">
-                                {{--                                <button class="btn btn-primary" type="submit">Create User</button>--}}
-                                <button type="button" id="add-dependencies" class="btn btn-success waves-effect waves-light">
-                                    Create User
+                                <button type="button" id="add-contact" class="btn btn-success waves-effect waves-light">
+                                    Save
                                 </button>
                             </div>
                         </div>
                     </div>
                 </form>
-
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
-

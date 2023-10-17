@@ -31,15 +31,11 @@
     <link href="{{ asset('libs/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css">
 @endsection
 <!-- Begin page -->
-
 @section('content')
-
     @section('content_data')
-
         <div class="container-fluid">
             <form class="needs-validation" novalidate method="Post"
                   action="{{ route('patient_details.update', $patient->id) }}" enctype="multipart/form-data">
-
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <h1>Fix bellow errors before continuing</h1>
@@ -50,19 +46,14 @@
                         </ul>
                     </div>
                 @endif
-
                 <div class="row">
-
                     {{ csrf_field() }}
                     {{ method_field('PATCH') }}
-
                     <div class="col-lg-6">
                         <div class="card-box">
-
                             <h5 class="text-uppercase bg-light p-2 mt-0 mb-3"><i class="mdi mdi-account-circle mr-1">
                                 </i> Personal Info
                             </h5>
-
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="form-group">
@@ -72,7 +63,6 @@
                                                name="first_name" placeholder="Enter first name">
                                     </div>
                                 </div>
-
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="firstname">Initials </label>
@@ -81,7 +71,6 @@
                                                name="initial" placeholder="Enter Initial">
                                     </div>
                                 </div>
-
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="lastname">Last Name</label>
@@ -91,10 +80,7 @@
                                     </div>
                                 </div> <!-- end col -->
                             </div>
-
                             <input type="hidden" id="is_active" name="is_active" value="1">
-
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -118,10 +104,7 @@
                                     </div>
                                 </div> <!-- end col -->
                             </div>
-
-
                             <div class="row">
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Date of Birth</label>
@@ -130,7 +113,6 @@
                                                class="form-control" placeholder="Pick a date">
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="passport_number"> Age </label>
@@ -140,7 +122,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -152,8 +133,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                             <br>
                             <div class="row d-flex justify-content-center">
                                 <br>
@@ -168,7 +147,6 @@
                                 </div>
                             </div>
                             <br>
-
                             <div id="b-id_number">
                                 <div class="row id_number box">
 
@@ -183,8 +161,6 @@
                                     </div> <!-- end col -->
                                 </div>
                             </div>
-
-
                             <div id="passport">
                                 <div class="row passport box">
                                     <div class="col-md-6">
@@ -213,8 +189,6 @@
                                     </div> <!-- end col -->
                                 </div>
                             </div>
-
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -233,7 +207,6 @@
                                     </div>
                                 </div> <!-- end col -->
                             </div> <!-- end row -->
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -252,14 +225,10 @@
                                     </div>
                                 </div> <!-- end col -->
                             </div> <!-- end row -->
-
-
                         </div> <!-- end card-box -->
-
                         @foreach($patient->emergency as $emergency)
                             <div class="card-box">
                                 <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Emergency Contact </h5>
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -269,7 +238,6 @@
                                                    name="emergency_contact_name" placeholder="Enter first name">
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="lastname">Last Name</label>
@@ -279,7 +247,6 @@
                                         </div>
                                     </div> <!-- end col -->
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -300,7 +267,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label> Contact Number</label>
@@ -312,14 +278,11 @@
                                     </div>
                                     <!-- end col -->
                                 </div>
-
                             </div> <!-- end card-box -->
                         @endforeach
-
                         @foreach($patient->doctor as $doctor)
                             <div class="card-box">
                                 <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Family Doctor </h5>
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -329,7 +292,6 @@
                                                    name="doc_name" placeholder="Enter first name">
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label> Contact Number</label>
@@ -339,13 +301,9 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         @endforeach
-
                         <div class="card">
-
                             <div class="card-header bg-info py-3 text-white  user_datatable">
                                 <div class="card-widgets">
                                     <a href="javascript:;" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
@@ -359,7 +317,6 @@
                             <br>
                             <div class="align-content-end">
                                 <br>
-
                                 <button type="button" class="btn btn-sm btn-blue waves-effect waves-light float-right"
                                         data-toggle="modal" data-target="#add-new-dependencies-modal">
                                     <i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
@@ -367,14 +324,9 @@
                                 </button>
                                 <br>
                             </div>
-
                             <div id="cardCollpase9" class="collapse show">
-
                                 <br>
                                 <div class="table-responsive">
-{{--                                    <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"--}}
-{{--                                           id="data-table">--}}
-
                                         <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                                                id="tickets-table">
 
@@ -385,7 +337,6 @@
                                             <th>date of birth</th>
                                             <th>Dependency Code</th>
                                             <th>Action</th>
-
                                         </tr>
                                         </thead>
 
@@ -415,27 +366,6 @@
                                                             data-toggle="dropdown" aria-expanded="false"><i
                                                                 class="mdi mdi-arrange-bring-to-front"></i></div>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            {{--                                                            <button class="dropdown-item"--}}
-                                                            {{--                                                                    data-toggle="modal"--}}
-                                                            {{--                                                                    data-target="#edit-new-module-modal"--}}
-                                                            {{--                                                                    data-id="{{ $module->id }}"--}}
-                                                            {{--                                                                    data-name="{{ $module->dependency_first_name }}"--}}
-                                                            {{--                                                                    data-path="{{ $module->path }}"--}}
-                                                            {{--                                                                    data-font_awesome="{{ $module->font_awesome }}"--}}
-                                                            {{--                                                                    data-code_name="{{ $module->code_name }}">--}}
-                                                            {{--                                                                <i class="mdi mdi-pencil mr-2 text-muted font-18 vertical-middle"></i>--}}
-                                                            {{--                                                                Edit Dependency--}}
-                                                            {{--                                                            </button>--}}
-
-                                                            {{--                                                            <button class="dropdown-item" id="delete_button" name="command"--}}
-                                                            {{--                                                                    onclick="if(confirm('Are you sure you want to delete this Induction ?'))--}}
-                                                            {{--                                                                    { deleteRecord({{$module->id}})} else {return false;}"--}}
-                                                            {{--                                                                    value="Delete">--}}
-                                                            {{--                                                                <i class="mdi mdi-delete-empty mr-2 text-muted font-18 vertical-middle delete_confirm"--}}
-                                                            {{--                                                                   data-toggle="tooltip" title='Delete'></i>--}}
-                                                            {{--                                                                Delete--}}
-                                                            {{--                                                            </button>--}}
-
                                                             <button class="dropdown-item" type="button"
                                                                     id="delete_button" name="command"
                                                                     onclick="if(confirm('Are you sure you want to delete this Induction ?'))
@@ -444,12 +374,9 @@
                                                                 <i class="mdi mdi-delete-empty mr-2 text-muted font-18 vertical-middle delete_confirm"
                                                                    data-toggle="tooltip" title='Delete'></i>Delete
                                                             </button>
-
-
                                                         </div>
                                                     </div>
                                                 </td>
-
                                             </tr>
                                         @endforeach
 
@@ -1534,7 +1461,6 @@
 
             });
 
-
             $("#humanfd-datepicker").change(function () {
                 let date = $("#humanfd-datepicker").datepicker({dateFormat: 'MM,dd,yyyy'}).val();
                 let getAge = GetAge(new Date(date))
@@ -1560,8 +1486,6 @@
                 let successMsg = 'Record has been updated successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
-
-
         });
 
 

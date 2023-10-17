@@ -24,9 +24,8 @@ class AddDependencyRequest extends FormRequest
     public function rules()
     {
         return [
-            'dependency_first_name' => 'required',
-            'dependency_surname' => 'required',
-            'dependency_code' => 'required',
+            'package_name' => 'required',
+            'no_table' => 'required',
         ];
     }
 }

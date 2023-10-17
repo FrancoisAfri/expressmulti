@@ -15,19 +15,18 @@ class Dependencies extends Model
         Uuids,
         LogsActivity;
 
-    protected $table = 'dependancy';
+    protected $table = 'contacts_person';
 
     protected $fillable = [
-        'patient_id', 'dependency_first_name', 'dependency_surname', 'dependency_date_of_birth',
-        'dependency_age', 'dependency_code', 'dependency_id_number', 'dependency_passport_number',
-        'dependency_passport_origin_country_id',
+        'company_id', 'first_name', 'surname', 'date_of_birth',
+        'email', 'cell_number',
     ];
 
-    protected static $logName = 'Dependencies  Details';
+    protected static $logName = 'Contacts Person  Details';
 
     protected function getDescriptionForEvent(string $eventName): string
     {
-        return "Dependencies Details {$eventName} ";
+        return "Contacts Person Details {$eventName} ";
     }
 
     /**
