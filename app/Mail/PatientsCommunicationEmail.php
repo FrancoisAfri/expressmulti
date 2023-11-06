@@ -31,8 +31,5 @@ class PatientsCommunicationEmail extends Mailable
         return $this->subject( $this->mailData['title'] )
             ->view('Email.myTestMail')
             ->with('mailData', $this->mailData);
-
-//        return $this->markdown('Email.PatientsCommunicationEmail')
-//            ->with('mailData', $this->mailData);
     }
 }

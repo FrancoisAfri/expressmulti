@@ -31,6 +31,7 @@
                         <tr>
                             <th> Name</th>
                             <th> No of Tables</th>
+                            <th> Price</th>
                             <th> Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
@@ -46,6 +47,11 @@
                                 <td>
 									<span>
 										 {{ $package->no_table ?? '' }}
+									</span>
+                                </td>
+								<td>
+									<span>
+										 {{ $package->price ?? '' }}
 									</span>
                                 </td>
                                 <td>
@@ -68,7 +74,8 @@
 													data-toggle="modal" title="Edit Package" data-target="#edit-package-modal"
 													data-id="{{ $package->id }}"
 													data-package_name="{{ $package->package_name }}"
-													data-no_table="{{$package->no_table}}">
+													data-no_table="{{$package->no_table}}"
+													data-price="{{$package->price}}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
 											<button onclick="postData({{$package->id}}, 'actdeac');"
@@ -154,9 +161,11 @@
                 packageId = btnEdit.data('id');
                 let package_name = btnEdit.data('package_name');
                 let no_table = btnEdit.data('no_table');
+                let price = btnEdit.data('price');
                 let modal = $(this);
                 modal.find('#package_name').val(package_name);
                 modal.find('#no_table').val(no_table);
+                modal.find('#price').val(price);
             });
 
             // update modal			
@@ -167,6 +176,7 @@
                 let objData = {
                     package_name: $('#' + modalID).find('#package_name').val(),
                     no_table: $('#' + modalID).find('#no_table').val(),
+                    price: $('#' + modalID).find('#price').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 

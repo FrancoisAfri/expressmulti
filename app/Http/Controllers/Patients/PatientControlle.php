@@ -4,22 +4,17 @@ namespace App\Http\Controllers\Patients;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddDependencyRequest;
-use App\Models\Accounts;
+use App\Http\Requests\AddContactPersonRequest;
+use App\Http\Requests\AddPackagesRequest;
 use App\Models\Country;
 use App\Models\CompanyIdentity;
-use App\Models\Dependencies;
-use App\Models\Doctor;
+use App\Models\ContactPerson;
 use App\Models\Packages;
-use App\Models\EmergencyContact;
-use App\Models\Employer;
-use App\Models\Guarantor;
-use App\Models\MedicalAid;
-use App\Models\MedicalAids;
 use App\Models\Patient;
 use App\Models\Url;
 use App\Models\Province;
 use App\Services\CommunicationService;
-use App\Services\PatientService;
+use App\Services\ClientService;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use Illuminate\Http\RedirectResponse;
@@ -27,15 +22,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToText\Pdf;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\DB;
 
 class PatientControlle extends Controller
 {
     use BreadCrumpTrait, CompanyIdentityTrait;
 
     /**
-     * @var PatientService
+     * @var ClientService
      */
-    private $patientService;
+    private $clientService;
     /**
      * @var CommunicationService
      */
@@ -45,13 +41,9 @@ class PatientControlle extends Controller
      * @var
      */
 
-    public function __construct(
-        CommunicationService $communicationService,
-        PatientService       $patientService
-
-    )
+    public function __construct(CommunicationService $communicationService, ClientService $clientService)
     {
-        $this->patientService = $patientService;
+        $this->ClientService = $clientService;
         $this->communicationService = $communicationService;
 
 
@@ -71,7 +63,7 @@ class PatientControlle extends Controller
             'Client Profile',
             'Client Details'
         );
-
+		$data['packages'] = Packages::getPackages();
         $data['country'] = Country::getAllCountries();
 
         return view('client.index')->with($data);
@@ -92,19 +84,19 @@ class PatientControlle extends Controller
         return view('client.packages')->with($data);
     }
 	// store packages
-	public function storePackage(AddDependencyRequest $request)
+	public function storePackage(AddPackagesRequest $request)
     {
         $requestData = $request->validationData();
-        $this->patientService->persistDependencies($requestData);
+        $this->ClientService->persistPackages($requestData);
         alert()->success('SuccessAlert', 'Record Created Successfully');
         return response()->json(['message' => 'success'], 200);
     }
 	
 	// package update
-	public function packageUpdate(AddDependencyRequest $request, Packages $package)
+	public function packageUpdate(AddPackagesRequest $request, Packages $package)
     {
         $requestData = $request->validationData();
-        $this->patientService->updatePackage($requestData, $package);
+        $this->ClientService->updatePackage($requestData, $package);
         alert()->success('SuccessAlert', 'Record Updated Successfully');
         return response()->json(['message' => 'success'], 200);
     }
@@ -119,7 +111,7 @@ class PatientControlle extends Controller
 	// active/de-activate package
 	public function activatePackage(Packages $package): RedirectResponse
     {
-        $this->patientService->activatePackage($package);
+        $this->ClientService->activatePackage($package);
         Alert::toast('Record Status changed Successfully ', 'success');
         activity()->log('Package status changed');
         return back();
@@ -186,7 +178,7 @@ class PatientControlle extends Controller
     }
 
 
-    public function patientManagement()
+    public function clientslist()
     {
 		
         $data = $this->breadcrumb(
@@ -221,48 +213,39 @@ class PatientControlle extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required|max:255',
-            'initial' => 'required',
-            'surname' => 'required',
-            'date_of_birth' => 'required',
-            'gender' => 'required',
-            'email' => 'required|unique:patient',
-            'phone_number' => 'required|unique:patient'
-        ]);
+      //  $request->validate([
+         //   'name' => 'required|max:255',
+         //   'package_id' => 'required',
+         //   'email' => 'required|unique:companies',
+         //   'phone_number' => 'required|unique:companies'
+        //]);
 
-        if ($request->radioInline == 'id_number') {
-            $request->validate([
-                'id_number' => 'required|unique:patient'
-            ]);
-        } elseif ($request->radioInline == 'passport') {
-            $request->validate([
-                'passport_number' => 'required|unique:patient'
-            ]);
-        }
-
-        $patientRecord = $this->patientService->persistPatientData($request);
-
-        alert()->success('SuccessAlert', 'Your changes have been saved successfully');
+        $patientRecord = $this->ClientService->persistClientData($request);
+		
+        alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('Client Information created');
-        return redirect()->route('patient_details.show', $patientRecord->uuid);
+		if (!empty($patientRecord->uuid))
+			return redirect()->route('client_details.show', $patientRecord->uuid);
+		else return redirect()->route('clientManagement.index');
     }
 
 	// store dependencies
-    public function storeDependencies(AddDependencyRequest $request)
+    public function storeContactPerson(AddContactPersonRequest $request)
     {
         $requestData = $request->validationData();
-        $this->patientService->persistDependencies($requestData);
+        $this->ClientService->persistContactPerson($requestData);
         alert()->success('SuccessAlert', 'Record Created Successfully');
+		activity()->log('Client contact person created');
         return response()->json(['message' => 'success'], 200);
     } 
 	// save package
 
 
-    public function destroyDependencies(Dependencies $dependency)
+    public function destroyContactPerson(ContactPerson $contact)
     {
-        $dependency->delete();
+        $contact->delete();
         Alert::toast('Record Deleted Successfully ', 'success');
+		activity()->log('Client contact person deleted');
         return redirect()->back();
     }
 
@@ -277,33 +260,28 @@ class PatientControlle extends Controller
 
         $data = $this->breadcrumb(
             'Client ',
-            'Client page for Client related settings',
-            'patient_details',
+            'Client page for Client details settings',
+            'client_details',
             'Client Profile',
             'Client Management'
         );
 
-        $patient = Patient::getPatientByUuid($id);
-
-
-        if (empty($patient)) {
-            $data['patient'] = Patient::getPatientDetails();
-            $data['gender'] = Patient::getPatientGender();
-            $data['country'] = Country::getAllCountries();
-
-            return redirect()->route('patientManagement.index')->with($data);
+        $client = Patient::getPatientByUuid($id);
+		
+        if (empty($client)) {
+			// get all client in the system
+            $data['clients'] = Patient::getPatientDetails();
+			// redirect to client index page
+            return redirect()->route('clientManagement.index')->with($data);
 
         } else {
-            $data['medicalAids'] = MedicalAids::getMedicalAids();
-            $data['patient'] = Patient::getPatientByUuid($id);
-            $data['gender'] = Patient::getPatientGender();
-            $data['country'] = Country::getAllCountries();
-            $data['dependencies'] = Dependencies::where('patient_id', $patient->id)->get();
+            // return to client edit page
+            $data['client'] = Patient::getPatientByUuid($id);
+            $data['contactPersons'] = ContactPerson::where('company_id', $client->id)->get();
+			$data['packages'] = Packages::getPackages();
 
-            return view('patients.patient_management_edit')->with($data);
+            return view('client.client_management_edit')->with($data);
         }
-
-
     }
 
     /**
@@ -327,17 +305,17 @@ class PatientControlle extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->patientService->updatePatientDetails($request, $id);
+        $this->ClientService->updateClientDetails($request, $id);
 
-        alert()->success('SuccessAlert', 'Your changes have been saved successfully');
-        activity()->log('Client Information updated');
+        alert()->success('SuccessAlert', 'Your changes have been updated successfully');
+        activity()->log('Client Information Updated');
         return back();
     }
 
     public function patientManagementGuest(Request $request, $id)
     {
 
-        $this->patientService->completeGuestPatient($request, $id);
+        $this->ClientService->completeGuestPatient($request, $id);
 
     }
 
@@ -350,7 +328,7 @@ class PatientControlle extends Controller
     public function destroy($id)
     {
 
-        $this->patientService->destroyPatientRecords($id);
+        $this->ClientService->destroyPatientRecords($id);
 
         Alert::toast('Record Status destroyed Successfully ', 'success');
         activity()->log('Client status destroyed');
@@ -362,10 +340,10 @@ class PatientControlle extends Controller
      * @param Patient $patient
      * @return RedirectResponse
      */
-    public function activatePatient(Patient $patient): RedirectResponse
+    public function activateClient(Patient $client): RedirectResponse
     {
 
-        $this->patientService->ManagePatient($patient);
+        $this->ClientService->activeClient($client);
         Alert::toast('Record Status changed Successfully ', 'success');
         activity()->log('Client status changed');
         return back();

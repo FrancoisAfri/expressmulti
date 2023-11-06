@@ -25,7 +25,7 @@
                         <div id="success-alert"></div>
                         <div class="modal-body p-4">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="package_name"> Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control"
@@ -35,14 +35,25 @@
                                         </div>
                                     </div>
                                 </div>
-								<div class="col-md-6">
+								<div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="no_table"> No Of Table <span class="text-danger">*</span></label>
+                                        <label for="no_table"> No of Table <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control"
-                                               id="no_table" name="no_table" placeholder="No Of Table" required>
+                                               id="no_table" name="no_table" placeholder="No of Table" required>
 
                                         <div class="invalid-feedback">
-                                            Please Enter No Of Table.
+                                            Please Enter No of Table.
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price"> Price <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control"
+                                               id="price" name="price" placeholder="Price" required>
+
+                                        <div class="invalid-feedback">
+                                            Please Enter No of Table.
                                         </div>
                                     </div>
                                 </div>

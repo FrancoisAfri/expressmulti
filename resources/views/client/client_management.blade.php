@@ -32,8 +32,9 @@
                             <th>#</th>
                             <th> Name</th>
                             <th> Email</th>
-                            <th> Gender</th>
                             <th> Phone</th>
+                            <th> Address</th>
+                            <th> Package</th>
                             <th> Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
@@ -51,8 +52,7 @@
                                 </td>
                                 <td>
                                     <span
-									class="ml-2">{{ (!empty($client->first_name . ' ' . $client->surname)) ?
-													 $client->first_name . ' ' . $client->surname : ''}}
+									class="ml-2">{{ (!empty($client->name)) ? $client->name : ''}}
 									</span>
                                 </td>
                                 <td>
@@ -63,6 +63,16 @@
                                 <td>
 									<span>
 										 {{ $client->phone_number ?? '' }}
+									</span>
+                                </td>
+								<td>
+									<span>
+										 {{ $client->res_address ?? '' }}
+									</span>
+                                </td>
+								<td>
+									<span>
+										 {{ $client->packages->package_name ?? '' }}
 									</span>
                                 </td>
                                 <td>
@@ -81,28 +91,12 @@
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <button class="dropdown-item"
-                                                    data-toggle="modal"
-                                                    data-target="#add-new-dependencies-modal">
-                                                <i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-                                                Add Contact Person
+                                            <button onclick="postData({{$client->id}}, 'actdeac');"
+                                                    class="dropdown-item" data-toggle="tooltip"
+                                                    title='change Active status'><i
+                                                    class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+                                                {{(!empty($client->is_active) && $client->is_active == 1) ? "De-Activate" : "Activate"}}
                                             </button>
-                                            <form name="command"
-                                                  onclick="if(confirm('Are you sure you want to delete this Induction ?'))"
-
-                                                  action="{{ route('patient_details.destroy', $client->id) }}"
-                                                  method="POST"
-                                                  style="display: inline-block;">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="hidden" name="_token"
-                                                       value="{{ csrf_token() }}">
-                                                <button type="submit"
-                                                        class="dropdown-item delete_confirm namespac"
-                                                        data-toggle="tooltip" title='Delete'>
-                                                    <i class="mdi mdi-delete-empty mr-2 text-muted font-18 vertical-middle delete_confirm"
-                                                       data-toggle="tooltip" title='Delete'></i>Delete
-                                                </button>
-                                            </form>
                                         </div>
                                     </div>
                                 </td>
@@ -153,24 +147,20 @@
 
         function postData(id, data) {
 
-            if (data == 'ribbons')
-                location.href = "/users/ribbons/" + id;
-            else if (data == 'edit')
-                location.href = "/users/module_edit/" + id;
-            else if (data == 'actdeac')
-                location.href = "{{route('patientManagement.activate', '')}}" + "/" + id;
+            if (data == 'actdeac')
+                location.href = "{{route('clientManagement.activate', '')}}" + "/" + id;
         }
 
         $(function () {
 
-            $('#add-dependencies').on('click', function () {
+			$('#add-contact-person').on('click', function () {
                 let strUrl = '{{ route('contact_person.store') }}';
-                let modalID = 'add-new-dependencies-modal';
-                let formName = 'add-dependencies-form';
-                let submitBtnID = 'add-dependencies';
-                let redirectUrl = '{{ route('patientManagement.index') }}';
+                let modalID = 'add-new-contact-person-modal';
+                let formName = 'add-contact-person-form';
+                let submitBtnID = 'add-contact-person';
+                let redirectUrl = '{{route('clientManagement.index')}}';
                 let successMsgTitle = 'Record Added!';
-                let successMsg = 'Record has been updated successfully.';
+                let successMsg = 'Record has been saved successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
         });

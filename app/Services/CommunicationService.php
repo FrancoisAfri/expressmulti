@@ -97,26 +97,15 @@ class CommunicationService
 
             if ($item->reminder_times < 1) {
 
-                // dd("test");
-//                if ($item->date("Y-m-d", strtotime($item->reminder_date)) === $now) {
-//                    //send once
-////              $this->dispatch()
-//                };
-
             }
-
 
             if ($item->reminder_times > 1) {
 
                 $date = Carbon::createFromFormat('Y-m-d H:i:s', $item->reminder_date);
                 $date->addWeek($item->repeat_reminder);
                 $date->format('Y-m-d H:i:s');
-
-
             }
-
         }
-
     }
 
     /**
@@ -130,7 +119,6 @@ class CommunicationService
         $details = $this->CompanyIdentityDetails();
 
         foreach ($todayBookings as $bookings) {
-
 
             $bookingDetails = [
                 'logo' => $details['logo'],

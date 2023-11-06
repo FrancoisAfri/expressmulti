@@ -19,6 +19,7 @@ class CreatePackagesTable extends Migration
 			$table->string('package_name');
 			$table->smallInteger('no_table')->nullable()->default(0);
 			$table->smallInteger('status')->nullable()->default(0);
+			$table->double('price')->nullable()->default(0);
             $table->timestamps();
         });
     }

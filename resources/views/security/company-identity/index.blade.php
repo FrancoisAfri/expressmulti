@@ -136,42 +136,7 @@
                                         Looks good!!!
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="res_address">Address </label>
-
-                                            <input type="text" class="form-control" id="address"
-                                                   name="address" value="{{ $companyDetails->address ?? '' }}"
-                                                   placeholder="Enter address">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="res_suburb">Suburb </label>
-                                            <input type="text" class="form-control" id="suburb" name="suburb"
-                                                   value="{{ $companyDetails->suburb ?? '' }}"
-                                                   placeholder="Enter Suburb ">
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="companyname">City </label>
-                                            <input type="text" class="form-control" id="city" name="city"
-                                                   value="{{ $companyDetails->city ?? '' }}" placeholder="Enter City">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="res_postal_code">Postal Code</label>
-                                            <input type="number" class="form-control" id="postal_code"
-                                                   name="postal_code" value="{{ $companyDetails->postal_code ?? '' }}"
-                                                   placeholder="Enter Postal Code">
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
+                                <!-- end row -->
                                 <div class="form-group mb-3">
                                     <label for="validationCustom04">Company Logo</label>
                                     <div class="mt-3">

@@ -157,32 +157,38 @@ Route::group(['prefix' => 'users', 'middleware' => [
 Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
     Route::resource('client_details', PatientControlle::class);
-    Route::get('profile_management', [PatientControlle::class, 'patientManagement'])
-        ->name('patientManagement.index');
+    Route::get('profile_management', [PatientControlle::class, 'clientslist'])
+        ->name('clientManagement.index');
+	Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
+        ->name('client_details.update');
     Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
         ->name('patientManagement.guest.update');
-    Route::get('profile_management/act/{patient}', [PatientControlle::class, 'activatePatient'])
-        ->name('patientManagement.activate');
+    Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
+        ->name('clientManagement.activate'); 
+	Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
+        ->name('client_details.show');
     Route::get('send-message', [ContactControllere::class, 'sendMessages'])
         ->name('sendMessages.view');
     Route::post('send-message', [ContactControllere::class, 'sendSmsMessages'])
         ->name('sendMessages.sendSms');
     Route::post('send-email', [ContactControllere::class, 'sendEmailCommunication'])
         ->name('sendMessages.sendEmail');
-	Route::post('add_dependencies', [PatientControlle::class, 'storeDependencies'])
+	Route::post('add_contact_person', [PatientControlle::class, 'storeContactPerson'])
         ->name('contact_person.store');
-    Route::get('destroy_dependency/{dependency}', [PatientControlle::class, 'destroyDependencies'])
-        ->name('dependencies.destroy');
+    Route::get('destroy_contact_person/{contact}', [PatientControlle::class, 'destroyContactPerson'])
+        ->name('contact_person.destroy');
+Route::post('company/delete/{id}', [PatientControlle::class, 'destroy'])
+        ->name('company_details.destroy');
 	Route::delete('destroy_package/{package}', [PatientControlle::class, 'destroyPackage'])
         ->name('package.destroy');
 	Route::get('packages', [PatientControlle::class, 'packagesView'])
         ->name('packages.view');
-	Route::post('add_package', [PatientControlle::class, 'storeDependencies'])
+	Route::post('add_package', [PatientControlle::class, 'storePackage'])
         ->name('package.store');
 	Route::get('package/act/{package}', [PatientControlle::class, 'activatePackage'])
         ->name('package.activate');
 	Route::PATCH('update/package/{package}', [PatientControlle::class, 'packageUpdate'])
-        ->name('patientManavgement.update');
+        ->name('package.update');
 });
 
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {

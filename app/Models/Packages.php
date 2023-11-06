@@ -22,7 +22,7 @@ class Packages extends Model
 	protected $table = 'packages';
 	
 	protected $fillable = [
-        'package_name', 'no_table', 'status'
+        'package_name', 'no_table', 'status', 'price'
     ];
 	protected static $logName = 'Client Profile';
 

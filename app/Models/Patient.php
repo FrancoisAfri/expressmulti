@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Patient extends Model
 {
@@ -26,7 +27,8 @@ class Patient extends Model
     protected $fillable = [
         'name', 'email', 'cell_number', 'phone_number', 'res_address', 'post_address',
         'date_joined', 'client_logo', 'is_active', 'payment_method', 'payment_status'
-		, 'package_id',
+		, 'package_id', 'database_name', 'database_user', 'database_password',
+	 'trading_as','vat',
     ];
 	
 
@@ -39,7 +41,12 @@ class Patient extends Model
         return "Client Profile {$eventName} ";
     }
 
-
+	// package relationship
+	public function packages(): BelongsTo
+    {
+        return $this->belongsTo(Packages::class, 'package_id', 'id');
+    }
+	
     public function sendRegisterBookingNotification($url='' , $user='' , $name='', $date='')
     {
         $this->notify(new regitserPatientNotification($url , $user,$name, $date));
@@ -52,14 +59,7 @@ class Patient extends Model
 
 	public function contacts(): HasMany
     {
-        return $this->hasMany(ContactPerson::class);
-    }
-    /**
-     * @return HasMany
-     */
-    public function emergency(): HasMany
-    {
-        return $this->hasMany(EmergencyContact::class);
+        return $this->hasMany(ContactPerson::class, 'company_id', 'id');
     }
 
     /**
@@ -69,12 +69,8 @@ class Patient extends Model
     public static function getPatientByUuid($id)
     {
         return Patient::with(
-            'emergency',
-            'medicalAid',
-            'doctor',
-            'guarantor',
-            'employer',
-            'mainMember'
+            'packages',
+            'contacts'
         )->where(
             [
                 'uuid' => $id
@@ -92,11 +88,8 @@ class Patient extends Model
     public static function getPatientDetails()
     {
         return Patient::with(
-            'emergency',
-            'medicalAid',
-            'doctor',
-            'guarantor',
-            'employer'
+            'packages',
+            'contacts'
         )->get();
     }
 

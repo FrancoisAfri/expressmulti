@@ -17,6 +17,8 @@ class CreateCompaniesTable extends Migration
             $table->increments('id');
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
+            $table->string('trading_as')->nullable();
+            $table->string('vat')->nullable();
 			$table->string('email')->unique()->nullable();
             $table->string('cell_number')->nullable();
             $table->string('phone_number')->nullable();
@@ -26,8 +28,11 @@ class CreateCompaniesTable extends Migration
             $table->string('client_logo')->nullable();
             $table->boolean('is_active')->nullable()->default(1);
             $table->string('payment_method')->nullable();
-            $table->integer('payment_status')->nullable();
             $table->integer('package_id')->nullable();
+            $table->integer('payment_status')->nullable();
+            $table->string('database_name')->nullable();
+            $table->string('database_user')->nullable();
+            $table->string('database_password')->nullable();
             $table->timestamps();
         });
     }

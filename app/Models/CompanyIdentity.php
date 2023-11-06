@@ -23,8 +23,7 @@ class CompanyIdentity extends Model
         , 'header_acronym_bold','header_acronym_regular', 'company_logo'
         , 'sys_theme_color', 'mailing_name', 'mailing_address', 'support_email'
         ,'company_website','password_expiring_month','system_background_image',
-        'login_background_image','address','suburb','city','postal_code','daily_revenue_target',
-        'monthly_revenue_target','terms_and_conditions','hospital'
+        'login_background_image'
     ];
 
     protected static $logAttributes = ['company_name', 'full_company_name', 'company_logo', 'type', 'status'];

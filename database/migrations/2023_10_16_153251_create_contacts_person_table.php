@@ -22,7 +22,7 @@ class CreateContactsPersonTable extends Migration
 			$table->string('surname')->nullable();
 			$table->bigInteger('date_of_birth')->nullable();
 			$table->string('email')->unique()->nullable();
-            $table->string('cell_number')->nullable();
+            $table->string('contact_number')->nullable();
             $table->timestamps();
         });
     }
