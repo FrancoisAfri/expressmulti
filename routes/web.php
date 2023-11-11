@@ -41,6 +41,10 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
+Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
+Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
+
+	
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
     ->name('2fa.index');
 
@@ -152,7 +156,7 @@ Route::group(['prefix' => 'users', 'middleware' => [
     Route::post('edit_patient_sms', [ContactControllere::class, 'editPatientSms'])
         ->name('edit.PatientSms');
 
-});
+}) ;
 
 Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
@@ -169,7 +173,7 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
         ->name('client_details.show');
     Route::get('send-message', [ContactControllere::class, 'sendMessages'])
         ->name('sendMessages.view');
-    Route::post('send-message', [ContactControllere::class, 'sendSmsMessages'])
+	Route::post('send-message', [ContactControllere::class, 'sendSmsMessages'])
         ->name('sendMessages.sendSms');
     Route::post('send-email', [ContactControllere::class, 'sendEmailCommunication'])
         ->name('sendMessages.sendEmail');
