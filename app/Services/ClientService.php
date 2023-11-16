@@ -17,6 +17,7 @@ use App\Services\BillingService;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Exception;
+use Stancl\Tenancy\Tenant;
 
 class ClientService
 {
@@ -44,48 +45,51 @@ class ClientService
 		
 		DB::beginTransaction();
 
-		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
-		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
-		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
-		$request->merge(array('phone_number' => $mobile));
-		$request->merge(array('cell_number' => $cellNumber));
-		$request->merge(array('contact_number' => $contactNumber));
+			$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
+			$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
+			$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
+			$request->merge(array('phone_number' => $mobile));
+			$request->merge(array('cell_number' => $cellNumber));
+			$request->merge(array('contact_number' => $contactNumber));
 
-		$patientRecord = Patient::create($request->all());
-		
-		$request->request->add(['company_id' => $patientRecord['id']]);
-		
-		// save contact person
-		ContactPerson::create([
-			'company_id' => $patientRecord->id,
-			'first_name' => $request['first_name'],
-			'surname' => $request['surname'],
-			'contact_number' => $request['contact_number'],
-			'email' => $request['email'],
-			'status' => 1
-		]);
+			$patientRecord = Patient::create($request->all());
+			
+			$request->request->add(['company_id' => $patientRecord['id']]);
+			
+			// save contact person
+			ContactPerson::create([
+				'company_id' => $patientRecord->id,
+				'first_name' => $request['first_name'],
+				'surname' => $request['surname'],
+				'contact_number' => $request['contact_number'],
+				'email' => $request['email'],
+				'status' => 1
+			]);
+			// save logo
+			$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
+			
 		DB::commit();
 		/*
 		 * create a new database
 		 */
 		// make db name
-		$dbName = str_replace(' ', '', $patientRecord['name'])."db";
-		$dbName = strtolower($dbName);
+		$name = str_replace(' ', '', $patientRecord['name']);
+		$name = strtolower($name);
 		
-		$this->createDB($dbName);
+		$url = $this->createTenant($name, $firstname, $surname, $email);
 
 		// update database name in the system
-		$patientRecord['database_name'] = $dbName;
+		$patientRecord['database_name'] = $url;
 		$patientRecord->update();
 		
 		/*
 	  * avatar
 	  */
-		$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
+		
 
 		//DB::commit();
 
-		return $patientRecord;
+		return $url;
     }
 
 
@@ -282,6 +286,87 @@ class ClientService
 		DB::reconnect('pgsql');
 		return $dbname;
 	}
+	// create new tenant  
+	public function createTenant($dbname)
+	{
+		
+		$tenant_id = '-' . Str::slug($dbname, '');
+        $domain = $tenant_id . '.' . 'localhost';
+		
+		// save tenant and domain
+		$tenant = Tenant::create([
+            'id' => $tenant_id
+        ]);
+
+        $tenant->createDomain([
+            'domain' => $domain
+        ]);
+		// run migration
+		Artisan::call('tenants:migrate', [
+			'--tenants' => [$tenant['id']]
+		]);
+		// seed
+		Artisan::call('tenants:seed', [
+			'--tenants' => [$tenant['id']]
+		]);
+		
+        $tenant->run(function()
+        {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+        });
+
+        //tenancy()->initialize($tenant);
+		
+		return $domain;
+	
+	}
+	// tenant code from the net
+	/*public function store(Request $request)
+    {
+        $this->validate($request, [
+            'company' => 'required',
+            'domain' => 'required|unique:domains',
+            'name' => 'required',
+            'email' => 'required|unique:users,email',
+            'password' => 'required|confirm'
+        ]);
+        $tenant_id = '-' . Str::slug($request->company, '-');
+        $domain = $request->domain . '.' . 'saas.test';
+
+        $tenant = Tenant::create([
+            'id' => $tenant_id
+        ]);
 
 
+        $tenant->createDomain([
+            'domain' => $domain
+        ]);
+		// run migration 
+		Artisan::call(‘tenants:migrate’);
+		
+		Artisan::call('tenants:migrate', [
+			'--tenants' => [$tenant['id']]
+		]);
+		// seed
+		Artisan::call('tenants:seed', [
+			'--tenants' => [$tenant['id']]
+		]);
+		
+        $tenant->run(function()
+        {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+        });
+
+        tenancy()->initialize($tenant);
+
+        return redirect($domain);
+    }*/
 }

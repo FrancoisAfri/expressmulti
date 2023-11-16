@@ -1,0 +1,137 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AddDependencyRequest;
+use App\Models\CompanyIdentity;
+use App\Services\CommunicationService;
+use App\Services\PatientService;
+use App\Traits\BreadCrumpTrait;
+use App\Traits\CompanyIdentityTrait;
+use App\Models\ContactPerson;
+use App\Models\Packages;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use App\Services\ClientService;
+//use Illuminate\Support\Facades\Redirect;
+use RealRashid\SweetAlert\Facades\Alert;
+
+class ClientRegistrationGuestController extends Controller
+{
+	use BreadCrumpTrait, CompanyIdentityTrait;
+	
+	/**
+     * @var PatientService
+     */
+    private $patientService;
+	
+	public function __construct(PatientService $patientService)
+    {
+        $this->patientService = $patientService;
+    }
+	
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // data to display on views
+		$data = $this->breadcrumb(
+            'Client ',
+            'Client page for Client related settings',
+            'patient_details',
+            'Client Profile',
+            'Client Details'
+        );
+		// views call
+        
+		$data['packages'] = Packages::getPackages();
+        return view('guest.index')->with($data);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //  $request->validate([
+         //   'name' => 'required|max:255',
+         //   'package_id' => 'required',
+         //   'email' => 'required|unique:companies',
+         //   'phone_number' => 'required|unique:companies'
+		 //'email' => 'unique:users,email',
+         //'email' => 'unique:hr_people,email',
+        //]);
+
+        $newClientUrl = $this->ClientService->persistClientData($request);
+		
+        alert()->success('SuccessAlert', 'New record have been saved successfully');
+        activity()->log('New Client Registration');
+		if (!empty($newClientUrl))
+			return redirect()->away($newClientUrl);
+			//return redirect()->route('client_details.show', $patientRecord->uuid);
+		else return redirect()->back();
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}

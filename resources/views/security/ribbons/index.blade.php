@@ -170,7 +170,6 @@
         $(function () {
 
             $('#add-ribbon').on('click', function () {
-                console.log('testing');
                 let strUrl = '{{ route('ribbons.store') }}';
                 let modalID = 'add-new-ribbon-modal';
                 let formName = 'add-ribbon-form';
@@ -179,6 +178,7 @@
                 let successMsgTitle = 'Record Added!';
                 let successMsg = 'Record has been updated successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
+				console.log('testing more');
             });
 
             let ribbonId;

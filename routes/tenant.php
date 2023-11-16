@@ -28,7 +28,7 @@ Route::middleware([
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
 	
-	Auth::routes(['register' => false]);
+	/*Auth::routes(['register' => false]);
 
 	Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
 	Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
@@ -178,5 +178,5 @@ Route::middleware([
 	});
 
 	Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
-
+*/
 });
