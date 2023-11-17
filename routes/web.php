@@ -24,6 +24,7 @@ use App\Http\Controllers\SetUp\UserProfileController;
 use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\AuditController;
 use App\Http\Controllers\Patients\PatientControlle;
+use App\Http\Controllers\Restaurant\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -197,9 +198,7 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
 
 Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
-    Route::resource('client_details', PatientControlle::class);
-    Route::get('profile_management', [PatientControlle::class, 'clientslist'])
-        ->name('clientManagement.index');
+    //Route::resource('category', RestaurantController::class);
 	Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
         ->name('client_details.update');
     Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
@@ -220,16 +219,26 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('contact_person.destroy');
 	Route::post('company/delete/{id}', [PatientControlle::class, 'destroy'])
         ->name('company_details.destroy');
-	Route::delete('destroy_package/{package}', [PatientControlle::class, 'destroyPackage'])
-        ->name('package.destroy');
-	Route::get('packages', [PatientControlle::class, 'packagesView'])
-        ->name('packages.view');
-	Route::post('add_package', [PatientControlle::class, 'storePackage'])
-        ->name('package.store');
-	Route::get('package/act/{package}', [PatientControlle::class, 'activatePackage'])
-        ->name('package.activate');
-	Route::PATCH('update/package/{package}', [PatientControlle::class, 'packageUpdate'])
-        ->name('package.update');
+    Route::get('category', [RestaurantController::class, 'categories'])
+        ->name('categories.view');
+	Route::delete('destroy_category/{category}', [RestaurantController::class, 'destroyCategory'])
+        ->name('category.destroy');
+	Route::post('add_category', [RestaurantController::class, 'storeCategory'])
+        ->name('category.store');
+	Route::get('category/act/{category}', [RestaurantController::class, 'activateCategory'])
+        ->name('category.activate');
+	Route::PATCH('update/category/{category}', [RestaurantController::class, 'categoryUpdate'])
+        ->name('category.update');
+	Route::get('menu', [RestaurantController::class, 'menus'])
+        ->name('menus.view');
+	Route::delete('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
+        ->name('menu.destroy');
+	Route::post('add_menu', [RestaurantController::class, 'storeMenu'])
+        ->name('menu.store');
+	Route::get('menu/act/{menu}', [RestaurantController::class, 'activateMenu'])
+        ->name('menu.activate');
+	Route::PATCH('update/menu/{menu}', [RestaurantController::class, 'MenuUpdate'])
+        ->name('menu.update');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
