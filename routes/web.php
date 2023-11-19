@@ -237,8 +237,30 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('menu.store');
 	Route::get('menu/act/{menu}', [RestaurantController::class, 'activateMenu'])
         ->name('menu.activate');
-	Route::PATCH('update/menu/{menu}', [RestaurantController::class, 'MenuUpdate'])
+	Route::PATCH('update/menu/{menu}', [RestaurantController::class, 'menuUpdate'])
         ->name('menu.update');
+	Route::get('seating_plan', [RestaurantController::class, 'plans'])
+        ->name('tables.view');
+	Route::delete('destroy_plan/{plan}', [RestaurantController::class, 'destroyPlan'])
+        ->name('table.destroy');
+	Route::post('add_plan', [RestaurantController::class, 'storePlan'])
+        ->name('table.store');
+	Route::get('plan/act/{plan}', [RestaurantController::class, 'activatePlan'])
+        ->name('table.activate');
+	Route::PATCH('update/table/{table}', [RestaurantController::class, 'planUpdate'])
+        ->name('table.update');
+	Route::get('service_type', [RestaurantController::class, 'services'])
+        ->name('services.view');
+	Route::delete('destroy_service/{service}', [RestaurantController::class, 'destroyService'])
+        ->name('service.destroy');
+	Route::post('add_service', [RestaurantController::class, 'storeService'])
+        ->name('service.store');
+	Route::get('service/act/{service}', [RestaurantController::class, 'activateService'])
+        ->name('service.activate');
+	Route::PATCH('update/service/{service}', [RestaurantController::class, 'serviceUpdate'])
+        ->name('service.update');
+	Route::get('qr_code/generate/{table}', [RestaurantController::class, 'generateQrCode'])
+        ->name('generate.qr_code');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

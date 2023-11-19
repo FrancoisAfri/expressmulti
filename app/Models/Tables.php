@@ -18,11 +18,11 @@ class Tables extends Model
 
     protected $fillable = [
         'name', 'qr_code', 'area_id', 'number_customer',
-        'status'
+        'status', 'employee_id'
 
     ];
 
-    protected static $logName = 'Tables  Details';
+    protected static $logName = 'Tables Details';
 
     protected function getDescriptionForEvent(string $eventName): string
     {
@@ -35,5 +35,15 @@ class Tables extends Model
     public function areaName(): BelongsTo
     {
         return $this->belongsTo(areas::class, 'area_id', 'id');
+    }
+	
+	public function employees(): BelongsTo
+    {
+        return $this->belongsTo(HRPerson::class, 'employee_id', 'id');
+    }
+	// get all tables
+	public static function getTables()
+    {
+        return Tables::get();
     }
 }

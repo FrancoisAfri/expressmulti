@@ -1,5 +1,5 @@
 <!-- Signup modal content -->
-<div id="add-new-contact-person-modal" class="modal fade" tabindex="-1" role="dialog"
+<div id="edit-menu-modal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="scrollableModalTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">
@@ -17,7 +17,7 @@
                         </div>
                     @endif
                     <div class="modal-header bg-light">
-                        <h4 class="modal-title" id="myCenterModalLabel">Add Contact Person</h4>
+                        <h4 class="modal-title" id="myCenterModalLabel">Edit Menu</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="form-group text-center">
-                                <button type="button" id="add-contact-person" class="btn btn-success waves-effect waves-light">
+                                <button type="button" id="edit-menu" class="btn btn-success waves-effect waves-light">
                                     Save
                                 </button>
                             </div>

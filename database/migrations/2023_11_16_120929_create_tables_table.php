@@ -19,6 +19,7 @@ class CreateTablesTable extends Migration
 			$table->string('name')->nullable();
 			$table->string('qr_code')->nullable();
 			$table->bigInteger('area_id')->nullable();
+			$table->bigInteger('employee_id')->nullable();
 			$table->bigInteger('number_customer')->nullable();
 			$table->bigInteger('status')->nullable();
             $table->timestamps();

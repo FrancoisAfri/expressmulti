@@ -76,9 +76,40 @@ trait FileUpload
                 $filename = pathinfo($file_name->getClientOriginalName(), PATHINFO_FILENAME);
                 $fileNameToStore =  $filename . '-' . Str::random(8) . '.' . $File_ext;
                 $nameFile  = $file_name->store('uploads');
-
+				//$nameFile = $file_name->storeAs($directory, $fileNameToStore);
                 $fileName = substr($nameFile, strpos($nameFile, '/') + 1);
                 $moduleName->$file = $fileName;
+                return $moduleName->update();
+            }
+        }
+        return null;
+    }
+	// upload video
+	public function uploadVideo(Request $request,$file,$directory,$moduleName)
+    {
+        if ($request->hasFile($file)) {
+            $file_name = $request->file($file);
+            $File_ext = $file_name->extension();
+            if (in_array($File_ext, ['mp4']) && $file_name->isValid()) 
+			{
+				
+                //$filename = pathinfo($file_name->getClientOriginalName(), PATHINFO_FILENAME);
+                //$fileNameToStore =  $filename . '-' . Str::random(8) . '.' . $File_ext;
+               // $nameFile  = $file_name->store('uploads');
+
+                //$fileName = substr($nameFile, strpos($nameFile, '/') + 1);
+				// 
+				$fileName = time().'_'.$request->video->getClientOriginalName();
+				//$file_path = $request->file('video')->storeAs('Videos', $file_name);
+				
+				//$filePath = 'emp_vid' . ' ' . str_random(16) . '.' . $File_ex;
+				//$isFileUploaded = Storage::disk('public')->put('Videos/' . $filePath,file_get_contents($request->file('video')));
+				//
+				$filePath = 'res_vid' . ' ' . str_random(16) . '.' . $File_ext;
+				$isFileUploaded = Storage::disk('public')->put('Videos/' . $filePath,
+				file_get_contents($request->file('video')));
+			
+                $moduleName->$file = $filePath;
                 return $moduleName->update();
             }
         }

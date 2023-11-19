@@ -27,5 +27,9 @@ class ServiceType extends Model
     {
         return "ServiceTypes Details {$eventName} ";
     }
-
+	// get all service type
+	public static function getServices()
+    {
+        return ServiceType::get();
+    }
 }

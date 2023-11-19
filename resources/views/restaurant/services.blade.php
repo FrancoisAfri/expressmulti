@@ -23,71 +23,33 @@
             <div class="col-12">
                 <div class="card-box">
 					<button type="button" class="btn btn-sm btn-blue waves-effect waves-light float-right"
-							data-toggle="modal" data-target="#add-new-menu-modal">
+							data-toggle="modal" data-target="#add-new-service-modal">
 						<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-						Add Menu
+						Add Service
 					</button>
-                    <h4 class="header-title mb-4">Menus</h4>
+                    <h4 class="header-title mb-4">Services</h4>
                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                            id="tickets-table">
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Description</th>
-                            <th>Ingredients</th>
-                            <th>Category</th>
-                            <th>Type</th>
-                            <th>Image</th>
-                            <th>Video</th>
                             <th>Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($menus as $key => $menu)
+                        @foreach ($services as $key => $service)
                             <tr>
                                 <td>
 									<span>
-										 {{ $menu->name ?? ''}}
+										 {{ $service->name ?? ''}}
 									</span>
-                                </td>
-								<td>
-									<span>
-										 {{ $menu->description ?? ''}}
-									</span>
-                                </td>
-								<td>
-									<span>
-										 {{ $menu->ingredients ?? ''}}
-									</span>
-                                </td>
-								<td>
-									<span>
-										 {{ $menu->categories->name ?? ''}}
-									</span>
-                                </td>
-								<td>
-									<span>
-										 {{(!empty($menu->menu_type)) ? $menusArray[$menu->menu_type] : 'N/A'}}
-									</span>
-                                </td>
-								<td>
-									<div class="popup-thumbnail img-responsive">
-										<img src="{{ asset('storage/assets/Images/'.$menu->image) }} "
-											 height="35px" width="40px" alt="Image">
-									</div>
-                                </td>
-								<td>
-									<video  height="60" width="150" controls>
-										<source src="{{URL::asset("storage/public/Videos/$menu->video")}}" type="video/mp4">
-										Your browser does not support the video tag.
-									</video>
                                 </td>
                                 <td>
 									<span>
-										@if($menu->status == 1)
+										@if($service->status == 1)
 											<span class="badge badge-success">Active</span>
-										@elseif($menu->status == 0)
+										@elseif($service->status == 0)
 											<span class="badge bg-soft-danger text-danger">No-Active</span>
 										@endif
 									</span>
@@ -99,26 +61,22 @@
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-											<button type="button" id="edit_menu" class="dropdown-item"
-													data-toggle="modal" title="Edit Menu" data-target="#edit-menu-modal"
-													data-id="{{ $menu->id }}"
-													data-name="{{ $menu->name }}"
-													data-description="{{ $menu->description }}"
-													data-ingredients="{{ $menu->ingredients }}"
-													data-category_id="{{ $menu->category_id }}"
-													data-menu_type="{{ $menu->menu_type }}">
+											<button type="button" id="edit_service" class="dropdown-item"
+													data-toggle="modal" title="Edit Service" data-target="#edit-service-modal"
+													data-id="{{ $service->id }}"
+													data-name="{{ $service->name }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
-											<button onclick="postData({{$menu->id}}, 'actdeac');"
+											<button onclick="postData({{$service->id}}, 'actdeac');"
                                                     class="dropdown-item" data-toggle="tooltip"
                                                     title='change Active status'>
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-                                                {{(!empty($menu->status) && $menu->status == 1) ? "De-Activate" : "Activate"}}
+                                                {{(!empty($service->status) && $service->status == 1) ? "De-Activate" : "Activate"}}
                                             </button>
                                             <form name="command"
-                                                  onclick="if(confirm('Are you sure you want to delete this menu ?'))"
+                                                  onclick="if(confirm('Are you sure you want to delete this service ?'))"
 
-                                                  action="{{ route('menu.destroy', $menu->id) }}"
+                                                  action="{{ route('service.destroy', $service->id) }}"
                                                   method="POST"
                                                   style="display: inline-block;">
                                                 <input type="hidden" name="_method" value="DELETE">
@@ -140,8 +98,8 @@
                 </div>
             </div><!-- end col -->
         </div>
-        @include('restaurant.partials.add_menu')
-        @include('restaurant.partials.edit_menu')
+        @include('restaurant.partials.add_service')
+        @include('restaurant.partials.edit_service')
     @endsection
 @stop
 @section('page_script')
@@ -163,9 +121,7 @@
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
 	 <script src="{{ asset('libs/dropzone/min/dropzone.min.js') }}"></script>
     <script src="{{ asset('libs/dropify/js/dropify.min.js') }}"></script>
-	<script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
-	<script src="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.js"
-            type="text/javascript"></script> 
+	 <script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
     <script>
         function deleteRecord(id) {
             location.href = "{{route('client_details.destroy', '')}}" + "/" + id;
@@ -174,55 +130,43 @@
         function postData(id, data) {
 
             if (data == 'actdeac')
-                location.href = "{{route('menu.activate', '')}}" + "/" + id;
+                location.href = "{{route('service.activate', '')}}" + "/" + id;
         }
 
         $(function () {
 
-            $('#add-menu').on('click', function () {
-                let strUrl = '{{ route('menu.store') }}';
-                let modalID = 'add-new-menu-modal';
-                let formName = 'add-menu-form';
-                let submitBtnID = 'add-menu';
-                let redirectUrl = '{{ route('menus.view') }}';
+            $('#add-service').on('click', function () {
+                let strUrl = '{{ route('service.store') }}';
+                let modalID = 'add-new-service-modal';
+                let formName = 'add-service-form';
+                let submitBtnID = 'add-service';
+                let redirectUrl = '{{ route('services.view') }}';
                 let successMsgTitle = 'Record Added!';
                 let successMsg = 'Record has been saved successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
 			<!-- edit component file -->
-            let menuID;
-            $('#edit-menu-modal').on('show.bs.modal', function (e) {
+            let serviceID;
+            $('#edit-service-modal').on('show.bs.modal', function (e) {
                 let btnEdit = $(e.relatedTarget);
-                menuID = btnEdit.data('id');
+                serviceID = btnEdit.data('id');
                 let name = btnEdit.data('name');
-                let description = btnEdit.data('description');
-                let ingredients = btnEdit.data('ingredients');
-                let category_id = btnEdit.data('category_id');
-                let menu_type = btnEdit.data('menu_type');
                 let modal = $(this);
                 modal.find('#name').val(name);
-                modal.find('#description').val(description);
-                modal.find('#ingredients').val(ingredients);
-                modal.find('#category_id').val(category_id);
-                modal.find('#menu_type').val(menu_type);
             });
 
             // update modal			
-            $('#edit-menu').on('click', function () {
-				let com = 'menu';
-                let strUrl = '/restaurant/update/menu/' + menuID;
-                let modalID = 'edit-menu-modal';
+            $('#edit-service').on('click', function () {
+				let com = 'service';
+                let strUrl = '/restaurant/update/service/' + serviceID;
+                let modalID = 'edit-service-modal';
                 let objData = {
                     name: $('#' + modalID).find('#name').val(),
-                    description: $('#' + modalID).find('#description').val(),
-                    ingredients: $('#' + modalID).find('#ingredients').val(),
-                    category_id: $('#' + modalID).find('#category_id').val(),
-                    menu_type: $('#' + modalID).find('#menu_type').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 
-                let submitBtnID = 'edit-menu';
-                let redirectUrl = '{{route('menus.view')}}';
+                let submitBtnID = 'edit-service';
+                let redirectUrl = '{{route('services.view')}}';
                 let successMsgTitle = 'Changes Saved!';
                 let successMsg = 'The Record has been updated successfully.';
                 let Method = 'PATCH';

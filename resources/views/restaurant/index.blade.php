@@ -210,7 +210,7 @@
                     </div> <!-- end col -->
                     <div class="col-lg-6">
                         <div class="card-box">
-                            <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Logo Imags</h5>
+                            <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Logo Image</h5>
                             <div class="form-group mb-3">
                                 <div class="mt-3">
                                     <input type="file" name="client_logo"

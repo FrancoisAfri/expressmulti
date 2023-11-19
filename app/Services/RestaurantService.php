@@ -4,8 +4,12 @@ namespace App\Services;
 use Artisan; 
 //use App\Services\RestaurantServiceInterface;
 use App\Models\Categories;
+use App\Models\Menu;
+use App\Models\Tables;
+use App\Models\ServiceType;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Exception;
 use Stancl\Tenancy\Tenant;
 class RestaurantService //implements RestaurantServiceInterface
@@ -73,5 +77,183 @@ class RestaurantService //implements RestaurantServiceInterface
         $category['status'] == 1 ? $status = 0 : $status = 1;
         $category['status'] = $status;
         $category->update();
+    }
+	// menu section
+	public function persistMenuSave($request)
+    {
+		// save category
+		DB::beginTransaction();
+
+			$menuRecord = Menu::create([
+                'name' => $request['name'],
+                'description' => $request['description'],
+                'ingredients' => $request['ingredients'],
+                'category_id' => $request['category_id'],
+                'menu_type' => $request['menu_type'],
+                'status' => 1,
+            ]);
+			
+			// save image
+			$this->uploadImage($request, 'image', 'Image', $menuRecord);
+			// save video
+			$this->uploadVideo($request, 'video', 'Video', $menuRecord);
+			
+		DB::commit();
+    }
+	
+	public function persistMenuUpdate($request, $id)
+    {
+		// update menu
+		DB::beginTransaction();
+
+			$menuRecord = Menu::find($id);
+			$menuRecord->update($request->all());
+			
+			// save image
+			$this->uploadImage($request, 'image', 'Image', $menuRecord);
+			// save video
+			$this->uploadVideo($request, 'video', 'Video', $menuRecord);
+			
+		DB::commit();
+    }
+	
+	public function destroyMenu($menu)
+    {
+
+        try {
+			
+			DB::beginTransaction();
+			
+				$menu->delete();
+
+            DB::commit();
+
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+        }
+    }
+
+    /**
+     * @param $patient
+     * @return void
+     */
+    public function activeMenu($menu)
+    {
+		
+        $menu['status'] == 1 ? $status = 0 : $status = 1;
+        $menu['status'] = $status;
+        $menu->update();
+    }
+	
+	// table section
+	public function persistTableSave($request)
+    {
+		// save category
+		DB::beginTransaction();
+
+			$tableRecord = Tables::create([
+                'name' => $request['name'],
+                'number_customer' => $request['number_customer'],
+                'employee_id' => $request['employee_id'],
+                'status' => 1,
+            ]);
+						
+		DB::commit();
+    }
+	
+	public function persistTableUpdate($request, $id)
+    {
+		// update Tables
+		DB::beginTransaction();
+
+			$tableRecord = Tables::find($id->id);
+			
+			$tableRecord->name= $request['name'];
+			$tableRecord->number_customer = $request['number_customer'];
+			$tableRecord->employee_id= $request['employee_id'];
+			$tableRecord->update();
+						
+		DB::commit();
+    }
+	
+	public function destroyTable($table)
+    {
+
+        try {
+			
+			DB::beginTransaction();
+			
+				$table->delete();
+
+            DB::commit();
+
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+        }
+    }
+
+    /**
+     * @param $patient
+     * @return void
+     */
+    public function activeTable($table)
+    {
+        $table['status'] == 1 ? $status = 0 : $status = 1;
+        $table['status'] = $status;
+        $table->update();
+    }
+	
+	// service section
+	public function persistServiceSave($request)
+    {
+		// save ServiceType
+		DB::beginTransaction();
+
+			$tableRecord = ServiceType::create([
+                'name' => $request['name'],
+                'status' => 1,
+            ]);
+						
+		DB::commit();
+    }
+	
+	public function persistServiceUpdate($request, $id)
+    {
+		// update ServiceType
+		DB::beginTransaction();
+
+			$serviceRecord = ServiceType::find($id->id);
+			
+			$serviceRecord->name= $request['name'];
+			$serviceRecord->update();
+						
+		DB::commit();
+    }
+	
+	public function destroyService($service)
+    {
+
+        try {
+			
+			DB::beginTransaction();
+			
+				$service->delete();
+
+            DB::commit();
+
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+        }
+    }
+
+    /**
+     * @param $patient
+     * @return void
+     */
+    public function activeService($service)
+    {
+        $service['status'] == 1 ? $status = 0 : $status = 1;
+        $service['status'] = $status;
+        $service->update();
     }
 }
