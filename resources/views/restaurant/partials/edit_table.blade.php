@@ -48,23 +48,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Employees </label>
-										<select class="form-control" name="employee_id"
-											  id="employee_id"  data-toggle="select2"
-												data-placeholder="Choose ...">
-											<option value="">Select an Employee ...</option>
-											@foreach($users as $user)
-												<option
-													value="{{ $user->id }}">{{ $user->first_name." ".$user->surname }}
-												</option>
-											@endforeach
-										</select>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="form-group text-center">
                                 <button type="button" id="edit-table" class="btn btn-success waves-effect waves-light">
                                     Save

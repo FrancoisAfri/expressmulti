@@ -49,6 +49,28 @@
                                 </div>
                             </div>
 							<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="price">Price <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" type="number" step="0.01"
+                                               id="price" name="price" placeholder="Enter Price" required>
+                                        <div class="invalid-feedback">
+                                            Please provide Price.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="calories"> Calories <span class="text-danger"></span></label>
+                                        <input type="number" class="form-control"
+                                               id="calories" name="calories" placeholder="Enter Calories">
+                                        <div class="invalid-feedback">
+                                            Please provide Calories.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+							<div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="ingredients"> Ingredients <span class="text-danger">*</span></label>

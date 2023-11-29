@@ -17,7 +17,7 @@ class ServiceType extends Model
     protected $table = 'service_types';
 			
     protected $fillable = [
-        'name', 'status', 'image'
+        'name', 'status', 'image', 'turn_around_time'
 
     ];
 

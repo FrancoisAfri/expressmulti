@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateServiceTypesTable extends Migration
+class CreateWaiterAuditsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateServiceTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('service_types', function (Blueprint $table) {
+        Schema::create('waiter_audits', function (Blueprint $table) {
             $table->id();
 			$table->uuid('uuid')->index();
-			$table->string('name')->nullable();
-			$table->string('image')->nullable();
-			$table->bigInteger('status')->nullable();
-			$table->bigInteger('turn_around_time')->nullable();
+			$table->bigInteger('table_id')->nullable();
+			$table->bigInteger('employee_id')->nullable();
+			$table->bigInteger('user_id')->nullable();
+			$table->string('comment')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateServiceTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_types');
+        Schema::dropIfExists('waiter_audits');
     }
 }

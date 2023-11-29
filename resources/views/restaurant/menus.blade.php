@@ -37,6 +37,8 @@
                             <th>Ingredients</th>
                             <th>Category</th>
                             <th>Type</th>
+                            <th>Price</th>
+                            <th>Calories</th>
                             <th>Image</th>
                             <th>Video</th>
                             <th>Status</th>
@@ -72,6 +74,16 @@
 									</span>
                                 </td>
 								<td>
+									<span>
+										 {{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}
+									</span>
+                                </td>
+								<td>
+									<span>
+										 {{ $menu->calories ?? ''}}
+									</span>
+                                </td>
+								<td>
 									<div class="popup-thumbnail img-responsive">
 										<img src="{{ asset('storage/assets/Images/'.$menu->image) }} "
 											 height="35px" width="40px" alt="Image">
@@ -103,6 +115,8 @@
 													data-toggle="modal" title="Edit Menu" data-target="#edit-menu-modal"
 													data-id="{{ $menu->id }}"
 													data-name="{{ $menu->name }}"
+													data-price="{{ $menu->price }}"
+													data-calories="{{ $menu->calories }}"
 													data-description="{{ $menu->description }}"
 													data-ingredients="{{ $menu->ingredients }}"
 													data-category_id="{{ $menu->category_id }}"
@@ -199,17 +213,22 @@
                 let ingredients = btnEdit.data('ingredients');
                 let category_id = btnEdit.data('category_id');
                 let menu_type = btnEdit.data('menu_type');
+                let calories = btnEdit.data('calories');
+                let price = btnEdit.data('price');
                 let modal = $(this);
                 modal.find('#name').val(name);
                 modal.find('#description').val(description);
                 modal.find('#ingredients').val(ingredients);
                 modal.find('#category_id').val(category_id);
                 modal.find('#menu_type').val(menu_type);
+                modal.find('#calories').val(calories);
+                modal.find('#price').val(price);
             });
 
             // update modal			
             $('#edit-menu').on('click', function () {
 				let com = 'menu';
+				console.log(menuID);
                 let strUrl = '/restaurant/update/menu/' + menuID;
                 let modalID = 'edit-menu-modal';
                 let objData = {
@@ -218,6 +237,8 @@
                     ingredients: $('#' + modalID).find('#ingredients').val(),
                     category_id: $('#' + modalID).find('#category_id').val(),
                     menu_type: $('#' + modalID).find('#menu_type').val(),
+                    price: $('#' + modalID).find('#price').val(),
+                    calories: $('#' + modalID).find('#calories').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 

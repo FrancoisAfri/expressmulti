@@ -18,7 +18,7 @@ class Menu extends Model
 			
     protected $fillable = [
         'name','description', 'ingredients', 'image', 'video',
-        'menu_docs', 'category_id', 'menu_type', 'status'
+        'menu_docs', 'category_id', 'menu_type', 'status', 'calories', 'price'
 
     ];
 

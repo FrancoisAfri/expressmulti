@@ -14,6 +14,7 @@
 	<link href="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.css" rel="stylesheet">
 	 <link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css"/>
 	<link href="{{ asset('libs/dropify/css/dropify.min.css') }}" rel="stylesheet" type="text/css"/>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 @endsection
 
 {{-- Page content --}}
@@ -59,9 +60,10 @@
 									</span>
                                 </td>
 								<td>
-									<span>
-										 {{ $table->qr_code ?? ''}}
-									</span>
+									<div class="card-body">
+										{!! QrCode::size(200)->generate("{{$current_url/$table->id}}") !!}
+
+									</div>
                                 </td>
                                 <td>
 									<span>
@@ -83,8 +85,7 @@
 													data-toggle="modal" title="Edit Table" data-target="#edit-table-modal"
 													data-id="{{ $table->id }}"
 													data-name="{{ $table->name }}"
-													data-employee_id="{{ $table->employee_id }}"
-													data-number_customer="{{ $table->number_customer }}"">
+													data-number_customer="{{ $table->number_customer }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
 											<button onclick="postData({{$table->id}}, 'actdeac');"
@@ -93,11 +94,11 @@
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
                                                 {{(!empty($table->status) && $table->status == 1) ? "De-Activate" : "Activate"}}
                                             </button>
-											<button onclick="postData({{$table->id}}, 'generateCode');"
+											<button onclick="postData({{$table->id}}, 'printCode');"
                                                     class="dropdown-item" data-toggle="tooltip"
-                                                    title='Generate Qr Code'>
+                                                    title='Print Qr Code'>
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-                                                Generate Qr Code
+                                                Print Qr Code
                                             </button>
                                             <form name="command"
                                                   onclick="if(confirm('Are you sure you want to delete this table ?'))"
@@ -157,8 +158,8 @@
 
             if (data == 'actdeac')
                 location.href = "{{route('table.activate', '')}}" + "/" + id;
-			elseif (data == 'generateCode')
-				location.href = "{{route('generate.qr_code', '')}}" + "/" + id;
+			elseif (data == 'printCode')
+				location.href = "{{route('print.qr_code', '')}}" + "/" + id;
         }
 
         $(function () {
@@ -179,11 +180,9 @@
                 let btnEdit = $(e.relatedTarget);
                 tableID = btnEdit.data('id');
                 let name = btnEdit.data('name');
-                let employee_id = btnEdit.data('employee_id');
                 let number_customer = btnEdit.data('number_customer');
                 let modal = $(this);
                 modal.find('#name').val(name);
-                modal.find('#employee_id').val(employee_id);
                 modal.find('#number_customer').val(number_customer);
             });
 
@@ -194,7 +193,6 @@
                 let modalID = 'edit-table-modal';
                 let objData = {
                     name: $('#' + modalID).find('#name').val(),
-                    employee_id: $('#' + modalID).find('#employee_id').val(),
                     number_customer: $('#' + modalID).find('#number_customer').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };

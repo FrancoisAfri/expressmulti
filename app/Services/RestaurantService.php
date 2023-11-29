@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Exception;
 use Stancl\Tenancy\Tenant;
+use Illuminate\Http\Request;
+
 class RestaurantService //implements RestaurantServiceInterface
 {
 	use FileUpload;
@@ -90,6 +92,8 @@ class RestaurantService //implements RestaurantServiceInterface
                 'ingredients' => $request['ingredients'],
                 'category_id' => $request['category_id'],
                 'menu_type' => $request['menu_type'],
+                'calories' => $request['calories'],
+                'price' => $request['price'],
                 'status' => 1,
             ]);
 			
@@ -101,18 +105,28 @@ class RestaurantService //implements RestaurantServiceInterface
 		DB::commit();
     }
 	
-	public function persistMenuUpdate($request, $id)
+	public function persistMenuUpdate($request, $menu)
     {
 		// update menu
 		DB::beginTransaction();
 
-			$menuRecord = Menu::find($id);
-			$menuRecord->update($request->all());
-			
+			//$menuRecord = Menu::find($id->id);
+			//$menu->update($request->all());
+
+			$menu->name= $request['name'];
+			$menu->description = $request['description'];
+			$menu->ingredients= $request['ingredients'];
+			$menu->category_id= $request['category_id'];
+			$menu->menu_type= $request['menu_type'];
+			$menu->calories= $request['calories'];
+			$menu->price= $request['price'];
+			$menu->update();
 			// save image
-			$this->uploadImage($request, 'image', 'Image', $menuRecord);
+			if (!empty($request['image'])) 
+				$this->uploadImage($request, 'image', 'Image', $menu);
 			// save video
-			$this->uploadVideo($request, 'video', 'Video', $menuRecord);
+			if (!empty($request['video']))
+				$this->uploadVideo($request, 'video', 'Video', $menu);
 			
 		DB::commit();
     }

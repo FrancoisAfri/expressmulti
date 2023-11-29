@@ -30,6 +30,8 @@ class AddMenuRequest extends FormRequest
             'ingredients' => 'required',
             'category_id' => 'required',
             'menu_type' => 'required',
+            'calories' => 'required',
+            'price' => 'required',
         ];
     }
 }

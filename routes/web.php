@@ -158,7 +158,7 @@ Route::group(['prefix' => 'users', 'middleware' => [
         ->name('edit.PatientSms');
 
 }) ;
-
+Route::get('test', fn () => phpinfo());
 Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
     Route::resource('client_details', PatientControlle::class);
@@ -259,8 +259,10 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('service.activate');
 	Route::PATCH('update/service/{service}', [RestaurantController::class, 'serviceUpdate'])
         ->name('service.update');
-	Route::get('qr_code/generate/{table}', [RestaurantController::class, 'generateQrCode'])
-        ->name('generate.qr_code');
+	Route::get('qr_code/print/{table}', [RestaurantController::class, 'printQrCode'])
+        ->name('print.qr_code');
+	Route::post('assign/employee/{table}', [RestaurantController::class, 'assignEmployee'])
+        ->name('assign.employee');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

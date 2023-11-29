@@ -30,6 +30,7 @@
         "plummer/calendarful": "^0.2.1",
         "ramsey/uuid-doctrine": "^1.8",
         "realrashid/sweet-alert": "^v3.1.6",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/data-transfer-object": "^2.8",
         "spatie/enum": "^3.12",
         "spatie/laravel-activitylog": "^3.17",

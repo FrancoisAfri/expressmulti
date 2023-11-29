@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddMenuCategoryRequest;
 use App\Http\Requests\AddMenuRequest;
 use App\Http\Requests\AddTableRequest;
+use App\Http\Requests\AssingnEmployeeRequest;
 use App\Http\Requests\AddServiceRequest;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
@@ -198,6 +199,8 @@ class RestaurantController extends Controller
 	// Menu update
 	public function menuUpdate(AddMenuRequest $request, Menu $menu)
     {
+		//return $menu;
+		
         $requestData = $request->validationData();
         $this->RestaurantService->persistMenuUpdate($requestData, $menu);
         alert()->success('SuccessAlert', 'Record Updated Successfully');
@@ -232,9 +235,10 @@ class RestaurantController extends Controller
             'Tables Management',
             'Tables'
         );
-		
+
 		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTables();
+		$data['current_url'] = url()->current();
 		 
         return view('restaurant.tables')->with($data);
     }
@@ -325,7 +329,7 @@ class RestaurantController extends Controller
         return redirect()->back();
     }
 	// delete ServiceType
-    public function generateQrCode(Tables $table)
+    public function printQrCode(Tables $table)
     {
 		
 		die('Qr Code');
@@ -334,5 +338,18 @@ class RestaurantController extends Controller
         Alert::toast('Record Deleted Successfully ', 'success');
 		activity()->log('Services deleted');
         return redirect()->back();
+    }
+	// assign employee
+	// store Tables
+	public function assignEmployee(AssingnEmployeeRequest $request, Tables $table)
+    {
+        $requestData = $request->validationData();
+		// assign employee
+		$table->employee_id= $request['employee_id'];
+		$table->update();
+		// send alert
+        alert()->success('SuccessAlert', 'Record Updated Successfully');
+		activity()->log('Table Updated');
+        return response()->json(['message' => 'success'], 200);
     }
 }

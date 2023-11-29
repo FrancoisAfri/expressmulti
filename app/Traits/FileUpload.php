@@ -76,6 +76,8 @@ trait FileUpload
                 $filename = pathinfo($file_name->getClientOriginalName(), PATHINFO_FILENAME);
                 $fileNameToStore =  $filename . '-' . Str::random(8) . '.' . $File_ext;
                 $nameFile  = $file_name->store('uploads');
+				$nameFile = Storage::disk('public')->put('Images/' . $fileNameToStore,
+				file_get_contents($request->file($file)));
 				//$nameFile = $file_name->storeAs($directory, $fileNameToStore);
                 $fileName = substr($nameFile, strpos($nameFile, '/') + 1);
                 $moduleName->$file = $fileName;
@@ -99,15 +101,15 @@ trait FileUpload
 
                 //$fileName = substr($nameFile, strpos($nameFile, '/') + 1);
 				// 
-				$fileName = time().'_'.$request->video->getClientOriginalName();
+				$fileName = time().'_'.$request->$file->getClientOriginalName();
 				//$file_path = $request->file('video')->storeAs('Videos', $file_name);
 				
 				//$filePath = 'emp_vid' . ' ' . str_random(16) . '.' . $File_ex;
 				//$isFileUploaded = Storage::disk('public')->put('Videos/' . $filePath,file_get_contents($request->file('video')));
 				//
-				$filePath = 'res_vid' . ' ' . str_random(16) . '.' . $File_ext;
+				$filePath = 'res_vid' . '-' . str_random(16) . '.' . $File_ext;
 				$isFileUploaded = Storage::disk('public')->put('Videos/' . $filePath,
-				file_get_contents($request->file('video')));
+				file_get_contents($request->file($file)));
 			
                 $moduleName->$file = $filePath;
                 return $moduleName->update();

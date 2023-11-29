@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMenusTable extends Migration
+class CreateOrdersProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,14 @@ class CreateMenusTable extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('orders_products', function (Blueprint $table) {
             $table->id();
 			$table->uuid('uuid')->index();
-			$table->string('name')->nullable();
-			$table->string('description')->nullable();
-			$table->string('ingredients', 3000)->nullable();
-			$table->string('image')->nullable();
-			$table->string('video')->nullable();
-			$table->string('menu_docs')->nullable();
-			$table->bigInteger('category_id')->nullable();
-			$table->bigInteger('menu_type')->nullable();
+			$table->string('comment')->nullable();
 			$table->bigInteger('status')->nullable();
-			$table->bigInteger('calories')->nullable();
+			$table->bigInteger('product_id')->nullable();
+			$table->bigInteger('table_id')->nullable();
+			$table->bigInteger('order_id')->nullable();
 			$table->double('price')->nullable();
             $table->timestamps();
         });
@@ -38,6 +33,6 @@ class CreateMenusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('orders_products');
     }
 }

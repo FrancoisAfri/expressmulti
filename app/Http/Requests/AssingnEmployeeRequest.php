@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddTableRequest extends FormRequest
+class AssingnEmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class AddTableRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'number_customer' => 'required',
+            'employee_id' => 'required',
         ];
     }
 }

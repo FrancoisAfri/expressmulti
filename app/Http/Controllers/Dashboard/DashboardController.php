@@ -7,17 +7,12 @@ use App\Models\Booking;
 use App\Models\BookingNotification;
 use App\Models\CompanyIdentity;
 use App\Models\HRPerson;
-use App\Models\MedicalAids;
-use App\Models\InvoicePayments;
-use App\Models\BillingInvoice;
 use App\Models\modules;
 use App\Models\Notification;
 use App\Models\Patient;
 use App\Models\Url;
 use App\Models\User;
-use App\Services\ApiGetwayService;
-use App\Services\BookingService;
-use App\Services\ExternalClientService;
+use App\Models\Tables;
 use App\Traits\CompanyIdentityTrait;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Contracts\Foundation\Application;
@@ -42,23 +37,21 @@ class DashboardController extends Controller
      */
     private $notification;
     private Booking $booking;
-    private BookingService $bookingService;
-    private ExternalClientService $clientService;
+    //private BookingService $bookingService;
 
 
     public function __construct(
 
-        BookingNotification   $notification,
-        BookingService        $bookingService,
-        Booking               $booking,
-        ExternalClientService $clientService
+        BookingNotification   $notification
+        /*BookingService        $bookingService,
+        Booking               $booking*/
     )
     {
 
-        $this->clientService = $clientService;
-        $this->notification = $notification;
-        $this->booking = $booking;
-        $this->bookingService = $bookingService;
+       /// $this->clientService = $clientService;
+       // $this->notification = $notification;
+        //$this->booking = $booking;
+        //$this->bookingService = $bookingService;
     }
 
 
@@ -97,8 +90,30 @@ class DashboardController extends Controller
 
         
 		//die();
+		// get waiting list
+        //$myList = Booking::where('status', 3)->with('patient')->get();
+        // calculate waiting time
+
+		$data['tables'] = Tables::getTables();
+		//return Tables::getTables();
         $data['activeModules'] = modules::where('active', 1)->get();
-         return view('dashboard.index')->with($data);
+        //$data['topMedicalAids'] = BillingInvoice::topMedicalAids();
+        $data['dailyData'] = 23;//$this->getDailyProfit();
+        //$data['myList'] = $myList;
+        //$data['patients'] = Patient::getPatientInfo();
+        //$data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
+        //$data['totalPayment'] = InvoicePayments::getDailySummary(0)->sum('paid');
+        //$data['cashPayment'] = InvoicePayments::getDailySummary(1)->sum('paid');
+        //$data['cashEft'] = InvoicePayments::getDailySummary(2)->sum('paid');
+        //$data['cashDebitCard'] = InvoicePayments::getDailySummary(3)->sum('paid');
+       // $data['notifications'] = $this->notification::getAllUnreadNotifications();
+       // $data['activePatients'] = Patient::totalPatients();
+        //$data['bookingForMonth'] = Booking::getBookingForMonth();
+       // $data['bookingForShowedUp'] = Booking::getBookingForShowedUp();
+        //$data['bookingForNoShow'] = Booking::getBookingForNoShow();
+       // $data['activeModules'] = modules::where('active', 1)->get();
+		$data['users'] = HRPerson::getAllUsers();
+        return view('dashboard.index')->with($data);
     }
 
     public function getBookingsDash()
@@ -106,7 +121,6 @@ class DashboardController extends Controller
         $bookings = $this->bookingService->getAllBookings();
         return response($bookings, 200);
     }
-
 
 
     public function markNotification(Request $request)
@@ -118,7 +132,6 @@ class DashboardController extends Controller
         ]);
 
     }
-
 
     /**
      * Show the form for creating a new resource.
