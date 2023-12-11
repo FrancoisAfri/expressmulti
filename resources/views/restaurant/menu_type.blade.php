@@ -23,39 +23,39 @@
             <div class="col-12">
                 <div class="card-box">
 					<button type="button" class="btn btn-sm btn-blue waves-effect waves-light float-right"
-							data-toggle="modal" data-target="#add-new-service-modal">
+							data-toggle="modal" data-target="#add-menu-type-modal">
 						<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-						Add Service
+						Add Menu
 					</button>
-                    <h4 class="header-title mb-4">Services</h4>
+                    <h4 class="header-title mb-4">Menu Types</h4>
                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                            id="tickets-table">
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Turn Around Time</th>
+                            <th>Description</th>
                             <th>Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($services as $key => $service)
+                        @foreach ($menuTypes as $key => $type)
                             <tr>
                                 <td>
 									<span>
-										 {{ $service->name ?? ''}}
+										 {{ $type->name ?? ''}}
 									</span>
                                 </td>
 								<td>
 									<span>
-										 {{ $service->turn_around_time ?? ''}}
+										 {{ $type->description ?? ''}}
 									</span>
                                 </td>
                                 <td>
 									<span>
-										@if($service->status == 1)
+										@if($type->status == 1)
 											<span class="badge badge-success">Active</span>
-										@elseif($service->status == 0)
+										@elseif($type->status == 0)
 											<span class="badge bg-soft-danger text-danger">No-Active</span>
 										@endif
 									</span>
@@ -67,23 +67,23 @@
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-											<button type="button" id="edit_service" class="dropdown-item"
-													data-toggle="modal" title="Edit Service" data-target="#edit-service-modal"
-													data-id="{{ $service->id }}"
-													data-name="{{ $service->name }}"
-													data-turn_around_time="{{ $service->turn_around_time }}">
+											<button type="button" id="edit_type" class="dropdown-item"
+													data-toggle="modal" title="Edit Type" data-target="#edit-menu-type-modal"
+													data-id="{{ $type->id }}"
+													data-name="{{ $type->name }}"
+													data-description="{{ $type->description }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
-											<button onclick="postData({{$service->id}}, 'actdeac');"
+											<button onclick="postData({{$type->id}}, 'actdeac');"
                                                     class="dropdown-item" data-toggle="tooltip"
                                                     title='change Active status'>
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-                                                {{(!empty($service->status) && $service->status == 1) ? "De-Activate" : "Activate"}}
+                                                {{(!empty($type->status) && $type->status == 1) ? "De-Activate" : "Activate"}}
                                             </button>
                                             <form name="command"
-                                                  onclick="if(confirm('Are you sure you want to delete this service ?'))"
+                                                  onclick="if(confirm('Are you sure you want to delete this type ?'))"
 
-                                                  action="{{ route('service.destroy', $service->id) }}"
+                                                  action="{{ route('menu-type.destroy', $type->id) }}"
                                                   method="POST"
                                                   style="display: inline-block;">
                                                 <input type="hidden" name="_method" value="DELETE">
@@ -105,8 +105,8 @@
                 </div>
             </div><!-- end col -->
         </div>
-        @include('restaurant.partials.add_service')
-        @include('restaurant.partials.edit_service')
+        @include('restaurant.partials.add_menu_type')
+        @include('restaurant.partials.edit_menu_type')
     @endsection
 @stop
 @section('page_script')
@@ -137,46 +137,46 @@
         function postData(id, data) {
 
             if (data == 'actdeac')
-                location.href = "{{route('service.activate', '')}}" + "/" + id;
+                location.href = "{{route('menu-type.activate', '')}}" + "/" + id;
         }
 
         $(function () {
 
-            $('#add-service').on('click', function () {
-                let strUrl = '{{ route('service.store') }}';
-                let modalID = 'add-new-service-modal';
-                let formName = 'add-service-form';
-                let submitBtnID = 'add-service';
-                let redirectUrl = '{{ route('services.view') }}';
+            $('#add-type').on('click', function () {
+                let strUrl = '{{ route('menu-type.store') }}';
+                let modalID = 'add-menu-type-modal';
+                let formName = 'add-menu-type-form';
+                let submitBtnID = 'add-type';
+                let redirectUrl = '{{ route('menu-type.view') }}';
                 let successMsgTitle = 'Record Added!';
                 let successMsg = 'Record has been saved successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
 			<!-- edit component file -->
-            let serviceID;
-            $('#edit-service-modal').on('show.bs.modal', function (e) {
+            let typeID;
+            $('#edit-menu-type-modal').on('show.bs.modal', function (e) {
                 let btnEdit = $(e.relatedTarget);
-                serviceID = btnEdit.data('id');
+                typeID = btnEdit.data('id');
                 let name = btnEdit.data('name');
-                let turnAroundTime = btnEdit.data('turn_around_time');
+                let description = btnEdit.data('description');
                 let modal = $(this);
                 modal.find('#name').val(name);
-                modal.find('#turn_around_time').val(turnAroundTime);
+                modal.find('#description').val(description);
             });
 
             // update modal			
-            $('#edit-service').on('click', function () {
+            $('#edit-type').on('click', function () {
 				let com = 'service';
-                let strUrl = '/restaurant/update/service/' + serviceID;
-                let modalID = 'edit-service-modal';
+                let strUrl = '/restaurant/update/menu-type/' + typeID;
+                let modalID = 'edit-menu-type-modal';
                 let objData = {
                     name: $('#' + modalID).find('#name').val(),
-                    turn_around_time: $('#' + modalID).find('#turn_around_time').val(),
+                    description: $('#' + modalID).find('#description').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 
-                let submitBtnID = 'edit-service';
-                let redirectUrl = '{{route('services.view')}}';
+                let submitBtnID = 'edit-type';
+                let redirectUrl = '{{route('menu-type.view')}}';
                 let successMsgTitle = 'Changes Saved!';
                 let successMsg = 'The Record has been updated successfully.';
                 let Method = 'PATCH';

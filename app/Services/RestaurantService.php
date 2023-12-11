@@ -7,6 +7,9 @@ use App\Models\Categories;
 use App\Models\Menu;
 use App\Models\Tables;
 use App\Models\ServiceType;
+use App\Models\OrdersServices;
+use App\Models\OrdersHistory;
+use App\Models\MenuType;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -225,6 +228,7 @@ class RestaurantService //implements RestaurantServiceInterface
 
 			$tableRecord = ServiceType::create([
                 'name' => $request['name'],
+                'turn_around_time' => $request['turn_around_time'],
                 'status' => 1,
             ]);
 						
@@ -238,7 +242,8 @@ class RestaurantService //implements RestaurantServiceInterface
 
 			$serviceRecord = ServiceType::find($id->id);
 			
-			$serviceRecord->name= $request['name'];
+			$serviceRecord->name = $request['name'];
+			$serviceRecord->turn_around_time = $request['turn_around_time'];
 			$serviceRecord->update();
 						
 		DB::commit();
@@ -270,4 +275,85 @@ class RestaurantService //implements RestaurantServiceInterface
         $service['status'] = $status;
         $service->update();
     }
+	// request for service
+	public function requestService($table, $service)
+    {
+       
+		// save request
+		DB::beginTransaction();
+			//$table = Tables::find($tableID);
+			//$tableRecord = Tables::find($id->id);
+			///'service_id', 'comment', 'table_id', 'status'
+			$comment = "$service->name requested on table: $table->name";
+			$action = "$service->name Service Requesed" ;
+			$request = OrdersServices::create([
+                'service_id' => $service->id,
+                'comment' => $comment,
+                'table_id' => $table->id,
+                'status' => 1,
+            ]);
+			///'action', 'comment', 'table_id', 'order_id'
+			$history = OrdersHistory::create([
+                'action' => $action,
+                'table_id' => $table->id,
+            ]);
+						
+		DB::commit();
+    }
+	// Menu type
+	public function persistMenuTypeSave($request)
+    {
+		// save MenuType
+		DB::beginTransaction();
+
+			$tableRecord = MenuType::create([
+                'name' => $request['name'],
+                'description' => $request['description'],
+                'status' => 1,
+            ]);
+						
+		DB::commit();
+    }
+	
+	public function persistMenuTypeUpdate($request, $id)
+    {
+		// update MenuType
+		DB::beginTransaction();
+
+			$serviceRecord = MenuType::find($id->id);
+			
+			$serviceRecord->name = $request['name'];
+			$serviceRecord->description = $request['description'];
+			$serviceRecord->update();
+						
+		DB::commit();
+    }
+	
+	public function destroyMenuType($menuType)
+    {
+
+        try {
+			
+			DB::beginTransaction();
+			
+				$menuType->delete();
+
+            DB::commit();
+
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+        }
+    }
+
+    /**
+     * @param $patient
+     * @return void
+     */
+    public function activeMenuType($menuType)
+    {
+        $menuType['status'] == 1 ? $status = 0 : $status = 1;
+        $menuType['status'] = $status;
+        $menuType->update();
+    }
+	
 }

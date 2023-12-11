@@ -45,6 +45,11 @@ Auth::routes(['register' => false]);
 Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
 Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
 
+// table scanning /2
+Route::get('/restaurant/seating_plan/{table}', 'App\Http\Controllers\RestaurantGuestController@index');
+Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
+Route::post('/restaurant/place-order/{table}', 'App\Http\Controllers\RestaurantGuestController@store');
+
 	
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
     ->name('2fa.index');
@@ -263,6 +268,16 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('print.qr_code');
 	Route::post('assign/employee/{table}', [RestaurantController::class, 'assignEmployee'])
         ->name('assign.employee');
+	Route::get('menu-type', [RestaurantController::class, 'menuType'])
+        ->name('menu-type.view');
+	Route::delete('destroy_menu-type/{type}', [RestaurantController::class, 'destroyMenuType'])
+        ->name('menu-type.destroy');
+	Route::post('add_menu_type', [RestaurantController::class, 'storeMenuType'])
+        ->name('menu-type.store');
+	Route::get('menu-type/act/{type}', [RestaurantController::class, 'activateMenuType'])
+        ->name('menu-type.activate');
+	Route::PATCH('update/menu-type/{type}', [RestaurantController::class, 'menuTypeUpdate'])
+        ->name('menu-type.update');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

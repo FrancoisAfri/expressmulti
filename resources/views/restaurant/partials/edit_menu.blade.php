@@ -105,10 +105,12 @@
 										<select class="form-control" name="menu_type"
 											  id="menu_type"  data-toggle="select2"
 												data-placeholder="Choose ...">
-											<option value="">Select a Type ...</option>
-												<option value="1">Main Course</option>
-												<option value="2">Starters</option>
-												<option value="3">Desert</option>
+												<option value="">Select a Type ...</option>
+												@foreach($menusTypes as $type)
+													<option
+														value="{{ $type->id }}">{{ $type->name }}
+													</option>
+												@endforeach
 										</select>
                                     </div>
                                 </div>

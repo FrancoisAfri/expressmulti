@@ -9,10 +9,12 @@ use App\Http\Requests\AddMenuRequest;
 use App\Http\Requests\AddTableRequest;
 use App\Http\Requests\AssingnEmployeeRequest;
 use App\Http\Requests\AddServiceRequest;
+use App\Http\Requests\MenuTypeRequest;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use App\Models\Categories;
 use App\Models\Menu;
+use App\Models\MenuType;
 use App\Models\Tables;
 use App\Models\ServiceType;
 use App\Models\HRPerson;
@@ -30,12 +32,12 @@ class RestaurantController extends Controller
      * @var RestaurantService
      */
     private $restaurantService;
-    private $menuType;
+   // private $menuType;
 	
 	public function __construct(RestaurantService $restaurantService)
     {
         $this->RestaurantService = $restaurantService;
-        $this->menuType = array(1 => 'Main Course', 2 => 'Starters', 3 => 'Desert');
+        //$this->menuType = array(1 => 'Main Course', 2 => 'Starters', 3 => 'Desert');
     }
 	
     /**
@@ -182,7 +184,7 @@ class RestaurantController extends Controller
 		
 		$data['categories'] = Categories::getCategories();
 		$data['menus'] = Menu::getMenus();
-		$data['menusArray'] = $this->menuType;
+		$data['menusTypes'] = MenuType::getMenuTypes();
 		 
         return view('restaurant.menus')->with($data);
     }
@@ -351,5 +353,55 @@ class RestaurantController extends Controller
         alert()->success('SuccessAlert', 'Record Updated Successfully');
 		activity()->log('Table Updated');
         return response()->json(['message' => 'success'], 200);
+    }
+	/// menu type
+	public function menuType()
+    {
+		 $data = $this->breadcrumb(
+            'Restaurant',
+            'Menu Type Page',
+            'Menu_type_view',
+            'Menu Type Management',
+            'Menu Type'
+        );
+		
+		$data['menuTypes'] = MenuType::getMenuTypes();
+		 
+        return view('restaurant.menu_type')->with($data);
+    }
+	// store ServiceType
+	public function storeMenuType(MenuTypeRequest $request)
+    {
+        $requestData = $request->validationData();
+        $this->RestaurantService->persistMenuTypeSave($request);
+        alert()->success('SuccessAlert', 'Record Created Successfully');
+		activity()->log('Menu Type Created');
+        return response()->json(['message' => 'success'], 200);
+    }
+	
+	// MenuType update
+	public function menuTypeUpdate(MenuTypeRequest $request, MenuType $type)
+    {
+        $requestData = $request->validationData();
+        $this->RestaurantService->persistMenuTypeUpdate($requestData, $type);
+        alert()->success('SuccessAlert', 'Record Updated Successfully');
+		activity()->log('Menu Type updated');
+        return response()->json(['message' => 'success'], 200);
+    }
+	public function activateMenuType(MenuType $type): RedirectResponse
+    {
+		//return $type;
+        $this->RestaurantService->activeMenuType($type); 
+        Alert::toast('Record Status changed Successfully', 'success');
+        activity()->log('Menu Type status changed');
+        return back();
+    }
+	// delete MenuType
+    public function destroyMenuType(MenuType $type)
+    {
+		$this->RestaurantService->destroyMenuType($type); 
+        Alert::toast('Record Deleted Successfully ', 'success');
+		activity()->log('Menu Type deleted');
+        return redirect()->back();
     }
 }

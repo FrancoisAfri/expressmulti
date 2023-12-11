@@ -1,11 +1,11 @@
 <!-- Signup modal content -->
-<div id="add-new-service-modal" class="modal fade" tabindex="-1" role="dialog"
+<div id="add-menu-type-modal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="scrollableModalTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="needs-validation" novalidate method="Post" name="add-service-form"  enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="Post" name="add-menu-type-form"  enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -17,7 +17,7 @@
                         </div>
                     @endif
                     <div class="modal-header bg-light">
-                        <h4 class="modal-title" id="myCenterModalLabel">Add Service</h4>
+                        <h4 class="modal-title" id="myCenterModalLabel">Add Menu Type</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -38,18 +38,18 @@
                                 </div>
 								<div class="col-md-6">
 									<div class="form-group">
-                                        <label for="turn_around_time">Turn Around Time (In Minutes) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control"
-                                               id="turn_around_time" name="turn_around_time" placeholder="Enter Turn Around Time" required>
+                                        <label for="description">Description <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                               id="description" name="description" placeholder="Enter Description" required>
 
                                         <div class="invalid-feedback">
-                                            Please provide Turn Around Time.
+                                            Please Description.
                                         </div>
                                     </div>
 								</div>
                             </div>
                             <div class="form-group text-center">
-                                <button type="button" id="add-service" class="btn btn-success waves-effect waves-light">
+                                <button type="button" id="add-type" class="btn btn-success waves-effect waves-light">
                                     Save
                                 </button>
                             </div>

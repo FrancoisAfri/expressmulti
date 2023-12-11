@@ -89,18 +89,22 @@
 
                 <div class="collapse navbar-collapse" id="topnav-menu-content">
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fe-grid mr-1"></i>  Patient Details <div class="arrow-down"></div>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="topnav-apps">
-
-                                <a  class="dropdown-item"><i class="fe-calendar mr-1"></i> Patient Details</a>
-
-                            </div>
-                        </li>
-
+					
+					@if(count($services) > 0 && !empty($tableID))
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"
+							   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fe-grid mr-1"></i>  Service Type<div class="arrow-down"></div>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="topnav-components">
+								@foreach($services as $service)
+									@if ($service->status === 1)
+										<a href="/restaurant/service-request/{{$tableID}}/{{$service->id}}" class="dropdown-item"><i class="fe-calendar mr-1"></i> {{ $service->name }}</a>
+									@endif
+								@endforeach
+							</div>
+						</li>
+					@endif
                     </ul> <!-- end navbar-->
                 </div> <!-- end .collapsed-->
             </nav>

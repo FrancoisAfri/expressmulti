@@ -70,7 +70,7 @@
                                 </td>
 								<td>
 									<span>
-										 {{(!empty($menu->menu_type)) ? $menusArray[$menu->menu_type] : 'N/A'}}
+										 {{(!empty($menu->menuType->name)) ? $menu->menuType->name : 'N/A'}}
 									</span>
                                 </td>
 								<td>
