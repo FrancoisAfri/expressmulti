@@ -9,6 +9,7 @@ use App\Models\Tables;
 use App\Models\ServiceType;
 use App\Models\OrdersServices;
 use App\Models\OrdersHistory;
+use App\Models\TableScans;
 use App\Models\MenuType;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
@@ -275,31 +276,7 @@ class RestaurantService //implements RestaurantServiceInterface
         $service['status'] = $status;
         $service->update();
     }
-	// request for service
-	public function requestService($table, $service)
-    {
-       
-		// save request
-		DB::beginTransaction();
-			//$table = Tables::find($tableID);
-			//$tableRecord = Tables::find($id->id);
-			///'service_id', 'comment', 'table_id', 'status'
-			$comment = "$service->name requested on table: $table->name";
-			$action = "$service->name Service Requesed" ;
-			$request = OrdersServices::create([
-                'service_id' => $service->id,
-                'comment' => $comment,
-                'table_id' => $table->id,
-                'status' => 1,
-            ]);
-			///'action', 'comment', 'table_id', 'order_id'
-			$history = OrdersHistory::create([
-                'action' => $action,
-                'table_id' => $table->id,
-            ]);
-						
-		DB::commit();
-    }
+	
 	// Menu type
 	public function persistMenuTypeSave($request)
     {
@@ -354,6 +331,40 @@ class RestaurantService //implements RestaurantServiceInterface
         $menuType['status'] == 1 ? $status = 0 : $status = 1;
         $menuType['status'] = $status;
         $menuType->update();
+    }
+	
+	// request for service
+	public function requestService($table, $service)
+    {
+       
+		// get table last scanned
+		$scanned = TableScans::where('table_id', $table->id)->orderBy('id', 'desc')->first();
+
+		if (!empty($scanned->status) &&  $scanned->status === 1)
+		{
+			// save request
+			DB::beginTransaction();
+				//$table = Tables::find($tableID);
+				//$tableRecord = Tables::find($id->id);
+				///'service_id', 'comment', 'table_id', 'status'
+				$comment = "$service->name requested on table: $table->name";
+				$action = "$service->name Service Requesed" ;
+				$request = OrdersServices::create([
+					'service_id' => $service->id,
+					'comment' => $comment,
+					'table_id' => $table->id,
+					'scan_id' => $scanned->id,
+					'status' => 1,
+				]);
+				///'action', 'comment', 'table_id', 'order_id'
+				$history = OrdersHistory::create([
+					'action' => $action,
+					'table_id' => $table->id,
+				]);
+							
+			DB::commit();
+		}
+		
     }
 	
 }

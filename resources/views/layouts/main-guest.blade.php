@@ -22,10 +22,9 @@
 
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img src="{{ asset('images/m-silhouette.jpg')  }}" alt="user-image" class="rounded-circle">
                         <span class="pro-user-name ml-1">
-                                    hello Guest User <i class="mdi mdi-chevron-down"></i>
-                                </span>
+                                    Welcome to {{$localName}} <i class="mdi mdi-chevron-down"></i>
+                        </span>
                     </a>
 
                 </li>
@@ -94,7 +93,7 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"
 							   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="fe-grid mr-1"></i>  Service Type<div class="arrow-down"></div>
+								<i class="fe-grid mr-1"></i>  Quick Service Buttons<div class="arrow-down"></div>
 							</a>
 							<div class="dropdown-menu" aria-labelledby="topnav-components">
 								@foreach($services as $service)

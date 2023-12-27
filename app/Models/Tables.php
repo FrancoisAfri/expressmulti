@@ -46,4 +46,12 @@ class Tables extends Model
     {
         return Tables::get();
     }
+	
+	// get table details
+	public static function getTableDetails($id)
+    {
+        return Tables::with('employees')
+            ->where('id', $id)
+            ->first();
+    }
 }

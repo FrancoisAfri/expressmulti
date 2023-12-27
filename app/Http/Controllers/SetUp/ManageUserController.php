@@ -51,7 +51,6 @@ class ManageUserController extends Controller
             'Manage Users'
         );
 
-//        dd(User::with('person')->get());
 
         $data['roles'] = Role::select('id', 'name')->get();
         $data['users'] = User::with('person')->get();

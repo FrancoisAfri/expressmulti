@@ -139,6 +139,16 @@ class CompanyIdentityService
         return (!empty($avatar)) ? asset('uploads/' . $user->person->profile_pic) : $defaultAvatar;
 
     }
+	
+	public function getAvatarID($id)
+    {
+
+		$hrUser = HRPerson::where('id', $id)->first();
+        $defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
+        $avatar = $hrUser->profile_pic;
+        return (!empty($avatar)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
+
+    }
 
     public function persistHolidays($request)
     {

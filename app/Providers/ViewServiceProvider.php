@@ -7,8 +7,11 @@ use App\Models\CompanyIdentity;
 use App\Models\module_access;
 use App\Models\module_ribbons;
 use App\Models\modules;
+use App\Models\HRPerson;
 use App\Models\Notification;
 use App\Models\ServiceType;
+use App\Models\Tables;
+use App\Models\TableScans;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,15 +65,11 @@ class ViewServiceProvider extends ServiceProvider
             $headerAcronymBold = $companyDetails['header_acronym_bold'];
             $headerAcronymRegular = $companyDetails['header_acronym_regular'];
 
-
-
-            //   dd($companyDetails);
             $data['notifications'] = BookingNotification::getAllUnreadNotifications();
             $data['notificationsCount'] = BookingNotification::countNotifications();
             $data['user'] = $user;
             $data['full_name'] = $user->person->first_name . " " . $user->person->surname;
             $data['avatar'] =  (!empty($avatar)) ? asset('uploads/'.$user->person->profile_pic) : $defaultAvatar;
-
 
             $data['headerNameBold'] = $headerNameBold;
             $data['defaultAvatar'] = $defaultAvatar;
@@ -129,19 +128,44 @@ class ViewServiceProvider extends ServiceProvider
 		
 		view()->composer('layouts.main-guest', function ($view) use ( $companyDetails) {
 
-
-            //$logo = (!empty($companyDetails['company_logo_url'])) ? asset('uploads/'.$companyDetails['company_logo_url'] ) : asset('images/logo_default.png');
-            //$Background = (!empty($companyDetails['login_background_image_url'])) ? asset('uploads/'.$companyDetails['login_background_image_url'] ) : asset('images/bg-auth.jpg');
-
-            //$data['logo'] = $logo;
-            //$data['Background'] = $Background;
 			//
 			$url = url()->current();
 			$urlData = explode('/',$url);
 			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
-			//print_r($urlData);
-			//die($tableID);
+			
+			$data['localName'] = (!empty($companyDetails['company_name'])) ? $companyDetails['company_name'] : 'Express Serve';
 			$data['tableID'] = $tableID;
+			$data['tableDetails'] = Tables::where('id', $tableID)->first();
+			$data['services'] = ServiceType::getServices();
+            $view->with($data);
+        });
+		view()->composer('guest.index', function ($view) use ( $companyDetails) {
+
+			$url = url()->current();
+			$urlData = explode('/',$url);
+			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
+			
+			// get table last scanned
+			$scanned = TableScans::where('table_id', $tableID)->orderBy('id', 'desc')->first();
+
+			if (empty($scanned->status)  ||  $scanned->status !== 1)
+			{
+				$tableScans = TableScans::create([
+					'ip_address' => '',
+					'table_id' => $tableID,
+					'status' => 1,
+				]);
+			}
+			// get table details;
+			$tableDetails = Tables::where('id', $tableID)->first();
+			
+			// get avatar
+			$hrUser = HRPerson::where('id', $tableDetails->employee_id)->first();
+			$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
+			$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
+			
+			$data['profilePic'] = $profilePic;
+			$data['tableDetails'] = $tableDetails;
 			$data['services'] = ServiceType::getServices();
             $view->with($data);
         });

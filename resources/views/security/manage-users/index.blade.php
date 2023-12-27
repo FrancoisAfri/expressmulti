@@ -41,7 +41,6 @@
                         <tbody>
                         @foreach ($users as $key => $user)
                             <tr>
-
                                 <td>
                                     <a href="{{route('user_profile.show', $user->person->uuid)}}" class="text-body">
 
@@ -59,46 +58,27 @@
                                             class="ml-2">{{ (!empty($user->person->first_name . ' ' . $user->person->surname)) ?
                                                          $user->person->first_name . ' ' . $user->person->surname : ''}}
                                         </span>
-
                                     </a>
                                 </td>
-
-
-{{--                                <td>--}}
-{{--                                    <b>--}}
-
-{{--                                        <a href="{{route('user_profile.show', $user->person->uuid)}}"--}}
-{{--                                           class="btn btn-soft-primary btn-rounded btn-sm waves-effect waves-light">--}}
-{{--                                            <i class="mdi mdi-package-variant mr-2 text-muted font-18 vertical-middle"></i>--}}
-{{--                                            Go to Ribbons</a>--}}
-{{--                                    </b>--}}
-{{--                                </td>--}}
-
-
-{{--                                {{route('user_profile.show', $user->uuid)}}--}}
-
                                 <td>
-                                            <span>
-                                                 {{ $user->person->email  ?? ''}}
-                                            </span>
+									<span>
+										 {{ $user->person->email  ?? ''}}
+									</span>
                                 </td>
-
                                 <td>
-                                            <span>
-                                                 {{ $user->person->cell_number ?? '' }}
-                                            </span>
+									<span>
+										 {{ $user->person->cell_number ?? '' }}
+									</span>
                                 </td>
-
                                 <td>
-                                            <span>
-                                                @if($user->person->status == 1)
-                                                    <span class="badge badge-success">Active</span>
-                                                @elseif($user->person->status == 0)
-                                                    <span class="badge bg-soft-danger text-danger">No-Active</span>
-                                                @endif
-                                            </span>
+									<span>
+										@if($user->person->status == 1)
+											<span class="badge badge-success">Active</span>
+										@elseif($user->person->status == 0)
+											<span class="badge bg-soft-danger text-danger">No-Active</span>
+										@endif
+									</span>
                                 </td>
-
                                 <td>
                                     @if(!empty($user->getRoleNames()))
                                         @foreach($user->getRoleNames() as $role)
@@ -106,7 +86,6 @@
                                         @endforeach
                                     @endif
                                 </td>
-
                                 <td>
                                     <div class="btn-group dropdown">
                                         <a href="#"

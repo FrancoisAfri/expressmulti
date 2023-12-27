@@ -18,7 +18,7 @@ class Orders extends Model
 	protected $table = 'orders';
 
     protected $fillable = [
-        'order_no', 'comment', 'status', 'table_id'
+        'order_no', 'comment', 'status', 'table_id', 'scan_id'
 
     ];
 
