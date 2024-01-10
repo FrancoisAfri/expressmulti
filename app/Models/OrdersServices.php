@@ -46,4 +46,13 @@ class OrdersServices extends Model
         return OrdersServices::with('tables','services')
 					->get();
     }
+	// get all services order per table and scanID
+	public static function getServicesByTable($table, $scan)
+    {
+        return OrdersServices::with('services')
+					->where(['table_id' => $table])
+					->where(['scan_id' => $scan])
+					->get();
+    }
+
 }

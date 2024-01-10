@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Tables extends Model
@@ -41,6 +42,11 @@ class Tables extends Model
     {
         return $this->belongsTo(HRPerson::class, 'employee_id', 'id');
     }
+	// relationship between table and table scan
+	public function scans(): HasMany
+    {
+        return $this->hasMany(TableScans::class, 'table_id', 'id');
+    }
 	// get all tables
 	public static function getTables()
     {
@@ -53,5 +59,11 @@ class Tables extends Model
         return Tables::with('employees')
             ->where('id', $id)
             ->first();
+    }
+	// get all tables with scans
+	public static function getTablesScans()
+    {
+        return Tables::with('scans')
+				->get();
     }
 }

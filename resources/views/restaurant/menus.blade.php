@@ -228,7 +228,6 @@
             // update modal			
             $('#edit-menu').on('click', function () {
 				let com = 'menu';
-				console.log(menuID);
                 let strUrl = '/restaurant/update/menu/' + menuID;
                 let modalID = 'edit-menu-modal';
                 let objData = {

@@ -4,21 +4,19 @@
 
     <link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('libs/dropify/css/dropify.min.css') }}" rel="stylesheet" type="text/css"/>
-
-
     <link href="{{ asset('libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('libs/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}" rel="stylesheet"
           type="text/css"/>
     <link href="{{asset('libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset('libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet"
           type="text/css"/>
-
     <link href="{{asset('libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
-
     <link href="{{asset('libs/summernote/summernote-bs4.min.css') }}" rel="stylesheet" type="text/css"/>
-
     <link href="{{asset('libs/intl-tel-input/build/css/intlTelInput.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('libs/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css">
+	<link href="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.css" rel="stylesheet">
+    <link href="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/css/star-rating.css') }}" media="all"  rel="stylesheet" type="text/css">
+    <link href="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/themes/krajee-svg/theme.css') }}" media="all"  rel="stylesheet" type="text/css">
 @endsection
 <!-- Begin page -->
 
@@ -26,374 +24,266 @@
 
     @section('content_data')
         <div class="container-fluid">
-            <div class="row">
-				<div class="col-md-6 col-xl-3">
-					<div class="widget-rounded-circle card-box">
-						<div class="row align-items-center">
-							<div class="col">
-								<h5 class="mb-1 mt-2 font-16">{{$tableDetails->name}}</h5>
-								<p class="mb-2 text-muted">{{$tableDetails->number_customer}} Seat(s)</p>
-							</div>
-						</div> <!-- end row-->
-					</div> <!-- end widget-rounded-circle-->
-				</div>
-				<div class="col-md-6 col-xl-3">
-					<div class="widget-rounded-circle card-box bg-blue">
-						<div class="row align-items-center">
-							<div class="col">
-								<h5 class="mb-1 mt-2 text-white font-16">Arrived At: </h5>
-								<h5 class="mb-1 mt-2 text-white font-16">Counter: </h5>
-							</div>
-						</div> <!-- end row-->
-					</div> <!-- end widget-rounded-circle-->
-				</div> <!-- end col-->
-				<div class="col-md-6 col-xl-3">
-					<div class="widget-rounded-circle card-box">
-						<div class="row align-items-center">
-							<div class="col-auto">
-								<div class="avatar-lg">
-									<img src="{{$profilePic}}" class="img-fluid rounded-circle" alt="user-img">
+			@if (!empty($localName))
+				<div class="row">
+					<div class="col-md-6 col-xl-3">
+						<div class="widget-rounded-circle card-box">
+							<div class="row align-items-center">
+								<div class="col">
+									<h5 class="mb-1 mt-2 font-16">{{$tableDetails->name}}</h5>
+									<p class="mb-2 text-muted">{{$tableDetails->number_customer}} Seat(s)</p>
+									<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Save">
 								</div>
-							</div>
-							<div class="col">
-								<h5 class="mb-1 mt-2 font-16">{{ !empty($tableDetails->employees->first_name) && !empty($tableDetails->employees->surname) ? $tableDetails->employees->first_name.' '.$tableDetails->employees->surname : ''}}</h5>
-								<p class="mb-2 text-muted">Waiter</p>
-							</div>
-						</div> <!-- end row-->
-					</div> <!-- end widget-rounded-circle-->
-				</div>
-				<div class="col-md-6 col-xl-3">
-					<div class="widget-rounded-circle card-box">
-						<div class="row align-items-center">
-							<div class="col-auto">
-								<div class="avatar-lg">
-									<img src="{{$avatar}}" class="img-fluid rounded-circle" alt="user-img">
+							</div> <!-- end row-->
+						</div> <!-- end widget-rounded-circle-->
+					</div>
+					<div class="col-md-6 col-xl-3">
+						<div class="widget-rounded-circle card-box bg-blue">
+							<script>
+								var time = 0;
+								var running = 0;
+							</script>
+							<div class="row align-items-center">
+							<script>
+								running = 1;
+								time = {{ (time() - $scanned->scan_time)  * 10}};
+								console.log(time);
+							</script>
+								<div class="col">
+									<h5 class="mb-1 mt-2 text-white font-16">Arrived At: {{date('Y-m-d H-s-i', $scanned->scan_time)}}</h5>
+									<h5 class="mb-1 mt-2 text-white font-16">Counter: <input type="text" id="stopWatchDisplay" style="font-weight:bold; font-family:cursive; width: 120px; height: 23px;" value="" class="input-sm" disabled></h5>
 								</div>
-							</div>
-							<div class="col">
-								<h5 class="mb-1 mt-2 font-16">{{!empty($manager->first_name) && !empty($manager->surname) ? $manager->first_name.' '.$manager->surname : ''}}</h5>
-								<p class="mb-2 text-muted">Manager</p>
-							</div>
-						</div> <!-- end row-->
-					</div> <!-- end widget-rounded-circle-->
+							</div> <!-- end row-->
+						</div> <!-- end widget-rounded-circle-->
+					</div> <!-- end col-->
+					<div class="col-md-6 col-xl-3">
+						<div class="widget-rounded-circle card-box">
+							<div class="row align-items-center">
+								<div class="col-auto">
+									<div class="avatar-lg">
+										<img src="{{$profilePic}}" class="img-fluid rounded-circle" alt="user-img">
+									</div>
+								</div>
+								<div class="col">
+									<h5 class="mb-1 mt-2 font-16">{{ !empty($tableDetails->employees->first_name) && !empty($tableDetails->employees->surname) ? $tableDetails->employees->first_name.' '.$tableDetails->employees->surname : ''}}</h5>
+									<p class="mb-2 text-muted">Waiter</p>
+								</div>
+							</div> <!-- end row-->
+						</div> <!-- end widget-rounded-circle-->
+					</div>
+					<div class="col-md-6 col-xl-3">
+						<div class="widget-rounded-circle card-box">
+							<div class="row align-items-center">
+								<div class="col-auto">
+									<div class="avatar-lg">
+										<img src="{{$avatar}}" class="img-fluid rounded-circle" alt="user-img">
+									</div>
+								</div>
+								<div class="col">
+									<h5 class="mb-1 mt-2 font-16">{{!empty($manager->first_name) && !empty($manager->surname) ? $manager->first_name.' '.$manager->surname : ''}}</h5>
+									<p class="mb-2 text-muted">Manager</p>
+								</div>
+							</div> <!-- end row-->
+						</div> <!-- end widget-rounded-circle-->
+					</div>
+					<!-- end col-->
 				</div>
-				<!-- end col-->
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<!-- Portlet card -->
+				<div class="row">
+					<div class="col-12">
+						<!-- Portlet card -->
+						<div class="card">
+							<div class="card-body">
+								<div class="card-widgets">
+									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+									<a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
+									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+								</div>
+								<h4 class="header-title mb-0">Menu</h4>
+								<div id="cardCollpase4" class="collapse pt-3 show">
+									<div class="table-responsive" style="height:500px; overflow-y: scroll;">
+										<table class="table table-centered table-borderless mb-0">
+											<thead class="thead-light">
+												<tr>
+													<th></th>
+													<th></th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												@if (!empty($menus))
+													@foreach($menus as $menu)
+														<tr>
+															<td>
+																<div class="popup-thumbnail img-responsive">
+																	<img src="{{ asset('storage/assets/Images/'.$menu->image) }} "
+																		 height="35px" width="40px" alt="Image">
+																</div>
+															</td>
+															<td>{{ $menu->name ?? ''}}
+															<br>{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}
+															<br>{{ (!empty($menu->ingredients)) ? $menu->ingredients : ''}}
+															<br>{{ (!empty($menu->calories)) ? $menu->calories : ''}} Calories
+															</td>
+															<td>
+															
+															</td>
+														</tr>
+													@endforeach
+												@endif
+											</tbody>
+										</table>
+									</div> <!-- .table-responsive -->
+								</div> <!-- end collapse-->
+							</div> <!-- end card-body-->
+						</div> <!-- end card-->
+					</div> <!-- end col-->
+				</div>
+				<div class="row">
+					<div class="col-xl-6">
+						<div class="card">
+							<div class="card-body">
+								<div class="card-widgets">
+									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+									<a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+								</div>
+								<h4 class="header-title mb-0">Order History</h4>
+
+								<div id="cardCollpase6" class="collapse pt-3 hide">
+									<div class="table-responsive">
+										<table class="table table-hover table-centered mb-0">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Price</th>
+													<th>Quantity</th>
+													<th>Comment</th>
+												</tr>
+											</thead>
+											<tbody>
+												@if (!empty($orders))
+													@foreach($orders as $order)
+														<tr>
+															<td>{{ $order->products->items->name ?? ''}}</td>
+															<td>{{ (!empty($order->products->price)) ? 'R ' .number_format($order->products->price, 2) : ''}}</td>
+															<td>{{ $order->products->quantity ?? ''}}</td>
+															<td>{{ $order->products->comment ?? ''}}</td>
+														</tr>
+													@endforeach
+												@endif
+											</tbody>
+										</table>
+									</div> <!-- end table responsive-->
+								</div> <!-- collapsed end -->
+							</div> <!-- end card-body -->
+						</div> <!-- end card-->
+					</div>
+					<div class="col-xl-6">
+						<div class="card">
+							<div class="card-body">
+								<div class="card-widgets">
+									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+									<a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
+									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+								</div>
+								<h4 class="header-title mb-0">Query History & Acknowledgement</h4>
+
+								<div id="cardCollpase5" class="collapse pt-3 hide">
+									<div class="table-responsive">
+										<table class="table table-hover table-centered mb-0">
+											<thead>
+												<tr>
+													<th>Service</th>
+													<th>Requested</th>
+													<th>Acknowledged</th>
+												</tr>
+											</thead>
+											<tbody>
+												@if (!empty($ordersServices))
+													@foreach($ordersServices as $service)
+														<tr>
+															<td>{{ $service->services->name ?? ''}}</td>
+															<td>{{ $service->created_at ?? ''}}</td>
+															<td>{{ $service->updated_at ?? ''}}</td>
+														</tr>
+													@endforeach
+												@endif
+											</tbody>
+										</table>
+									</div> <!-- end table responsive-->
+								</div> <!-- collapsed end -->
+							</div> <!-- end card-body -->
+						</div> <!-- end card-->
+					</div>
+					<!-- end col -->
+				</div>
+				<div class="row">
+					<div class="col-xl-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="card-widgets">
+									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+									<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+								</div>
+								<h4 class="header-title mb-0">Customer Feedback</h4>
+								<div id="cardCollpase7" class="collapse pt-3 hide">
+									<div class="table-responsive">
+										<form action="/restaurant/rate/service/{{$scanned->id}}" method="POST">
+										{{ csrf_field() }}
+											<div class="box-body">
+												<hr class="hr-text" data-content="TELL US ABOUT YOUR EXPERIENCE">
+												<div class="form-group">
+													<label for="additional_comments" class="col-sm-2 control-label">Comments</label>
+													<div class="col-sm-10">
+														<textarea name="comments" id="comments" class="form-control" rows="4"></textarea>
+													</div>
+												</div>
+											</div>
+											<div class="box-footer">
+												<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Submit Feedback">
+											</div>
+										</form>
+									</div> <!-- end table responsive-->
+								</div> <!-- collapsed end -->
+							</div> <!-- end card-body -->
+						</div> <!-- end card-->
+					</div>
+				</div>	
+			@else
+				<div class="row">
+				<div class="col-xl-12">
 					<div class="card">
 						<div class="card-body">
 							<div class="card-widgets">
 								<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-								<a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
+								<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase7"><i class="mdi mdi-minus"></i></a>
 								<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 							</div>
-							<h4 class="header-title mb-0">Menu</h4>
-
-							<div id="cardCollpase4" class="collapse pt-3 show">
+							<h4 class="header-title mb-0">Fill in the form</h4>
+							<div id="cardCollpase7" class="collapse pt-3 show">
 								<div class="table-responsive">
-									<table class="table table-centered table-borderless mb-0">
-										<thead class="thead-light">
-											<tr>
-												<th>Project Name</th>
-												<th>Start Date</th>
-												<th>Due Date</th>
-												<th>Team</th>
-												<th>Status</th>
-												<th>Clients</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>App design and development</td>
-												<td>Jan 03, 2015</td>
-												<td>Oct 12, 2018</td>
-												<td>
-													<div class="avatar-group">
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mat Helme">
-															<img src="../assets/images/users/user-1.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Michael Zenaty">
-															<img src="../assets/images/users/user-2.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="James Anderson">
-															<img src="../assets/images/users/user-3.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Username">
-															<img src="../assets/images/users/user-5.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-													</div>
-												</td>
-												<td><span class="badge bg-soft-info text-info p-1">Work in Progress</span></td>
-												<td>Halette Boivin</td>
-											</tr>
-											<tr>
-												<td>Coffee detail page - Main Page</td>
-												<td>Sep 21, 2016</td>
-												<td>May 05, 2018</td>
-												<td>
-													<div class="avatar-group">
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="James Anderson">
-															<img src="../assets/images/users/user-3.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mat Helme">
-															<img src="../assets/images/users/user-4.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Username">
-															<img src="../assets/images/users/user-5.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-													</div>
-												</td>
-												<td><span class="badge bg-soft-warning text-warning p-1">Pending</span></td>
-												<td>Durandana Jolicoeur</td>
-											</tr>
-											<tr>
-												<th>Poster illustation design</th>
-												<td>Mar 08, 2018</td>
-												<td>Sep 22, 2018</td>
-												<td>
-													<div class="avatar-group">
-														
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Michael Zenaty">
-															<img src="../assets/images/users/user-2.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mat Helme">
-															<img src="../assets/images/users/user-6.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Username">
-															<img src="../assets/images/users/user-7.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-													</div>
-												</td>
-												<td><span class="badge bg-soft-success text-success p-1">Completed</span></td>
-												<td>Lucas Sabourin</td>
-											</tr>
-											<tr>
-												<td>Drinking bottle graphics</td>
-												<td>Oct 10, 2017</td>
-												<td>May 07, 2018</td>
-												<td>
-													<div class="avatar-group">
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mat Helme">
-															<img src="../assets/images/users/user-9.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Michael Zenaty">
-															<img src="../assets/images/users/user-10.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="James Anderson">
-															<img src="../assets/images/users/user-1.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-													</div>
-												</td>
-												<td><span class="badge bg-soft-info text-info p-1">Work in Progress</span></td>
-												<td>Donatien Brunelle</td>
-											</tr>
-											<tr>
-												<td>Landing page design - Home</td>
-												<td>Coming Soon</td>
-												<td>May 25, 2021</td>
-												<td>
-													<div class="avatar-group">
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Michael Zenaty">
-															<img src="../assets/images/users/user-5.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="James Anderson">
-															<img src="../assets/images/users/user-8.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mat Helme">
-															<img src="../assets/images/users/user-2.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-				
-														<a href="javascript: void(0);" class="avatar-group-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Username">
-															<img src="../assets/images/users/user-7.jpg" class="rounded-circle avatar-xs" alt="friend">
-														</a>
-													</div>
-												</td>
-												<td><span class="badge bg-soft-dark text-dark p-1">Coming Soon</span></td>
-												<td>Karel Auberjo</td>
-											</tr>
-
-										</tbody>
-									</table>
-								</div> <!-- .table-responsive -->
-							</div> <!-- end collapse-->
-						</div> <!-- end card-body-->
-					</div> <!-- end card-->
-				</div> <!-- end col-->
-			</div>
-			
-			 <div class="row">
-				<div class="col-xl-6">
-					<div class="card">
-						<div class="card-body">
-							<div class="card-widgets">
-								<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-								<a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
-								<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
-							</div>
-							<h4 class="header-title mb-0">Order History</h4>
-
-							<div id="cardCollpase6" class="collapse pt-3 show">
-								<div class="table-responsive">
-									<table class="table table-hover table-centered mb-0">
-										<thead>
-											<tr>
-												<th>Product Name</th>
-												<th>Price</th>
-												<th>Quantity</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>ASOS Ridley High Waist</td>
-												<td>$79.49</td>
-												<td>82</td>
-												<td>$6,518.18</td>
-											</tr>
-											<tr>
-												<td>Marco Lightweight Shirt</td>
-												<td>$128.50</td>
-												<td>37</td>
-												<td>$4,754.50</td>
-											</tr>
-											<tr>
-												<td>Half Sleeve Shirt</td>
-												<td>$39.99</td>
-												<td>64</td>
-												<td>$2,559.36</td>
-											</tr>
-											<tr>
-												<td>Lightweight Jacket</td>
-												<td>$20.00</td>
-												<td>184</td>
-												<td>$3,680.00</td>
-											</tr>
-											<tr>
-												<td>Marco Shoes</td>
-												<td>$28.49</td>
-												<td>69</td>
-												<td>$1,965.81</td>
-											</tr>
-											<tr>
-												<td>ASOS Ridley High Waist</td>
-												<td>$79.49</td>
-												<td>82</td>
-												<td>$6,518.18</td>
-											</tr>
-											<tr>
-												<td>Half Sleeve Shirt</td>
-												<td>$39.99</td>
-												<td>64</td>
-												<td>$2,559.36</td>
-											</tr>
-											<tr>
-												<td>Lightweight Jacket</td>
-												<td>$20.00</td>
-												<td>184</td>
-												<td>$3,680.00</td>
-											</tr>
-										</tbody>
-									</table>
+									<form action="/restaurant/add-table-name/{{$scanned->id}}" method="POST">
+									{{ csrf_field() }}
+										<div class="box-body">
+											<div class="form-group">
+												<label for="table_name" class="col-sm-2 control-label"></label>
+												<div class="col-sm-10">
+												<input type="text" name="nickname" id="nickname" value="" class="form-control"  placeholder="Please Enter Your Name">
+												</div>
+											</div>
+										</div>
+										<div class="box-footer">
+											<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Save">
+										</div>
+									</form>
 								</div> <!-- end table responsive-->
 							</div> <!-- collapsed end -->
 						</div> <!-- end card-body -->
 					</div> <!-- end card-->
 				</div>
-
-				<div class="col-xl-6">
-					<div class="card">
-						<div class="card-body">
-							<div class="card-widgets">
-								<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-								<a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
-								<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
-							</div>
-							<h4 class="header-title mb-0">Query History & Acknowledgement</h4>
-
-							<div id="cardCollpase5" class="collapse pt-3 show">
-								<div class="table-responsive">
-									<table class="table table-hover table-centered mb-0">
-										<thead>
-											<tr>
-												<th>Product Name</th>
-												<th>Price</th>
-												<th>Quantity</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>ASOS Ridley High Waist</td>
-												<td>$79.49</td>
-												<td>82</td>
-												<td>$6,518.18</td>
-											</tr>
-											<tr>
-												<td>Marco Lightweight Shirt</td>
-												<td>$128.50</td>
-												<td>37</td>
-												<td>$4,754.50</td>
-											</tr>
-											<tr>
-												<td>Half Sleeve Shirt</td>
-												<td>$39.99</td>
-												<td>64</td>
-												<td>$2,559.36</td>
-											</tr>
-											<tr>
-												<td>Lightweight Jacket</td>
-												<td>$20.00</td>
-												<td>184</td>
-												<td>$3,680.00</td>
-											</tr>
-											<tr>
-												<td>Marco Shoes</td>
-												<td>$28.49</td>
-												<td>69</td>
-												<td>$1,965.81</td>
-											</tr>
-											<tr>
-												<td>ASOS Ridley High Waist</td>
-												<td>$79.49</td>
-												<td>82</td>
-												<td>$6,518.18</td>
-											</tr>
-											<tr>
-												<td>Half Sleeve Shirt</td>
-												<td>$39.99</td>
-												<td>64</td>
-												<td>$2,559.36</td>
-											</tr>
-											<tr>
-												<td>Lightweight Jacket</td>
-												<td>$20.00</td>
-												<td>184</td>
-												<td>$3,680.00</td>
-											</tr>
-										</tbody>
-									</table>
-								</div> <!-- end table responsive-->
-							</div> <!-- collapsed end -->
-						</div> <!-- end card-body -->
-					</div> <!-- end card-->
-				</div>
-				<!-- end col -->
 			</div>
-						
+			@endif
         </div>
         <br><br>
     @endsection
@@ -420,28 +310,39 @@
     <script src="{{ asset('js/pages/form-pickers.init.js') }}"></script>
     <script src="{{ asset('libs/intl-tel-input/build/js/intlTelInput.js') }}"></script>
     <script src="{{ asset('libs/iCheck/icheck.min.js') }}"></script>
+	<script src="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.js"
+            type="text/javascript"></script>
+    <script src="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/js/star-rating.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/themes/krajee-svg/theme.js') }}"></script>
     <script>
+		$(function () {
+			
+            //Launch counter for running tasks
+            increment();
+        });
+		function increment(taskID) {
+			if (running == 1) {
+				setTimeout(function() {
+					time++;
+					var hours = Math.floor(time / 10 / 60 / 60) % 60;
+					var mins = Math.floor(time/ 10 / 60) % 60;
+					var secs = Math.floor(time / 10) % 60;
+					var tenths = time % 10;
 
-        document.querySelectorAll('#phone_number ,#cell_number ,#contact_number').forEach(item => {
-            window.intlTelInput(item, {
-                initialCountry: "auto",
-                geoIpLookup: function (success, failure) {
-                    $.get("https://ipinfo.io", function () {
-                    }, "jsonp").always
-                    (
-                        function (resp) {
-                            let countryCode = (resp && resp.country) ? resp.country : "ZA";
-                            success(countryCode);
-                        }
-                    );
-                },
-                autoHideDialCode: true,
-                nationalMode: false,
-                autoPlaceholder: 'aggressive',
-                hiddenInput: "fullContactNo",
-                utilsScript: "/js/utils.js",
-            });
-        })
-
+					if (hours < 10) {
+						hours = "0" + hours;
+					}
+					if (mins < 10) {
+						mins = "0" + mins;
+					}
+					if (secs < 10) {
+						secs = "0" + secs;
+					}
+					//document.getElementById("stopWatchDisplay").innerHTML = mins + ":" + secs + ":" + "0" + tenths;
+					$('#stopWatchDisplay').val(hours + ":" + mins + ":" + secs + "." + tenths);
+					increment(taskID);
+				}, 100);
+			}
+		}
     </script>
 @endsection

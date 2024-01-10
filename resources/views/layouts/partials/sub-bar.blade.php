@@ -1,7 +1,6 @@
 <div class="topnav shadow-lg">
     <div class="container-fluid">
         <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
-
             <div class="collapse navbar-collapse" id="topnav-menu-content">
                 <ul class="navbar-nav">
                     <li class="nav-item ">
@@ -10,7 +9,6 @@
                             <i class="fe-airplay mr-1"></i> Dashboard
                         </a>
                     </li>
-
                     @foreach($modulesAccess as $module)
                         @if(count($module->moduleRibbon) > 0)
                     <li class="nav-item dropdown">
@@ -28,7 +26,6 @@
                     </li>
                         @endif
                     @endforeach
-
                 </ul> <!-- end navbar-->
             </div> <!-- end .collapsed-->
         </nav>

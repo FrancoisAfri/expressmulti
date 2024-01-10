@@ -68,7 +68,7 @@
                                    aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
                                 <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
                             </div>
-                            <h4 class="header-title mb-0">Notifications</h4>
+                            <h4 class="header-title mb-0">Order Requests</h4>
                             <div id="cardCollpase5" class="collapse pt-3 show">
                                 <div class="table-responsive">
                                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
@@ -114,7 +114,65 @@
                     </div> <!-- end card-->
                 </div>
             </div>
-
+			<div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false"
+                                   aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Service Requests</h4>
+                            <div id="cardCollpase5" class="collapse pt-3 show">
+                                <div class="table-responsive">
+                                    <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
+                                           id="data-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Table</th>
+                                            <th>Status</th>
+											<th>Requested</th>
+											<th>Acknowledged</th>
+											<th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                @if (!empty($ordersServices))
+                                                    @foreach($ordersServices as $service)
+														<tr>
+															<td>{{ $service->services->name ?? ''}}</td>
+															<td>{{ $service->tables->name ?? ''}}</td>
+															<td>{{ $service->status == 1 ? 'Open': 'closed'}}</td>
+															<td>{{ $service->created_at ?? ''}}</td>
+															<td>{{ $service->updated_at ?? ''}}</td>
+															<td>
+																<button type="button" class="close mark-as-read"
+																		data-dismiss="alert"
+																		aria-label="Close"
+																		data-id="{{ $service->id }}">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</td>
+														</tr>
+                                                    @endforeach
+                                                @else
+                                                    <p class="dropdown-item">There are no new notifications</p>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div> <!-- end table responsive-->
+                            </div> <!-- collapsed end -->
+                        </div> <!-- end card-body -->
+                    </div> <!-- end card-->
+                </div>
+            </div>
             <!-- end row -->
 
            <!-- @role('Admin')-->
@@ -188,40 +246,57 @@
                                         <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                                                id="tickets-table">
                                             <thead>
-                                            <tr>
-                                                <th>Name</th>
-												<th>Employee</th>
-												<th>Number Customers</th>
-                                                <th></th>
-                                            </tr>
+												<tr>
+													<th>Name</th>
+													<th>Employee</th>
+													<th>Number Customers</th>
+													<th></th>
+												</tr>
                                             </thead>
                                             <tbody>
-                                            @foreach ($tables as $key => $table)
-                                                <tr>
-                                                    <td>
-                                                        <span>
-															 {{ $table->name ?? ''}}
-														</span>
-                                                    </td>
-                                                    <td>
-                                                        <span>
-															 {{ !empty($table->employees->first_name) && !empty($table->employees->surname) ? $table->employees->first_name." ".$table->employees->surname : ''}}
-														</span>
-                                                    </td>
-                                                    <td>
-                                                        <span>
-															 {{ $table->number_customer ?? ''}}
-														</span>
-                                                    </td>
-                                                    <td>
-														<button type="button" id="assign_employee" class="dropdown-item"
-																data-toggle="modal" title="Assign Employee" data-target="#assign-employees-modal"
-																data-id="{{ $table->id }}">
-																<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Assign Employee
-														</button>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+												@foreach ($tables as $key => $table)
+													<tr>
+														<td>
+															<span>
+																 {{ $table->name ?? ''}}
+															</span>
+														</td>
+														<td>
+															<span>
+																 {{ !empty($table->employees->first_name) && !empty($table->employees->surname) ? $table->employees->first_name." ".$table->employees->surname : ''}}
+															</span>
+														</td>
+														<td>
+															<span>
+																 {{ $table->number_customer ?? ''}}
+															</span>
+														</td>
+														<td>
+															<div class="btn-group dropdown">
+																<a href="#"
+																   class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm"
+																   data-toggle="dropdown" aria-expanded="false"><i
+																		class="mdi mdi-arrange-bring-to-front"></i></a>
+																<div class="dropdown-menu dropdown-menu-right">
+																	<button	class="dropdown-item" data-toggle="modal"
+																			data-target="#assign-employees-modal"
+																			title='Assign Employee' data-id="{{ $table->id }}">
+																			<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+																			 Assign Employee
+																	</button>
+																	@if ( \App\Models\TableScans::getTableStatus($table->id) == 1 )
+																		<button onclick="postData({{$table->id}}, 'closetable');"
+																				class="dropdown-item" data-toggle="tooltip"
+																				title='change Active status'>
+																				<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+																			Close
+																		</button>
+																	@endif
+																</div>
+															</div>
+														</td>
+													</tr>
+												@endforeach
                                             </tbody>
                                         </table>
                                     </div> <!-- end table responsive-->
@@ -243,21 +318,15 @@
     <script src="{{ asset('js/custom_components/js/modal_ajax_submit.js') }}"></script>
     <script src="{{ asset('js/custom_components/js/deleteAlert.js') }}"></script>
     <script src="{{ asset('js/custom_components/js/deleteModal.js') }}"></script>
-
     <script src="{{ asset('libs/jquery-mask-plugin/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('libs/autonumeric/autoNumeric-min.js') }}"></script>
     <script src="{{ asset('js/pages/form-masks.init.js') }}"></script>
-
     <script src="{{ asset('libs/jquery-mask-plugin/jquery.mask.min.js') }}"></script>
-
     <!-- third party js ends -->
     <!-- Tickets js -->
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
-
     <script src="{{ asset('libs/parsleyjs/parsley.min.js') }}"></script>
-
     <script src="{{ asset('libs/intl-tel-input/build/js/intlTelInput.js') }}"></script>
-
     <script src="{{ asset('js/custom_components/js/sweetalert.min.js') }}"></script>
     <!-- Plugins js-->
     <script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>
@@ -279,23 +348,22 @@
     <script src="{{ asset('libs/@fullcalendar/interaction/main.min.js')}}"></script>
     <!-- Calendar init -->
     <script src="{{ asset('js/calendar.js')}}"></script>
-
     <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
-
     <!-- toastr init js-->
-      <script src="{{ asset('js/pages/toastr.init.js')}}"></script>
-
+    <script src="{{ asset('js/pages/toastr.init.js')}}"></script>
     <script src="{{ asset('js/pages/datatables.init.js') }}"></script>
     <!-- Dashboar 1 init js-->
-    {{--    <script src="{{ asset('js/pages/dashboard-1.init.js')}}"></script>--}}
     <script src="{{ asset('js/pages/dashboard-2.init.js')}}"></script>
     <script src="{{ asset('js/pages/dashboard-3.init.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- App js-->
     <script src="{{ asset('js/app.min.js')}}"></script>
     <script>
+		function postData(id, data) {
 
-
+            if (data == 'closetable')
+                location.href = "{{route('table.close', '')}}" + "/" + id;
+        }
         (function () {
             "use strict";
 			

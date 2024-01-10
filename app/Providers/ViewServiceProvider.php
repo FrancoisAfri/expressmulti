@@ -12,6 +12,8 @@ use App\Models\Notification;
 use App\Models\ServiceType;
 use App\Models\Tables;
 use App\Models\TableScans;
+use App\Models\Orders;
+use App\Models\OrdersServices;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -132,8 +134,10 @@ class ViewServiceProvider extends ServiceProvider
 			$url = url()->current();
 			$urlData = explode('/',$url);
 			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
-			
-			$data['localName'] = (!empty($companyDetails['company_name'])) ? $companyDetails['company_name'] : 'Express Serve';
+			// get table last scanned
+			$scanned = TableScans::where('table_id', $tableID)->where('status', 1)->orderBy('id', 'desc')->first();
+
+			$data['localName'] = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
 			$data['tableID'] = $tableID;
 			$data['tableDetails'] = Tables::where('id', $tableID)->first();
 			$data['services'] = ServiceType::getServices();
@@ -146,16 +150,18 @@ class ViewServiceProvider extends ServiceProvider
 			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
 			
 			// get table last scanned
-			$scanned = TableScans::where('table_id', $tableID)->orderBy('id', 'desc')->first();
+			$scanned = TableScans::where('table_id', $tableID)->where('status', 1)->orderBy('id', 'desc')->first();
 
-			if (empty($scanned->status)  ||  $scanned->status !== 1)
+			if (empty($scanned->status))
 			{
-				$tableScans = TableScans::create([
+				$scanned = TableScans::create([
 					'ip_address' => '',
 					'table_id' => $tableID,
+					'scan_time' => time(),
 					'status' => 1,
-				]);
+				]); 
 			}
+			$scannedTime = !empty($scanned->scan_time) ? strtotime($scanned->scan_time) : 0;
 			// get table details;
 			$tableDetails = Tables::where('id', $tableID)->first();
 			
@@ -164,10 +170,18 @@ class ViewServiceProvider extends ServiceProvider
 			$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
 			$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
 			
+			// get orders and service history
+			$orders = Orders::getOderByTable($tableID,$scanned->id);
+			$ordersServices = OrdersServices::getServicesByTable($tableID,$scanned->id);
+			
+			$data['orders'] = $orders;
+			$data['ordersServices'] = $ordersServices;
+			$data['scanned'] = $scanned;
+			$data['scannedTime'] = $scannedTime;
 			$data['profilePic'] = $profilePic;
 			$data['tableDetails'] = $tableDetails;
 			$data['services'] = ServiceType::getServices();
             $view->with($data);
         });
-    } 
+    }
 }

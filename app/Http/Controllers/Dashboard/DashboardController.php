@@ -13,25 +13,33 @@ use App\Models\Patient;
 use App\Models\Url;
 use App\Models\User;
 use App\Models\Tables;
+use App\Models\TableScans;
+use App\Models\Orders;
+use App\Models\OrdersServices;
 use App\Traits\CompanyIdentityTrait;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
+use App\Services\RestaurantService;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
-
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DashboardController extends Controller
 {
 
     use CompanyIdentityTrait;
-
+	/**
+     * @var RestaurantService
+     */
+    private $restaurantService;
+	
     /**
      * @var Notification
      */
@@ -42,12 +50,12 @@ class DashboardController extends Controller
 
     public function __construct(
 
-        BookingNotification   $notification
+        BookingNotification   $notification, RestaurantService $restaurantService
         /*BookingService        $bookingService,
         Booking               $booking*/
     )
     {
-
+		$this->RestaurantService = $restaurantService;
        /// $this->clientService = $clientService;
        // $this->notification = $notification;
         //$this->booking = $booking;
@@ -89,16 +97,7 @@ class DashboardController extends Controller
         $CompanyIdentity = $this->CompanyIdentityDetails();
 
         
-		//die();
-		// get waiting list
-        //$myList = Booking::where('status', 3)->with('patient')->get();
-        // calculate waiting time
-
-		$data['tables'] = Tables::getTables();
-		//return Tables::getTables();
-        $data['activeModules'] = modules::where('active', 1)->get();
         //$data['topMedicalAids'] = BillingInvoice::topMedicalAids();
-        $data['dailyData'] = 23;//$this->getDailyProfit();
         //$data['myList'] = $myList;
         //$data['patients'] = Patient::getPatientInfo();
         //$data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
@@ -106,13 +105,20 @@ class DashboardController extends Controller
         //$data['cashPayment'] = InvoicePayments::getDailySummary(1)->sum('paid');
         //$data['cashEft'] = InvoicePayments::getDailySummary(2)->sum('paid');
         //$data['cashDebitCard'] = InvoicePayments::getDailySummary(3)->sum('paid');
-       // $data['notifications'] = $this->notification::getAllUnreadNotifications();
-       // $data['activePatients'] = Patient::totalPatients();
+		// $data['notifications'] = $this->notification::getAllUnreadNotifications();
+		// $data['activePatients'] = Patient::totalPatients();
         //$data['bookingForMonth'] = Booking::getBookingForMonth();
-       // $data['bookingForShowedUp'] = Booking::getBookingForShowedUp();
+		// $data['bookingForShowedUp'] = Booking::getBookingForShowedUp();
         //$data['bookingForNoShow'] = Booking::getBookingForNoShow();
-       // $data['activeModules'] = modules::where('active', 1)->get();
+		// $data['activeModules'] = modules::where('active', 1)->get();
+	  // $tables = Tables::getTablesScans();
+	   //return $tables;
+		$data['dailyData'] = 23000;//$this->getDailyProfit();
+		$data['activeModules'] = modules::where('active', 1)->get();
+		$data['ordersServices'] = OrdersServices::getAllRequest();
+		$data['orders'] = Orders::getOrders();
 		$data['users'] = HRPerson::getAllUsers();
+		$data['tables'] = Tables::getTablesScans();
         return view('dashboard.index')->with($data);
     }
 
@@ -138,9 +144,13 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function closeTable(Tables $table)
     {
-        //
+        $this->RestaurantService->closeTable($table); 
+        Alert::toast('Table Closed Successfully', 'success');
+        activity()->log('Table Closed Successfully');
+        return back();
+		
     }
 
     /**

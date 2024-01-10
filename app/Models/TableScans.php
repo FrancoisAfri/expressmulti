@@ -17,7 +17,7 @@ class TableScans extends Model
 	protected $table = 'table_scans';
 
     protected $fillable = [
-        'ip_address', 'status', 'table_id'
+        'ip_address', 'status', 'table_id', 'nickname', 'scan_time', 'comment'
 
     ];
 
@@ -34,5 +34,17 @@ class TableScans extends Model
     public function table(): BelongsTo
     {
         return $this->belongsTo(Tables::class, 'table_id', 'id');
+    } //getTableStatus
+	
+	public static function getTableStatus($id)
+    {
+		
+		$scan = TableScans::where('table_id', $id)
+			->where('status', 1)
+			->orderBy('id', 'desc')
+            ->first();
+		if (!empty($scan->status) && $scan->status == 1)
+			return 1;
+		else return 0;
     }
 }

@@ -23,7 +23,7 @@
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <span class="pro-user-name ml-1">
-                                    Welcome to {{$localName}} <i class="mdi mdi-chevron-down"></i>
+                                   <i class="mdi mdi-chevron-down"></i>
                         </span>
                     </a>
 
@@ -105,6 +105,9 @@
 						</li>
 					@endif
                     </ul> <!-- end navbar-->
+					<span style="text-align: right">
+                        <i class="mdi mdi-chevron-down"></i>
+					</span>
                 </div> <!-- end .collapsed-->
             </nav>
         </div> <!-- end container-fluid -->

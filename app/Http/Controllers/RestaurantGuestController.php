@@ -15,6 +15,7 @@ use App\Models\Orders;
 use App\Models\OrdersServices;
 use App\Models\ServiceType;
 use App\Models\HRPerson;
+use App\Models\CloseRequests;
 use App\Models\TableScans;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -45,19 +46,23 @@ class RestaurantGuestController extends Controller
      */
     public function index(Tables $table)
     {
-		// data to display on views
-		$data = $this->breadcrumb(
-            'Restaurant ',
-            'Restaurant ordering page',
-            'restaurant_details',
-            'Menu Page',
-            'Restaurant Menu & Services'
-        );
+		
 		// get table last scanned
-		$scanned = TableScans::where('table_id', $table->id)->orderBy('id', 'desc')->first();
+
+		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
+			//  Restaurant ordering page
+			$localName = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
+			// data to display on views
+			$data = $this->breadcrumb(
+				"Welcome $localName",
+				"",
+				'restaurant_details',
+				'Menu Page',
+				'Restaurant Menu & Services'
+			);
 			// get restaurant Manager
 			$user =  DB::table('users')->select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -65,23 +70,29 @@ class RestaurantGuestController extends Controller
 				->first();
 			
 			$manager = HRPerson::where('user_id',$user ->id)->first();
-			//return $manager;
 			// get orders and service history
-			
 			
 			$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			$data['menus'] = Menu::getMenus();
 			$data['manager'] = $manager;
+			$data['localName'] = $localName;
 			$data['services'] = ServiceType::getServices();
 			return view('guest.index')->with($data);
 		}
 		else
 		{
+			$scanned = TableScans::create([
+					'ip_address' => '',
+					'table_id' => $table->id,
+					'scan_time' => time(),
+					'status' => 1,
+				]);
+			$localName = '';
 			Alert::toast('This table have been closed !!! Please scan a qr code', 'warning');
-			return redirect()->route("/restaurant/seating_plan/$table->id");
+			return back();
+			//return redirect('/patients/booking_calender');
+			//eturn redirect()->route("seating.plan", $table->id);
 		}
-		
-		
     }
 
     /**
@@ -117,9 +128,16 @@ class RestaurantGuestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function rateService(Request $request, TableScans $scan)
     {
-        //
+		$comment = !empty($request['comments']) ? $request['comments'] : '';
+
+		$scan->comment = $comment;
+		$scan->update();
+		
+		Alert::toast('Thank you for your comment. We looking for to your next visist', 'success');
+		activity()->log('Client Added Comment');
+		return back();
     }
 
     /**
@@ -165,5 +183,29 @@ class RestaurantGuestController extends Controller
     public function destroy($id)
     {
         //
+    }
+	// close request
+	public function closeTableRequest(Tables $table, ServiceType $service)
+    {
+        //
+		$newRequest = $this->RestaurantService->requestService($table, $service);
+		
+        alert()->success('SuccessAlert', "Your: $service->name request have been submitted, It been atttended to");
+        activity()->log("New Service Request Added: $service->name ");
+
+		return redirect()->back();
+    }
+	
+	public function saveName(Request $request, TableScans $scan)
+    {
+		
+		$nickname = !empty($request['nickname']) ? $request['nickname'] : '';
+		
+		$scan->nickname = $nickname;
+		$scan->update();
+		Alert::toast('Thank you!!! You may continue.', 'success');
+        activity()->log('Table Closed Successfully');
+		return back();
+		
     }
 }

@@ -54,5 +54,12 @@ class Orders extends Model
 					->first();
     }
 	
-	
+	// get all order per table and scanID
+	public static function getOderByTable($table, $scan)
+    {
+        return Orders::with('products')
+					->where(['table_id' => $table])
+					->where(['scan_id' => $scan])
+					->get();
+    }
 }

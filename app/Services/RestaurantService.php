@@ -338,7 +338,7 @@ class RestaurantService //implements RestaurantServiceInterface
     {
        
 		// get table last scanned
-		$scanned = TableScans::where('table_id', $table->id)->orderBy('id', 'desc')->first();
+		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 
 		if (!empty($scanned->status) &&  $scanned->status === 1)
 		{
@@ -366,5 +366,13 @@ class RestaurantService //implements RestaurantServiceInterface
 		}
 		
     }
-	
+	// close table
+	public function closeTable($table)
+    {
+		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
+
+        $scanned->status = 2;
+        $scanned->closed_time = time();
+        $scanned->update();
+    }
 }

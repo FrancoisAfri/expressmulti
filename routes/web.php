@@ -25,6 +25,7 @@ use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\AuditController;
 use App\Http\Controllers\Patients\PatientControlle;
 use App\Http\Controllers\Restaurant\RestaurantController;
+use App\Http\Controllers\RestaurantGuestController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -46,9 +47,13 @@ Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationG
 Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
 
 // table scanning /2
-Route::get('/restaurant/seating_plan/{table}', 'App\Http\Controllers\RestaurantGuestController@index');
+Route::get('restaurant/seating_plan/{table}', [RestaurantGuestController::class, 'index'])
+    ->name('seating.plan');
+//Route::get('/', 'App\Http\Controllers\RestaurantGuestController@');
 Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
 Route::post('/restaurant/place-order/{table}', 'App\Http\Controllers\RestaurantGuestController@store');
+Route::post('restaurant/rate/service/{scan}', 'App\Http\Controllers\RestaurantGuestController@rateService');
+Route::post('restaurant/add-table-name/{scan}', 'App\Http\Controllers\RestaurantGuestController@saveName');
 
 	
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
@@ -203,7 +208,6 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
 
 Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
-    //Route::resource('category', RestaurantController::class);
 	Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
         ->name('client_details.update');
     Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
@@ -278,6 +282,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('menu-type.activate');
 	Route::PATCH('update/menu-type/{type}', [RestaurantController::class, 'menuTypeUpdate'])
         ->name('menu-type.update');
+	Route::get('table/close/{table}', [DashboardController::class, 'closeTable'])
+        ->name('table.close'); 
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
