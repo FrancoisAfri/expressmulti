@@ -10,6 +10,7 @@ use App\Models\HRPerson;
 use App\Models\modules;
 use App\Models\Notification;
 use App\Models\Patient;
+use App\Models\CloseRequests;
 use App\Models\Url;
 use App\Models\User;
 use App\Models\Tables;
@@ -112,10 +113,12 @@ class DashboardController extends Controller
         //$data['bookingForNoShow'] = Booking::getBookingForNoShow();
 		// $data['activeModules'] = modules::where('active', 1)->get();
 	  // $tables = Tables::getTablesScans();
+
 	   //return $tables;
 		$data['dailyData'] = 23000;//$this->getDailyProfit();
 		$data['activeModules'] = modules::where('active', 1)->get();
 		$data['ordersServices'] = OrdersServices::getAllRequest();
+		$data['CloseRequests'] = CloseRequests::getAllCloseRequests();
 		$data['orders'] = Orders::getOrders();
 		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTablesScans();
@@ -152,7 +155,33 @@ class DashboardController extends Controller
         return back();
 		
     }
-
+	// close service
+	public function closeService(OrdersServices $service)
+    {
+        $this->RestaurantService->closeService($service); 
+        Alert::toast('Service Request Successfully', 'success');
+        activity()->log('Service Request Closed Successfully');
+        return back();
+		
+    }
+	// close request
+	public function closeRequest(CloseRequests $close)
+    {
+        $this->RestaurantService->closeRequest($close); 
+        Alert::toast('Close Successfully', 'success');
+        activity()->log('Closed Request Successfully');
+        return back();
+		
+    }
+	// close request
+	public function closeDeniedRequest(CloseRequests $close)
+    {
+        $this->RestaurantService->closeDeniedRequest($close); 
+        Alert::toast('Close Successfully', 'success');
+        activity()->log('Closed Request Successfully');
+        return back();
+		
+    }
     /**
      * Store a newly created resource in storage.
      *

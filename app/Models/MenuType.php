@@ -30,6 +30,6 @@ class MenuType extends Model
 	// get all service type
 	public static function getMenuTypes()
     {
-        return MenuType::get();
+        return MenuType::where('status',1)->get();
 	}
 }

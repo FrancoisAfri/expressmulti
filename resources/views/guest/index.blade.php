@@ -17,6 +17,19 @@
 	<link href="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.css" rel="stylesheet">
     <link href="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/css/star-rating.css') }}" media="all"  rel="stylesheet" type="text/css">
     <link href="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/themes/krajee-svg/theme.css') }}" media="all"  rel="stylesheet" type="text/css">
+	<!-- Bootstrap Css -->
+      <link rel="stylesheet" href="{{ asset('libs/eatsome/vender/bootstrap/css/bootstrap.min.css') }}">
+      <!-- Icofont -->
+      <link rel="stylesheet" href="{{ asset('libs/eatsome/vender/icons/icofont.min.css') }}">
+      <!-- Slick SLider Css -->
+      <link rel="stylesheet" href="{{ asset('libs/eatsome/vender/slick/slick/slick.css') }}">
+      <link rel="stylesheet" href="{{ asset('libs/eatsome/vender/slick/slick/slick-theme.css') }}">
+      <!-- Font Awesome Icon -->
+      <link href="{{ asset('libs/eatsome/vender/fontawesome/css/all.min.css') }}" rel="stylesheet">
+      <!-- Sidebar CSS -->
+      <link href="{{ asset('libs/eatsome/vender/sidebar/demo.css') }}" rel="stylesheet">
+      <!-- Custom Css -->
+      <link rel="stylesheet" href="{{ asset('libs/eatsome/css/style.css') }}">
 @endsection
 <!-- Begin page -->
 
@@ -32,7 +45,6 @@
 								<div class="col">
 									<h5 class="mb-1 mt-2 font-16">{{$tableDetails->name}}</h5>
 									<p class="mb-2 text-muted">{{$tableDetails->number_customer}} Seat(s)</p>
-									<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Save">
 								</div>
 							</div> <!-- end row-->
 						</div> <!-- end widget-rounded-circle-->
@@ -47,7 +59,6 @@
 							<script>
 								running = 1;
 								time = {{ (time() - $scanned->scan_time)  * 10}};
-								console.log(time);
 							</script>
 								<div class="col">
 									<h5 class="mb-1 mt-2 text-white font-16">Arrived At: {{date('Y-m-d H-s-i', $scanned->scan_time)}}</h5>
@@ -90,7 +101,6 @@
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<!-- Portlet card -->
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
@@ -100,43 +110,96 @@
 								</div>
 								<h4 class="header-title mb-0">Menu</h4>
 								<div id="cardCollpase4" class="collapse pt-3 show">
-									<div class="table-responsive" style="height:500px; overflow-y: scroll;">
-										<table class="table table-centered table-borderless mb-0">
-											<thead class="thead-light">
-												<tr>
-													<th></th>
-													<th></th>
-													<th></th>
-												</tr>
-											</thead>
-											<tbody>
+									<div class="bg-light">
+										<form class="form-horizontal" method="get" action="{{ route('seating.plan', $table->id) }}">
+											
+											<div class="col-md-12">
+												<div class="form-group">
+													<div class="col-sm-4">
+														<label>Menu Type</label>
+														<select class="form-control select2 " style="width: 100%;"
+															   id="type" name="type" data-select2-id="1" tabindex="-1" aria-hidden="true">
+															<option value="0">*** Select Type ***</option>
+															@foreach ($menuTypes as $type)
+																<option value="{{ $type->id }}">{{ $type->name }}</option>
+															@endforeach
+														</select>
+													</div>
+													<div class="col-sm-4">
+														<label>Categories</label>
+														<select class="form-control select2 " style="width: 100%;"
+															 id="categoty" name="categoty"   data-select2-id="1" tabindex="-1" aria-hidden="true">
+															<option value="0">*** Select Category ***</option>
+															@foreach ($Categories as $cat)
+																<option value="{{ $cat->id }}">{{ $cat->name }}</option>
+															@endforeach
+														</select>
+													</div>
+												</div>
+												<div class="box-footer">
+													<button type="submit" class="btn btn-primary pull-left">Search</button><br>
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="tab-content" id="pills-tabContent" >
+										<!-- 1st tab -->
+										<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+											<!-- 1st product -->
+											<div class="store-list-2">
 												@if (!empty($menus))
 													@foreach($menus as $menu)
-														<tr>
-															<td>
-																<div class="popup-thumbnail img-responsive">
-																	<img src="{{ asset('storage/assets/Images/'.$menu->image) }} "
-																		 height="35px" width="40px" alt="Image">
+														<div class="row justify-content-between">
+															<div class="col-6">
+																<div class="d-flex align-items-center gap-2 mb-3">
+																	<img src="{{ asset('libs/eatsome/img/veg.jpeg') }}" alt="Image"
+																   class="img-fluid ch-20">
+																   <div class="badge border border-warning text-warning">Bestseller</div>
 																</div>
-															</td>
-															<td>{{ $menu->name ?? ''}}
-															<br>{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}
-															<br>{{ (!empty($menu->ingredients)) ? $menu->ingredients : ''}}
-															<br>{{ (!empty($menu->calories)) ? $menu->calories : ''}} Calories
-															</td>
-															<td>
-															
-															</td>
-														</tr>
+																<h3 class="fw-bold mb-1">{{ $menu->name ?? '' }}</h3>
+																<p class="small text-muted mb-3">{{ $menu->categories->name ?? '' }}</p>
+																<p class="small text-muted mb-3">{{ $menu->menuType->name ?? '' }}</p>
+																<h6 class="fw-bold">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</h6>
+																<div class="badge border border-warning">
+																	<span><i class="fa-solid fa-star text-warning"></i></span>
+																	<span><i class="fa-solid fa-star text-warning"></i></span>
+																	<span><i class="fa-solid fa-star text-warning"></i></span>
+																	<span><i class="fa-solid fa-star text-warning"></i></span>
+																	<span><i class="fa-solid fa-star text-dark"></i></span>
+																	<span class="text-dark">95</span>
+																</div>
+															</div>
+															<div class="col-4">
+																<div class="card border-0">
+																	<img src="{{ asset('libs/eatsome/img/veg.jpeg') }}"
+																   class="card-img-top rounded-3" alt="...">
+																	<div class="card-body d-grid px-0 pt-2 pb-0">
+																		<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded"
+																		data-bs-toggle="modal" data-bs-target="#view-more-modal"
+																		 data-id="{{ $menu->id }}"
+																			data-name="{{ $menu->name }}"
+																			data-description="{{ $menu->description }}"
+																			data-price="{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}"
+																			data-calories="{{ $menu->calories }}"
+																			data-category="{{ $menu->categories->name }}"
+																			data-type="{{ $menu->menuType->name }}"
+																			>
+																			Add +
+																		</button>
+																	</div>
+																</div>
+															</div>
+														</div>
 													@endforeach
 												@endif
-											</tbody>
-										</table>
-									</div> <!-- .table-responsive -->
-								</div> <!-- end collapse-->
-							</div> <!-- end card-body-->
-						</div> <!-- end card-->
-					</div> <!-- end col-->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							@include('guest.partials.add_item')
+						</div>
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-xl-6">
@@ -234,9 +297,9 @@
 											<div class="box-body">
 												<hr class="hr-text" data-content="TELL US ABOUT YOUR EXPERIENCE">
 												<div class="form-group">
-													<label for="additional_comments" class="col-sm-2 control-label">Comments</label>
+													<label for="comments" class="col-sm-2 control-label">Feedback</label>
 													<div class="col-sm-10">
-														<textarea name="comments" id="comments" class="form-control" rows="4"></textarea>
+														<textarea name="comments" id="comments" class="form-control" rows="4" placeholder="Enter Feedback"></textarea>
 													</div>
 												</div>
 											</div>
@@ -314,11 +377,52 @@
             type="text/javascript"></script>
     <script src="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/js/star-rating.js') }}" type="text/javascript"></script>
     <script src="{{ asset('libs/kartik-v-bootstrap-star-rating-3642656/themes/krajee-svg/theme.js') }}"></script>
+	<script src="{{ asset('libs/eatsome/vender/jquery/jquery.min.js') }}"></script>
+	<script src="{{ asset('libs/eatsome/vender/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+	<!-- slick Slider JS-->
+	<script src="{{ asset('libs/eatsome/vender/slick/slick/slick.min.js') }}"></script>
+	<!-- Sidebar JS-->
+	<script src="{{ asset('libs/eatsome/vender/sidebar/hc-offcanvas-nav.js') }}"></script>
+	<!-- Javascript -->
+	<script src="{{ asset('libs/eatsome/js/custom.js') }}"></script>
+	<script src="{{ asset('js/custom_components/js/modal_ajax_submit.js') }}"></script>
     <script>
+	
 		$(function () {
-			
+			// get view more modal
+			let menuID;
+            $('#view-more-modal').on('show.bs.modal', function (e) {
+                let btnEdit = $(e.relatedTarget);
+                menuID = btnEdit.data('id');
+				let name = btnEdit.data('name');
+				let description = btnEdit.data('description');
+				let price = btnEdit.data('price');
+				let category = btnEdit.data('category');
+				let type = btnEdit.data('type');
+				
+				let calories = btnEdit.data('calories');
+                let modal = $(this);
+				$('#name').html(name);
+				$('#description').html(description);
+				$('#price').html(price);
+				$('#category').html(category);
+				$('#menu_type').html(type);
+				$('#calories').html(calories + ' Calories');
+            });
+			// add item to cart
+			$('#add-item-cart').on('click', function () {
+                let strUrl = '/restaurant/add-cart/{{$table->id}}/' + menuID;
+                let modalID = 'view-more-modal';
+                let formName = 'add-cart-form';
+                let submitBtnID = 'add-item-cart';
+                let redirectUrl = '{{route('seating.plan', $table->id) }}';
+                let successMsgTitle = 'Item Saved!';
+                let successMsg = 'The item has been added successfully.';
+                modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
+            });
             //Launch counter for running tasks
             increment();
+			
         });
 		function increment(taskID) {
 			if (running == 1) {

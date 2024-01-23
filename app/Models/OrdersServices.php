@@ -43,7 +43,7 @@ class OrdersServices extends Model
 		// get all history
 	public static function getAllRequest()
     {
-        return OrdersServices::with('tables','services')
+        return OrdersServices::with('tables','services')->where('status',1)
 					->get();
     }
 	// get all services order per table and scanID

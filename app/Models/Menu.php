@@ -43,8 +43,18 @@ class Menu extends Model
     }
 	
 	// get all menus
-	public static function getMenus()
+	public static function getMenus($type, $categoty)
     {
-        return Menu::get();
+		$query = Menu::where('status',1);
+        // return only from asset type table if  selection from asset type
+        if ($type > 0) {
+            $query->where('menu_type', $type);
+        } 
+		if ($categoty > 0) {
+            $query->where('category_id', $categoty);
+        }
+		$query->orderBy('menu_type','asc')->orderBy('category_id','asc')->get();
+       
+	   return $query->get();	
     }
 }

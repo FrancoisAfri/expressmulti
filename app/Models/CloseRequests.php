@@ -27,4 +27,14 @@ class CloseRequests extends Model
     {
         return "Close Requests Details {$eventName} ";
     }
+	// relationship between Tables and order products	
+	public function tables(): BelongsTo
+    {
+        return $this->belongsTo(Tables::class, 'table_id', 'id');
+    }
+	// get all services order per table and scanID
+	public static function getAllCloseRequests()
+    {
+		return CloseRequests::with('tables')->where('status',1)->get();
+    }
 }

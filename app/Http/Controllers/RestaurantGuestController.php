@@ -9,7 +9,10 @@ use App\Services\RestaurantService;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use App\Services\CompanyIdentityService;
+use App\Models\MenuType;
+use App\Models\Categories;
 use App\Models\Menu;
+use App\Models\Cart;
 use App\Models\Tables;
 use App\Models\Orders;
 use App\Models\OrdersServices;
@@ -44,13 +47,14 @@ class RestaurantGuestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Tables $table)
+    public function index(Request $request, Tables $table)
     {
 		
 		// get table last scanned
 
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
-
+		$type = !empty($request['type']) ? $request['type'] : 0;
+		$categoty = !empty($request['categoty']) ? $request['categoty'] : 0;
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
 			//  Restaurant ordering page
@@ -60,7 +64,7 @@ class RestaurantGuestController extends Controller
 				"Welcome $localName",
 				"",
 				'restaurant_details',
-				'Menu Page',
+				'Home Page',
 				'Restaurant Menu & Services'
 			);
 			// get restaurant Manager
@@ -71,10 +75,14 @@ class RestaurantGuestController extends Controller
 			
 			$manager = HRPerson::where('user_id',$user ->id)->first();
 			// get orders and service history
-			
+			$menuTypes = MenuType::getMenuTypes();
+			$Categories = Categories::getCategories();
 			$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
-			$data['menus'] = Menu::getMenus();
+			$data['menus'] = Menu::getMenus($type, $categoty);
 			$data['manager'] = $manager;
+			$data['menuTypes'] = $menuTypes;
+			$data['Categories'] = $Categories;
+			$data['table'] = $table;
 			$data['localName'] = $localName;
 			$data['services'] = ServiceType::getServices();
 			return view('guest.index')->with($data);
@@ -185,20 +193,25 @@ class RestaurantGuestController extends Controller
         //
     }
 	// close request
-	public function closeTableRequest(Tables $table, ServiceType $service)
+	public function closeTableRequest(Tables $table)
     {
-        //
-		$newRequest = $this->RestaurantService->requestService($table, $service);
 		
-        alert()->success('SuccessAlert', "Your: $service->name request have been submitted, It been atttended to");
-        activity()->log("New Service Request Added: $service->name ");
+		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
+		// save close request
+		$closeRequests = CloseRequests::create([
+                'table_id' => $table->id,
+                'scan_id' => $scanned->id,
+                'status' => 1,
+            ]);
+
+        alert()->success('SuccessAlert', "Your request to close table have been submitted.");
+        activity()->log("New close table Request Added");
 
 		return redirect()->back();
     }
 	
 	public function saveName(Request $request, TableScans $scan)
     {
-		
 		$nickname = !empty($request['nickname']) ? $request['nickname'] : '';
 		
 		$scan->nickname = $nickname;
@@ -206,6 +219,51 @@ class RestaurantGuestController extends Controller
 		Alert::toast('Thank you!!! You may continue.', 'success');
         activity()->log('Table Closed Successfully');
 		return back();
+		
+    }
+	//save order
+	public function storeOrder(Request $request, TableScans $scan)
+    {
+		return $request;
+		///  save order 
+		
+		$quantities = $request->input('quantity');
+		$comments = $request->input('comment');
+		if ($quantities) {
+			foreach ($quantities as $productID => $quantity) {
+				$quote->products()->attach($productID, ['price' => $price, 'quantity' => $quantities[$productID], 'comment' => $comments[$productID]]);
+			}
+		}
+		$scan->comment = $comment;
+		$scan->update();
+		//$quoteNumber .= 'ORD' . sprintf('%07d', $quote->id);
+        //$quote->quote_number = $quoteNumber;
+       // $quote->update();
+		Alert::toast('Your Order have been submitted.', 'success');
+		activity()->log('New Order Added');
+		return back();
+    }
+	//save cart
+	public function saveCart(Request $request, Tables $table, Menu $menu)
+    {
+		$quantity = !empty($request->input('quantity')) ? $request->input('quantity') : 0;
+		$comment = !empty($request->input('comment')) ? $request->input('comment') : '';
+		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
+		// save item into cart
+
+		$cart = Cart::create([
+					'product_id' => $menu->id,
+					'comment' => $comment,
+					'quantity' => $quantity,
+					'table_id' => $table->id,
+					'scan_id' => $scanned->id,
+					'price' => $menu->price,
+					'status' => 1,
+				]);
+
+		Alert::toast('Your item have been added to cart.', 'success');
+		activity()->log('New Order Added');
+        return response()->json(['message' => 'success'], 200);
 		
     }
 }

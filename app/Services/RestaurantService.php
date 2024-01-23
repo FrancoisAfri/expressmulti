@@ -375,4 +375,34 @@ class RestaurantService //implements RestaurantServiceInterface
         $scanned->closed_time = time();
         $scanned->update();
     }
+	// close table
+	public function closeService($service)
+    {
+        $service->status = 2;
+        $service->update();
+    }
+	// close table
+	public function closeRequest($close)
+    {
+        $close->status = 2;
+        $close->update();
+		// close table 
+		$scanned = TableScans::where('id', $close->scan_id)->first();
+
+        $scanned->status = 2;
+        $scanned->closed_time = time();
+        $scanned->update();
+    }
+	// close table
+	public function closeDeniedRequest($close)
+    {
+        $close->status = 2;
+        $close->update();
+    }
+	// close table
+	public function closeOrders($order)
+    {
+        $order->status = 2;
+        $order->update();
+    }
 }

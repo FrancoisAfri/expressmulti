@@ -38,6 +38,6 @@ class Categories extends Model
 	// get all categories
 	public static function getCategories()
     {
-        return Categories::get();
+        return Categories::where('status',1)->get();
     }
 }

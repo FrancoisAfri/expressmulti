@@ -135,7 +135,6 @@
                                             <th>Table</th>
                                             <th>Status</th>
 											<th>Requested</th>
-											<th>Acknowledged</th>
 											<th></th>
                                         </tr>
                                         </thead>
@@ -149,12 +148,10 @@
 															<td>{{ $service->tables->name ?? ''}}</td>
 															<td>{{ $service->status == 1 ? 'Open': 'closed'}}</td>
 															<td>{{ $service->created_at ?? ''}}</td>
-															<td>{{ $service->updated_at ?? ''}}</td>
 															<td>
 																<button type="button" class="close mark-as-read"
-																		data-dismiss="alert"
+																		onclick="postData({{$service->id}}, 'closeservice');"
 																		aria-label="Close"
-																		data-id="{{ $service->id }}">
 																	<span aria-hidden="true">&times;</span>
 																</button>
 															</td>
@@ -169,14 +166,60 @@
                                     </table>
                                 </div> <!-- end table responsive-->
                             </div> <!-- collapsed end -->
+							<h4 class="header-title mb-0">Close Requests</h4>
+							<div id="cardCollpase5" class="collapse pt-3 show">
+                                <div class="table-responsive">
+                                    <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
+                                           id="data-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Table</th>
+											<th>Requested</th>
+                                            <th>Status</th>
+											<th></th>
+											<th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                @if (!empty($CloseRequests))
+                                                    @foreach($CloseRequests as $close)
+														<tr>
+															<td>{{ $close->tables->name ?? ''}}</td>
+															<td>{{ $close->status == 1 ? 'Open': 'closed'}}</td>
+															<td>{{ $close->created_at ?? ''}}</td>
+															<td>
+																<button type="button" class="close mark-as-read"
+																		onclick="postData({{$close->id}}, 'closedenied');"
+																		aria-label="Close"
+																	<span aria-hidden="true">No</span>
+																</button>
+															</td>
+															<td>
+																<button type="button" class="close mark-as-read"
+																		onclick="postData({{$close->id}}, 'closerequest');"
+																		aria-label="Close"
+																	<span aria-hidden="true">Yes</span>
+																</button>
+															</td>
+														</tr>
+                                                    @endforeach
+                                                @else
+                                                    <p class="dropdown-item">There are no new notifications</p>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div> <!-- end table responsive-->
+                            </div>
                         </div> <!-- end card-body -->
                     </div> <!-- end card-->
                 </div>
             </div>
             <!-- end row -->
-
            <!-- @role('Admin')-->
-           
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="card-box">
@@ -363,6 +406,14 @@
 
             if (data == 'closetable')
                 location.href = "{{route('table.close', '')}}" + "/" + id;
+			else if (data == 'closeservice')
+				location.href = "{{route('service.close', '')}}" + "/" + id;
+			else if (data == 'closerequest')
+				location.href = "{{route('request.close', '')}}" + "/" + id;
+			else if (data == 'closeorder')
+				location.href = "{{route('request.close', '')}}" + "/" + id;
+			else if (data == 'closedenied')
+				location.href = "{{route('request-denied.close', '')}}" + "/" + id;
         }
         (function () {
             "use strict";
@@ -430,8 +481,11 @@
         (chart = new ApexCharts(document.querySelector("#total-revenue"), options)).render();
         // chart.render();
         // }
-        function sendMarkRequest(id = null) {
-            console.log(id)
+        
+
+        /*
+		function sendMarkRequest(id = null) {
+            
             return $.ajax("{{ route('markNotification') }}", {
                 method: 'POST',
                 data: {
@@ -440,8 +494,7 @@
                 }
             });
         }
-
-        $(function () {
+		$(function () {
             $('.mark-as-read').click(function () {
                 let request = sendMarkRequest($(this).data('id'));
                 request.done(() => {
@@ -455,6 +508,6 @@
                     $('div.alert').remove();
                 })
             });
-        });
+        });*/
     </script>
 @stop

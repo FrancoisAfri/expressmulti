@@ -4,10 +4,8 @@
 
 <body data-layout-mode="horizontal"
       data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "topbar": {"color": "dark"}, "showRightSidebarOnPageLoad": true}'>
-
 <!-- Begin page -->
 <div id="wrapper">
-
     <!-- Topbar Start -->
     <div class="navbar-custom">
         <div class="container-fluid">
@@ -18,8 +16,6 @@
                         <i class="fe-maximize noti-icon"></i>
                     </a>
                 </li>
-
-
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <span class="pro-user-name ml-1">
@@ -28,11 +24,7 @@
                     </a>
 
                 </li>
-
-
-
             </ul>
-
             <!-- LOGO -->
             <div class="logo-box">
                 <a href="index.html" class="logo logo-dark text-center">
@@ -45,7 +37,6 @@
                         <!-- <span class="logo-lg-text-light">U</span> -->
                             </span>
                 </a>
-
                 <a href="index.html" class="logo logo-light text-center">
                             <span class="logo-sm">
                                 <img src="../assets/images/logo-sm.png" alt="" height="22">
@@ -55,14 +46,12 @@
                             </span>
                 </a>
             </div>
-
             <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
                 <li>
                     <button class="button-menu-mobile waves-effect waves-light">
                         <i class="fe-menu"></i>
                     </button>
                 </li>
-
                 <li>
                     <!-- Mobile menu toggle (Horizontal Layout)-->
                     <a class="navbar-toggle nav-link" data-toggle="collapse" data-target="#topnav-menu-content">
@@ -74,14 +63,11 @@
                     </a>
                     <!-- End mobile menu toggle-->
                 </li>
-
-
             </ul>
             <div class="clearfix"></div>
         </div>
     </div>
     <!-- end Topbar -->
-
     <div class="topnav shadow-lg">
         <div class="container-fluid">
             <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
@@ -115,9 +101,6 @@
     <!-- end topnav-->
 
     @include('sweetalert::alert')
-
-
-
     <!-- ============================================================== -->
     <!-- Start Page Content here -->
     <!-- ============================================================== -->
@@ -136,11 +119,9 @@
                                     @if (isset($breadcrumb) && count($breadcrumb) > 0)
                                         <ol class="breadcrumb">
                                             @foreach($breadcrumb as $bc_item)
-
                                                 <li class="breadcrumb-item">
                                                     <a href="{{ $bc_item['path'] ?? '' }}">{{ $bc_item['title'] }}</a>
                                                 </li>
-
                                             @endforeach
                                         </ol>
                                     @endif
@@ -149,14 +130,13 @@
                             <h4 class="page-title">
                                 {{ $page_title ?? '' }}
                                 <small>{{ $page_description ?? '' }}</small>
+								<a href="/restaurant/close-table/request/{{$tableID}}">Close Table</a>
                             </h4>
+							<a href="/restaurant/cart/{{$tableID}}"><b>Cart</b></a>
                         </div>
                     </div>
                 </div>
-
-
                 @yield('content_data')
-
             </div>
         </div>
     </div>

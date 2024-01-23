@@ -1,0 +1,239 @@
+/*
+Template Name: Eatsome - Restaurant & Food Delivery Mobile Template
+Author: Askbootstrap
+Author URI: https://themeforest.net/user/askbootstrap
+Version: 0.1
+*/
+
+/*
+- Import Font and Icon
+- Body
+- Scroll Bar
+- Custom Bootstrap
+- Custom Sizes
+- Products
+- Sort By
+- Search List
+- Notification
+- Offers
+*/
+
+/* Import Font and Icon */ 
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+
+
+/* Body */ 
+body{
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+}
+:root{
+    --red:#eb394d;
+}
+a{
+    text-decoration: none;
+}
+
+/* Scroll Bar */
+html ::-webkit-resizer {
+    background-color: #ffffff;
+}
+html ::-webkit-scrollbar {
+    width: 0px;
+    overflow: visible;
+}
+html ::-webkit-scrollbar-button {
+    display: none;
+}
+html ::-webkit-scrollbar-corner {
+    background-color: #ffffff;
+}
+html ::-webkit-scrollbar-thumb {
+    background-color: rgba(138, 138, 138, 0.4);
+    border-radius: 7px;
+}
+html ::-webkit-scrollbar-track-piece {
+    background-color: #ffffff;
+}
+
+/* Custom Bootstrap */
+.fw-bold {
+    font-weight: 500!important;
+}
+hr{
+    border-top: 1px solid #a4a4a4 !important;
+}
+.btn-outline-secondary {
+    border-color: #dee2e6;
+    color: #7a7c7d;
+}
+.text-danger{
+    color: var(--red);
+}
+.rounded-md{
+    border-radius: 10px;
+}
+.links a{
+    text-decoration: none;
+    color: #000;
+}
+.links span{
+    color: grey;
+}
+.links span:hover{
+    color: #000;
+}
+.links span .active{
+    color: var(--red);
+}
+.back{
+   position: relative;
+}
+.brands-list h6.card-title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Custom Sizes */ 
+.ch-10{
+    height: 10px;
+}
+.ch-20{
+    height: 20px;
+}
+.ch-30{
+    height: 30px;
+}
+.ch-40{
+    height: 40px;
+}
+.ch-50{
+    height: 50px;
+}
+.ch-60{
+    height: 60px;
+}
+.ch-70{
+    height: 70px;
+}
+.ch-80{
+    height: 80px;
+}
+.cw-10{
+    width: 10px;
+    min-width: 10px;
+}
+.cw-20{
+    width: 20px;
+    min-width: 20px;
+}
+.cw-30{
+    width: 30px;
+    min-width: 30px;
+}
+.cw-40{
+    width: 40px;
+    min-width: 40px;
+}
+.cw-50{
+    width: 50px;
+    min-width: 50px;
+}
+.cw-60{
+    width: 60px;
+    min-width: 60px;
+}
+.cw-70{
+    width: 70px;
+    min-width: 70px;
+}
+.cw-80{
+    width: 80px;
+    min-width: 80px;
+}
+h6, .h6 {
+    font-size: 14px;
+}
+h5, .h5 {
+    font-size: 15px;
+}
+h4, .h4 {
+    font-size: 16px;
+}
+h3, .h3 {
+    font-size: 17px;
+}
+.fs-3{
+    font-size: 16px !important;
+}
+.fs-5 {
+    font-size: 15px !important;
+}
+
+/* Products */
+.product-back{
+    position: relative;
+}
+.product-back-two{
+    position: relative;
+}
+.product-veg{
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    z-index: 1;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: white;
+}
+
+/* Sort By */
+.relevance-back{
+    position: relative;
+}
+.relevance{
+    position: absolute;
+    bottom: 16px;
+    right: 0;
+}
+
+/* Search List */
+.relevance-pizza-back{
+    position: relative;
+}
+.relevance-pizza{
+    position: absolute;
+    right: 0;
+    top: 18%;
+}
+.osahan-tab button{
+    border: none;
+    color:grey;
+    padding: 13px 0;
+}
+.osahan-tab button:hover{
+    color: #000;
+}
+.osahan-tab button.active{
+    color: var(--red);
+    border-bottom: 2px solid var(--red);
+}
+
+/* Notification */
+.notification-page .img-fluid {
+    height: 60px;
+    max-width: 60px;
+}
+
+/* Offers */
+.product-offer-back{
+    position: relative;
+}
+.product-rating{
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+}

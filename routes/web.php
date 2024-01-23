@@ -49,12 +49,16 @@ Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrati
 // table scanning /2
 Route::get('restaurant/seating_plan/{table}', [RestaurantGuestController::class, 'index'])
     ->name('seating.plan');
-//Route::get('/', 'App\Http\Controllers\RestaurantGuestController@');
+//Route::get('//{table}', 'App\Http\Controllers\RestaurantGuestController@');
+Route::get('/restaurant/close-table/request/{table}', 'App\Http\Controllers\RestaurantGuestController@closeTableRequest');
 Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
 Route::post('/restaurant/place-order/{table}', 'App\Http\Controllers\RestaurantGuestController@store');
 Route::post('restaurant/rate/service/{scan}', 'App\Http\Controllers\RestaurantGuestController@rateService');
 Route::post('restaurant/add-table-name/{scan}', 'App\Http\Controllers\RestaurantGuestController@saveName');
-
+Route::post('restaurant/make-order/{scan}', [RestaurantGuestController::class, 'storeOrder'])
+        ->name('order.store');
+Route::post('restaurant/add-cart/{table}/{menu}', [RestaurantGuestController::class, 'saveCart'])
+        ->name('cart.store');
 	
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
     ->name('2fa.index');
@@ -283,7 +287,13 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
 	Route::PATCH('update/menu-type/{type}', [RestaurantController::class, 'menuTypeUpdate'])
         ->name('menu-type.update');
 	Route::get('table/close/{table}', [DashboardController::class, 'closeTable'])
-        ->name('table.close'); 
+        ->name('table.close');
+	Route::get('request/close/{close}', [DashboardController::class, 'closeRequest'])
+        ->name('request.close');
+	Route::get('request-denied/close/{close}', [DashboardController::class, 'closeDeniedRequest'])
+        ->name('request-denied.close');
+	Route::get('service/close/{service}', [DashboardController::class, 'closeService'])
+        ->name('service.close');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
