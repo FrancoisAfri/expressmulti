@@ -18,7 +18,7 @@ class Cart extends Model
 			
     protected $fillable = [
         'table_id','scan_id', 'product_id', 'quantity', 'price',
-        'status'
+        'status','comment'
 
     ];
 
@@ -44,5 +44,27 @@ class Cart extends Model
 		return Cart::with('product')->where('table_id',$tableID)->get();
        
 		 	
+    }
+	
+	public static function getQuantity($id, $table)
+    {
+		
+		$cart = Cart::where('product_id', $id)
+			->where('table_id', $table)
+            ->first();
+		if (!empty($cart->quantity))
+			return $cart->quantity;
+		else return 0;
+    }
+	
+	public static function getComment($id, $table)
+    {
+		
+		$cart = Cart::where('product_id', $id)
+			->where('table_id', $table)
+            ->first();
+		if (!empty($cart->comment))
+			return $cart->comment;
+		else return '';
     }
 }

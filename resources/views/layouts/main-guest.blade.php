@@ -132,7 +132,6 @@
                                 <small>{{ $page_description ?? '' }}</small>
 								<a href="/restaurant/close-table/request/{{$tableID}}">Close Table</a>
                             </h4>
-							<a href="/restaurant/cart/{{$tableID}}"><b>Cart</b></a>
                         </div>
                     </div>
                 </div>

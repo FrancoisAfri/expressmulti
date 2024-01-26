@@ -15,6 +15,8 @@ use App\Models\Menu;
 use App\Models\Cart;
 use App\Models\Tables;
 use App\Models\Orders;
+use App\Models\EventsServices;
+use App\Models\OrdersProducts;
 use App\Models\OrdersServices;
 use App\Models\ServiceType;
 use App\Models\HRPerson;
@@ -67,12 +69,14 @@ class RestaurantGuestController extends Controller
 				'Home Page',
 				'Restaurant Menu & Services'
 			);
+			
 			// get restaurant Manager
 			$user =  DB::table('users')->select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
 				->where('model_has_roles.role_id', 3)
 				->first();
-			
+			$orders = Orders::getOderByTable($table->id, $scanned->id);
+			//return $orders;
 			$manager = HRPerson::where('user_id',$user ->id)->first();
 			// get orders and service history
 			$menuTypes = MenuType::getMenuTypes();
@@ -82,6 +86,10 @@ class RestaurantGuestController extends Controller
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;
 			$data['Categories'] = $Categories;
+			$data['categoty'] = $categoty;
+			$data['menu_type'] = $type;
+			$data['orders'] = Orders::getOderByTable($table->id, $scanned->id);
+			$data['carts'] = Cart::getCart($table->id);
 			$data['table'] = $table;
 			$data['localName'] = $localName;
 			$data['services'] = ServiceType::getServices();
@@ -203,7 +211,18 @@ class RestaurantGuestController extends Controller
                 'scan_id' => $scanned->id,
                 'status' => 1,
             ]);
-
+			
+		// save services requestService
+		$EventsServices = EventsServices::create([
+				'scan_id' => $scanned->id,
+				'table_id' => $table->id,
+				'service_type' => 3,
+				'requested_time' => time(),
+				'service' => "Close Request",
+				'item_id' => $closeRequests->id,
+				'status' => 1,
+			]);
+		//alert
         alert()->success('SuccessAlert', "Your request to close table have been submitted.");
         activity()->log("New close table Request Added");
 
@@ -222,26 +241,61 @@ class RestaurantGuestController extends Controller
 		
     }
 	//save order
-	public function storeOrder(Request $request, TableScans $scan)
+	public function storeOrder(Request $request, Tables $table)
     {
-		return $request;
 		///  save order 
 		
-		$quantities = $request->input('quantity');
-		$comments = $request->input('comment');
-		if ($quantities) {
-			foreach ($quantities as $productID => $quantity) {
-				$quote->products()->attach($productID, ['price' => $price, 'quantity' => $quantities[$productID], 'comment' => $comments[$productID]]);
-			}
+		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
+		// checck if product have already been added
+		$cart = Cart::where('table_id', $table->id)
+				->where('scan_id', $scanned->id)
+				->get();
+
+		$order = Orders::create([
+						'table_id' => $table->id,
+						'scan_id' => $scanned->id,
+						'status' => 1,
+					]);
+		$orderNumber = 'ORD' . sprintf('%07d', $order->id);
+        $order->order_no = $orderNumber;
+        $order->update();
+		// save items into order products table
+		$menuOrder = "Menu Order: ";
+		$comment = '';
+		foreach($cart as $item) {
+			
+			$OrdersProduct = OrdersProducts::create([
+						'product_id' => $item->product_id,
+						'comment' => $item->comment,
+						'table_id' => $item->table_id,
+						'order_id' => $order->id,
+						'price' => $item->price,
+						'quantity' => $item->quantity,
+						'status' => 1,
+					]);
+			// add service request variable
+			$menu = Menu::where('id', $item->product_id)->first();
+			$menuOrder .= "$menu->name, Quantity: $item->quantity | ";
+			$comment .= $item->comment." | ";
+			// delete item from cart
+			$item->delete();
 		}
-		$scan->comment = $comment;
-		$scan->update();
-		//$quoteNumber .= 'ORD' . sprintf('%07d', $quote->id);
-        //$quote->quote_number = $quoteNumber;
-       // $quote->update();
-		Alert::toast('Your Order have been submitted.', 'success');
+		// save service request
+		
+
+		$EventsServices = EventsServices::create([
+					'scan_id' => $scanned->id,
+					'table_id' => $item->table_id,
+					'service_type' => 2,
+					'requested_time' => time(),
+					'service' => $menuOrder,
+					'comment' => $comment,
+					'item_id' => $order->id,
+					'status' => 1,
+				]);
+		//Alert::toast('Your Order have been submitted.', 'success');
 		activity()->log('New Order Added');
-		return back();
+		return response()->json(['message' => 'success'], 200);
     }
 	//save cart
 	public function saveCart(Request $request, Tables $table, Menu $menu)
@@ -249,21 +303,43 @@ class RestaurantGuestController extends Controller
 		$quantity = !empty($request->input('quantity')) ? $request->input('quantity') : 0;
 		$comment = !empty($request->input('comment')) ? $request->input('comment') : '';
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
-		// save item into cart
-
-		$cart = Cart::create([
-					'product_id' => $menu->id,
-					'comment' => $comment,
-					'quantity' => $quantity,
-					'table_id' => $table->id,
-					'scan_id' => $scanned->id,
-					'price' => $menu->price,
-					'status' => 1,
-				]);
-
-		Alert::toast('Your item have been added to cart.', 'success');
-		activity()->log('New Order Added');
+		// checck if product have already been added
+		$cart = Cart::where('table_id', $table->id)
+				->where('product_id', $menu->id)
+				->where('scan_id', $scanned->id)
+				->first();
+		if (empty($cart))
+		{
+			/// save item into cart
+			$cart = Cart::create([
+						'product_id' => $menu->id,
+						'comment' => $comment,
+						'quantity' => $quantity,
+						'table_id' => $table->id,
+						'scan_id' => $scanned->id,
+						'price' => $menu->price,
+						'status' => 1,
+					]);
+		}
+		else
+		{
+			$cart->comment = $comment;
+			$cart->quantity = $quantity;
+			$cart->update();
+		}
+		//Alert::toast('Your item have been added to cart.', 'success');
+		activity()->log('New item added to cart');
         return response()->json(['message' => 'success'], 200);
+		
+    }
+	//delete cart
+	public function deleteItems(Cart $cart)
+    {
+		
+		$cart->delete();
+		Alert::toast('Your item have been deleted from cart.', 'success');
+		activity()->log('Item deleted From Cart');
+        return  back();
 		
     }
 }

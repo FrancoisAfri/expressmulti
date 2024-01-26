@@ -8,6 +8,7 @@ use App\Models\Menu;
 use App\Models\Tables;
 use App\Models\ServiceType;
 use App\Models\OrdersServices;
+use App\Models\EventsServices;
 use App\Models\OrdersHistory;
 use App\Models\TableScans;
 use App\Models\MenuType;
@@ -344,9 +345,7 @@ class RestaurantService //implements RestaurantServiceInterface
 		{
 			// save request
 			DB::beginTransaction();
-				//$table = Tables::find($tableID);
-				//$tableRecord = Tables::find($id->id);
-				///'service_id', 'comment', 'table_id', 'status'
+				
 				$comment = "$service->name requested on table: $table->name";
 				$action = "$service->name Service Requesed" ;
 				$request = OrdersServices::create([
@@ -361,6 +360,16 @@ class RestaurantService //implements RestaurantServiceInterface
 					'action' => $action,
 					'table_id' => $table->id,
 				]);
+				// save services requestService
+				$EventsServices = EventsServices::create([
+						'scan_id' => $scanned->id,
+						'table_id' => $table->id,
+						'service_type' => 1,
+						'requested_time' => time(),
+						'service' => "$service->name",
+						'item_id' => $request->id,
+						'status' => 1,
+					]);
 							
 			DB::commit();
 		}

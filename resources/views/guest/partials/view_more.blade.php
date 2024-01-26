@@ -1,5 +1,5 @@
 <!-- Signup modal content -->
-<div id="view-more-modal" class="modal fade" tabindex="-1" role="dialog"
+<div id="view-more-moda" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="scrollableModalTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">

@@ -36,9 +36,9 @@ class OrdersProducts extends Model
         return $this->belongsTo(Orders::class, 'order_id', 'id');
     }
 	// relationship between ordersProducts and products
-	public function items(): HasMany
+	public function item(): BelongsTo
     {
-        return $this->hasMany(Menu::class, 'product_id', 'id');
+        return $this->belongsTo(Menu::class, 'product_id', 'id');
     }
 
 }

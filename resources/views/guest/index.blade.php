@@ -109,6 +109,7 @@
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
 								<h4 class="header-title mb-0">Menu</h4>
+								
 								<div id="cardCollpase4" class="collapse pt-3 show">
 									<div class="bg-light">
 										<form class="form-horizontal" method="get" action="{{ route('seating.plan', $table->id) }}">
@@ -121,7 +122,7 @@
 															   id="type" name="type" data-select2-id="1" tabindex="-1" aria-hidden="true">
 															<option value="0">*** Select Type ***</option>
 															@foreach ($menuTypes as $type)
-																<option value="{{ $type->id }}">{{ $type->name }}</option>
+																<option value="{{ $type->id }}" {{ ($type->id == $menu_type) ? ' selected' : '' }}>{{ $type->name }}</option>
 															@endforeach
 														</select>
 													</div>
@@ -131,12 +132,17 @@
 															 id="categoty" name="categoty"   data-select2-id="1" tabindex="-1" aria-hidden="true">
 															<option value="0">*** Select Category ***</option>
 															@foreach ($Categories as $cat)
-																<option value="{{ $cat->id }}">{{ $cat->name }}</option>
+																<option value="{{ $cat->id }}" {{ ($cat->id == $categoty) ? ' selected' : '' }}>{{ $cat->name }}</option>
 															@endforeach
 														</select>
 													</div>
 												</div>
 												<div class="box-footer">
+													<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded"
+															data-toggle="modal" data-target="#view-cart-modal">
+														<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
+														Cart 
+													</button>
 													<button type="submit" class="btn btn-primary pull-left">Search</button><br>
 												</div>
 											</div>
@@ -183,6 +189,8 @@
 																			data-calories="{{ $menu->calories }}"
 																			data-category="{{ $menu->categories->name }}"
 																			data-type="{{ $menu->menuType->name }}"
+																			data-quantity="{{ (!empty(\App\Models\cart::getQuantity($menu->id,$table->id))) ? \App\Models\cart::getQuantity($menu->id,$table->id) : 1}}"
+																			data-comment="{{ (!empty(\App\Models\cart::getComment($menu->id,$table->id))) ? \App\Models\cart::getComment($menu->id,$table->id) : ''}}"
 																			>
 																			Add +
 																		</button>
@@ -198,6 +206,7 @@
 								</div>
 							</div>
 							@include('guest.partials.add_item')
+							@include('guest.partials.cart')
 						</div>
 					</div>
 				</div>
@@ -224,14 +233,16 @@
 												</tr>
 											</thead>
 											<tbody>
-												@if (!empty($orders))
+												@if (count($orders) > 0)
 													@foreach($orders as $order)
-														<tr>
-															<td>{{ $order->products->items->name ?? ''}}</td>
-															<td>{{ (!empty($order->products->price)) ? 'R ' .number_format($order->products->price, 2) : ''}}</td>
-															<td>{{ $order->products->quantity ?? ''}}</td>
-															<td>{{ $order->products->comment ?? ''}}</td>
-														</tr>
+														@foreach($order->products as $product)
+															<tr>
+																<td>{{ !empty($product->item->name) ? $product->item->name : ''}}</td>
+																<td>{{ (!empty($product->price)) ? 'R ' .number_format($product->price, 2) : ''}}</td>
+																<td>{{ $product->quantity ?? ''}}</td>
+																<td>{{ $product->comment ?? ''}}</td>
+															</tr>
+														@endforeach
 													@endforeach
 												@endif
 											</tbody>
@@ -399,6 +410,8 @@
 				let price = btnEdit.data('price');
 				let category = btnEdit.data('category');
 				let type = btnEdit.data('type');
+				let quantity = btnEdit.data('quantity');
+				let comment = btnEdit.data('comment');
 				
 				let calories = btnEdit.data('calories');
                 let modal = $(this);
@@ -408,6 +421,8 @@
 				$('#category').html(category);
 				$('#menu_type').html(type);
 				$('#calories').html(calories + ' Calories');
+				$('#comment').html(comment);
+				modal.find('#quantity').val(quantity);
             });
 			// add item to cart
 			$('#add-item-cart').on('click', function () {
@@ -420,6 +435,18 @@
                 let successMsg = 'The item has been added successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
+			/// place order
+			$('#place-order-cart').on('click', function () {
+                let strUrl = '/restaurant/place-order/{{$table->id}}/';
+                let modalID = 'view-cart-modal';
+                let formName = 'cart-form';
+                let submitBtnID = 'place-order-cart';
+                let redirectUrl = '{{route('seating.plan', $table->id) }}';
+                let successMsgTitle = 'Order Saved!';
+                let successMsg = 'Your order have been submitted successfully.';
+                modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
+            });
+			
             //Launch counter for running tasks
             increment();
 			

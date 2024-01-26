@@ -58,62 +58,6 @@
 					</div> <!-- end card-box-->
 				</div> <!-- end col-->
 			</div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-widgets">
-                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-                                <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false"
-                                   aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
-                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
-                            </div>
-                            <h4 class="header-title mb-0">Order Requests</h4>
-                            <div id="cardCollpase5" class="collapse pt-3 show">
-                                <div class="table-responsive">
-                                    <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
-                                           id="data-table">
-                                        <thead>
-                                        <tr>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                @if (!empty($notifications))
-                                                    @foreach($notifications as $notification)
-                                                        <div
-                                                            class="alert alert-success alert-dismissible bg-success text-white border-0 fade show"
-                                                            role="alert">
-                                                            [{{ $notification->created_at }}
-                                                            ] {{ $notification->message }}
-                                                            <button type="button" class="close mark-as-read"
-                                                                    data-dismiss="alert"
-                                                                    aria-label="Close"
-                                                                    data-id="{{ $notification->notifiable_id }}">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        @if($loop->last)
-                                                            <a href="#" id="mark-all">
-                                                                {{--                                            Mark all as read--}}
-                                                            </a>
-                                                        @endif
-                                                    @endforeach
-                                                @else
-                                                    <p class="dropdown-item">There are no new notifications</p>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div> <!-- end table responsive-->
-                            </div> <!-- collapsed end -->
-                        </div> <!-- end card-body -->
-                    </div> <!-- end card-->
-                </div>
-            </div>
 			<div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -131,30 +75,60 @@
                                            id="data-table">
                                         <thead>
                                         <tr>
-                                            <th>Service</th>
+                                            <th>Request time</th>
+                                            <th>Request type</th>
                                             <th>Table</th>
-                                            <th>Status</th>
-											<th>Requested</th>
-											<th></th>
+                                            <th>Waiter</th>
+                                            <th>Request Details</th>
+                                            <th>Timer</th>
+											<th nowrap>#</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                             <td>
-                                                @if (!empty($ordersServices))
-                                                    @foreach($ordersServices as $service)
+                                                @if (!empty($services))
+                                                    @foreach($services as $service)
 														<tr>
-															<td>{{ $service->services->name ?? ''}}</td>
-															<td>{{ $service->tables->name ?? ''}}</td>
-															<td>{{ $service->status == 1 ? 'Open': 'closed'}}</td>
-															<td>{{ $service->created_at ?? ''}}</td>
-															<td>
-																<button type="button" class="close mark-as-read"
+															<td>{{ !empty($service->requested_time) ? date('d/m/Y', $service->requested_time) : '' }}</td>
+															<td>{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
+															<td>{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
+															<td>{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
+															<td>{{ !empty($service->service) ? $service->service : '' }} </br>
+																{{ !empty($service->comment) ? $service->comment : '' }}
+															</td>
+															<td></td>
+															@if ($service->service_type == 1)
+																<td>	
+																	<button type="button" class="close mark-as-read"
 																		onclick="postData({{$service->id}}, 'closeservice');"
 																		aria-label="Close"
 																	<span aria-hidden="true">&times;</span>
-																</button>
-															</td>
+																	</button>
+																</td>
+															@elseif ($service->service_type == 2) 
+																<td>
+																	<button type="button" class="close mark-as-read"
+																			onclick="postData({{$service->id}}, 'closeorder');"
+																			aria-label="Close"
+																		<span aria-hidden="true">&times;</span>
+																	</button>
+																</td>
+															@elseif ($service->service_type == 3)
+																<td nowrap>
+																	<div><button type="button" class="close mark-as-read"
+																			onclick="postData({{$service->id}}, 'closerequest');"
+																			aria-label="Close"
+																		<span aria-hidden="true">Yes</span>
+																	</button> </div>
+																	
+																	<div><button type="button" class="close mark-as-read"
+																			onclick="postData({{$service->id}}, 'closedenied');"
+																			aria-label="Close"
+																		<span aria-hidden="true">No</span>
+																	</button></div>
+																</td>
+															@endif
 														</tr>
                                                     @endforeach
                                                 @else
@@ -166,54 +140,6 @@
                                     </table>
                                 </div> <!-- end table responsive-->
                             </div> <!-- collapsed end -->
-							<h4 class="header-title mb-0">Close Requests</h4>
-							<div id="cardCollpase5" class="collapse pt-3 show">
-                                <div class="table-responsive">
-                                    <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
-                                           id="data-table">
-                                        <thead>
-                                        <tr>
-                                            <th>Table</th>
-											<th>Requested</th>
-                                            <th>Status</th>
-											<th></th>
-											<th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                @if (!empty($CloseRequests))
-                                                    @foreach($CloseRequests as $close)
-														<tr>
-															<td>{{ $close->tables->name ?? ''}}</td>
-															<td>{{ $close->status == 1 ? 'Open': 'closed'}}</td>
-															<td>{{ $close->created_at ?? ''}}</td>
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$close->id}}, 'closedenied');"
-																		aria-label="Close"
-																	<span aria-hidden="true">No</span>
-																</button>
-															</td>
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$close->id}}, 'closerequest');"
-																		aria-label="Close"
-																	<span aria-hidden="true">Yes</span>
-																</button>
-															</td>
-														</tr>
-                                                    @endforeach
-                                                @else
-                                                    <p class="dropdown-item">There are no new notifications</p>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div> <!-- end table responsive-->
-                            </div>
                         </div> <!-- end card-body -->
                     </div> <!-- end card-->
                 </div>

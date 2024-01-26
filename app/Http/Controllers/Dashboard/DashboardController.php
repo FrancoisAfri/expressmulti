@@ -11,6 +11,7 @@ use App\Models\modules;
 use App\Models\Notification;
 use App\Models\Patient;
 use App\Models\CloseRequests;
+use App\Models\EventsServices;
 use App\Models\Url;
 use App\Models\User;
 use App\Models\Tables;
@@ -113,13 +114,15 @@ class DashboardController extends Controller
         //$data['bookingForNoShow'] = Booking::getBookingForNoShow();
 		// $data['activeModules'] = modules::where('active', 1)->get();
 	  // $tables = Tables::getTablesScans();
-
-	   //return $tables;
+		$services = EventsServices::getRequests();
+		//return $services;
 		$data['dailyData'] = 23000;//$this->getDailyProfit();
 		$data['activeModules'] = modules::where('active', 1)->get();
 		$data['ordersServices'] = OrdersServices::getAllRequest();
 		$data['CloseRequests'] = CloseRequests::getAllCloseRequests();
-		$data['orders'] = Orders::getOrders();
+		//$data['orders'] = Orders::getOrders();
+		$data['services'] = $services;
+		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
 		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTablesScans();
         return view('dashboard.index')->with($data);

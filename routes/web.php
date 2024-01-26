@@ -51,6 +51,7 @@ Route::get('restaurant/seating_plan/{table}', [RestaurantGuestController::class,
     ->name('seating.plan');
 //Route::get('//{table}', 'App\Http\Controllers\RestaurantGuestController@');
 Route::get('/restaurant/close-table/request/{table}', 'App\Http\Controllers\RestaurantGuestController@closeTableRequest');
+Route::get('/restaurant/cart-trash/{cart}', 'App\Http\Controllers\RestaurantGuestController@deleteItems');
 Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
 Route::post('/restaurant/place-order/{table}', 'App\Http\Controllers\RestaurantGuestController@store');
 Route::post('restaurant/rate/service/{scan}', 'App\Http\Controllers\RestaurantGuestController@rateService');
@@ -58,6 +59,8 @@ Route::post('restaurant/add-table-name/{scan}', 'App\Http\Controllers\Restaurant
 Route::post('restaurant/make-order/{scan}', [RestaurantGuestController::class, 'storeOrder'])
         ->name('order.store');
 Route::post('restaurant/add-cart/{table}/{menu}', [RestaurantGuestController::class, 'saveCart'])
+        ->name('cart.store');
+Route::post('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
         ->name('cart.store');
 	
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])

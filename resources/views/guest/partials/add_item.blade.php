@@ -32,7 +32,7 @@
 					<div class="d-flex align-items-start justify-content-between px-1">
 						<div class="minus"><i class="fa-solid fa-minus text-danger"></i></div>
 						<input class="shadow-none form-control text-center border-0 p-0 box" type="text" placeholder=""
-							aria-label="default input example" value="1" name="quantity" id="quantity">
+							aria-label="default input example" value="" name="quantity" id="quantity">
 						<div class="plus"><i class="fa-solid fa-plus text-danger"></i></div>
 					</div>
 				</div>
