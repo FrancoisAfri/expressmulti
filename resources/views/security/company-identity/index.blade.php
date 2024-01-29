@@ -124,6 +124,28 @@
                                            value="{{ $companyDetails->password_expiring_month ?? '' }}"
                                            placeholder="Enter project budget">
                                 </div>
+								<div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstname">Daily Target<span
+                                                    class="text-danger">*</span> </label>
+                                            <input type="text" class="form-control" id="daily_revenue_target"
+                                                   name="daily_revenue_target"
+                                                   value="{{ $companyDetails->daily_revenue_target ?? '' }}"
+                                                   placeholder="Enter daily revenue target">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstname">Monthly Target<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="monthly_revenue_target"
+                                                   name="monthly_revenue_target"
+                                                   value="{{ $companyDetails->monthly_revenue_target ?? '' }}"
+                                                   placeholder="Enter header monthly revenue target">
+                                        </div>
+                                    </div>
+                                </div>
                             </div> <!-- end col-->
                             <div class="col-xl-6">
                                 <div class="form-group mb-3">

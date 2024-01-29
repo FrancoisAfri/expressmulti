@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFacebookIdColumn extends Migration
+class AddAmountOrderProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddFacebookIdColumn extends Migration
      */
     public function up()
     {
-        Schema::table('users', function ($table) {
-            $table->string('facebook_id')->nullable();
+        Schema::table('orders_products', function ($table) {
+            $table->double('amount')->unsigned()->nullable();;
         });
     }
 
@@ -25,8 +25,8 @@ class AddFacebookIdColumn extends Migration
      */
     public function down()
     {
-        Schema::table('users', function ($table) {
-            $table->dropColumn('facebook_id');
+        Schema::table('orders_products', function ($table) {
+            $table->dropColumn('amount');
         });
     }
 }

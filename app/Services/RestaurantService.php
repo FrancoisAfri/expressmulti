@@ -11,6 +11,8 @@ use App\Models\OrdersServices;
 use App\Models\EventsServices;
 use App\Models\OrdersHistory;
 use App\Models\TableScans;
+use App\Models\CloseRequests;
+use App\Models\Orders;
 use App\Models\MenuType;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
@@ -388,16 +390,52 @@ class RestaurantService //implements RestaurantServiceInterface
 	public function closeService($service)
     {
         $service->status = 2;
-        $service->update();
+        $service->completed_time = time();
+        $service->update();  
+		// close event table
+		$request = OrdersServices::where('id', $service->item_id)->first();
+		$request->status = 2;
+        $request->update();
     }
 	// close table
 	public function closeRequest($close)
     {
         $close->status = 2;
+		$close->completed_time = time();
         $close->update();
+		
+		// close event table
+		$request = CloseRequests::where('id', $close->item_id)->first();
+		$request->status = 2;
+        $request->update();
+		// add code to close all open orders and service request
+		// close all order
+		$orders = Orders::getOderByTable($close->table_id, $close->scan_id);
+		foreach ($orders as $order)
+		{
+			$order->status = 2;
+			$order->update();
+			// update order products.
+			foreach ($order->products as $product)
+			{
+				$product->status = 2;
+				$product->update();
+			}
+		}
+		// close all service requests
+		DB::table('events_services')
+            ->where('table_id', $close->table_id)
+            ->where('scan_id', $close->scan_id)
+            ->update(['status' => 2, 'completed_time' => time()]); 
+			
+		// close all normal services
+		DB::table('orders_services')
+            ->where('table_id', $close->table_id)
+            ->where('scan_id', $close->scan_id)
+            ->update(['status' => 2]);
+		
 		// close table 
 		$scanned = TableScans::where('id', $close->scan_id)->first();
-
         $scanned->status = 2;
         $scanned->closed_time = time();
         $scanned->update();
@@ -406,12 +444,19 @@ class RestaurantService //implements RestaurantServiceInterface
 	public function closeDeniedRequest($close)
     {
         $close->status = 2;
+		$close->completed_time = time();
         $close->update();
+		// update new service request table
+		$request = CloseRequests::where('id', $close->item_id)->first();
+		$request->status = 2;
+        $request->update();
+		
     }
 	// close table
 	public function closeOrders($order)
     {
         $order->status = 2;
+		$order->completed_time = time();
         $order->update();
     }
 }

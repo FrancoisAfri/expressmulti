@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class OrdersProducts extends Model
@@ -19,7 +20,7 @@ class OrdersProducts extends Model
 
     protected $fillable = [
         'product_id', 'comment', 'status', 'table_id', 'order_id', 'price'
-		, 'quantity'
+		, 'quantity', 'amount'
 
     ];
 
@@ -40,5 +41,18 @@ class OrdersProducts extends Model
     {
         return $this->belongsTo(Menu::class, 'product_id', 'id');
     }
-
+	// get daily incme
+	public static function getDailySummary(){
+        return OrdersProducts::where('status',2)
+            ->whereDate(
+                'created_at', Carbon::today()
+            )
+            ->get();
+    }
+	// get monthly income
+	public static function getSummaryByMonth($month){
+        return OrdersProducts::whereMonth(
+            'created_at',$month
+        )->where('status',2)->get();
+    }
 }

@@ -15,6 +15,7 @@ use App\Models\EventsServices;
 use App\Models\Url;
 use App\Models\User;
 use App\Models\Tables;
+use App\Models\OrdersProducts;
 use App\Models\TableScans;
 use App\Models\Orders;
 use App\Models\OrdersServices;
@@ -53,15 +54,9 @@ class DashboardController extends Controller
     public function __construct(
 
         BookingNotification   $notification, RestaurantService $restaurantService
-        /*BookingService        $bookingService,
-        Booking               $booking*/
     )
     {
 		$this->RestaurantService = $restaurantService;
-       /// $this->clientService = $clientService;
-       // $this->notification = $notification;
-        //$this->booking = $booking;
-        //$this->bookingService = $bookingService;
     }
 
 
@@ -72,9 +67,9 @@ class DashboardController extends Controller
         $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
         foreach ($months as $month) {
-            $coll = InvoicePayments::getSummaryByMonth($month);
-            if (!empty($target['daily_revenue_target']))
-                $unique[] = $coll->sum('paid') / $target['monthly_revenue_target'] * 100;
+            $coll = OrdersProducts::getSummaryByMonth($month);
+            if (!empty($target['monthly_revenue_target']))
+                $unique[] = $coll->sum('amount') / $target['monthly_revenue_target'] * 100;
             else $unique[] = 0;
         }
 
@@ -85,7 +80,7 @@ class DashboardController extends Controller
     {
         $target = $this->CompanyIdentityDetails();
         if (!empty($target['daily_revenue_target']))
-            return InvoicePayments::getDailySummary(0)->sum('paid') / $target['daily_revenue_target'] * 100;
+            return OrdersProducts::getDailySummary()->sum('amount') / $target['daily_revenue_target'] * 100;
         else return 0;
     }
 
@@ -98,25 +93,11 @@ class DashboardController extends Controller
     {
         $CompanyIdentity = $this->CompanyIdentityDetails();
 
-        
-        //$data['topMedicalAids'] = BillingInvoice::topMedicalAids();
-        //$data['myList'] = $myList;
-        //$data['patients'] = Patient::getPatientInfo();
-        //$data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
-        //$data['totalPayment'] = InvoicePayments::getDailySummary(0)->sum('paid');
-        //$data['cashPayment'] = InvoicePayments::getDailySummary(1)->sum('paid');
-        //$data['cashEft'] = InvoicePayments::getDailySummary(2)->sum('paid');
-        //$data['cashDebitCard'] = InvoicePayments::getDailySummary(3)->sum('paid');
-		// $data['notifications'] = $this->notification::getAllUnreadNotifications();
-		// $data['activePatients'] = Patient::totalPatients();
-        //$data['bookingForMonth'] = Booking::getBookingForMonth();
-		// $data['bookingForShowedUp'] = Booking::getBookingForShowedUp();
-        //$data['bookingForNoShow'] = Booking::getBookingForNoShow();
-		// $data['activeModules'] = modules::where('active', 1)->get();
-	  // $tables = Tables::getTablesScans();
+        $data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
+        $data['totalPayment'] = OrdersProducts::getDailySummary()->sum('amount');
+        // $data['activePatients'] = Patient::totalPatients();
 		$services = EventsServices::getRequests();
-		//return $services;
-		$data['dailyData'] = 23000;//$this->getDailyProfit();
+		$data['dailyData'] = $this->getDailyProfit();
 		$data['activeModules'] = modules::where('active', 1)->get();
 		$data['ordersServices'] = OrdersServices::getAllRequest();
 		$data['CloseRequests'] = CloseRequests::getAllCloseRequests();
@@ -159,8 +140,9 @@ class DashboardController extends Controller
 		
     }
 	// close service
-	public function closeService(OrdersServices $service)
+	public function closeService(EventsServices $service)
     {
+		
         $this->RestaurantService->closeService($service); 
         Alert::toast('Service Request Successfully', 'success');
         activity()->log('Service Request Closed Successfully');
@@ -168,20 +150,31 @@ class DashboardController extends Controller
 		
     }
 	// close request
-	public function closeRequest(CloseRequests $close)
+	public function closeRequest(EventsServices $close)
     {
+		
         $this->RestaurantService->closeRequest($close); 
-        Alert::toast('Close Successfully', 'success');
+        Alert::toast('Table closed successfully', 'success');
         activity()->log('Closed Request Successfully');
         return back();
 		
     }
 	// close request
-	public function closeDeniedRequest(CloseRequests $close)
+	public function closeDeniedRequest(EventsServices $close)
     {
         $this->RestaurantService->closeDeniedRequest($close); 
-        Alert::toast('Close Successfully', 'success');
+        Alert::toast('Request closed successfully', 'success');
         activity()->log('Closed Request Successfully');
+        return back();
+		
+    }
+	// close order
+	public function closeOrder(EventsServices $order)
+    {
+		//return $order;
+        $this->RestaurantService->closeOrders($order); 
+        Alert::toast('Request closed successfully', 'success');
+        activity()->log('Request closed successfully');
         return back();
 		
     }

@@ -1,11 +1,6 @@
 @extends('layouts.main-layout')
 @section('page_dependencies')
-    <link href="{{ asset('libs/@fullcalendar/core/main.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('libs/@fullcalendar/daygrid/main.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('libs/@fullcalendar/bootstrap/main.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('libs/@fullcalendar/timegrid/main.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('libs/@fullcalendar/list/main.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"
+     <link href="{{ asset('libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"
           type="text/css"/>
     <link href="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.css')}}"
           rel="stylesheet" type="text/css" />
@@ -74,68 +69,75 @@
                                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                                            id="data-table">
                                         <thead>
-                                        <tr>
-                                            <th>Request time</th>
-                                            <th>Request type</th>
-                                            <th>Table</th>
-                                            <th>Waiter</th>
-                                            <th>Request Details</th>
-                                            <th>Timer</th>
-											<th nowrap>#</th>
-                                        </tr>
+											<tr>
+												<th>Request time</th>
+												<th>Request type</th>
+												<th>Table</th>
+												<th>Waiter</th>
+												<th>Request Details</th>
+												<th>Timer</th>
+												<th nowrap>#</th>
+											</tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>
-                                                @if (!empty($services))
-                                                    @foreach($services as $service)
-														<tr>
-															<td>{{ !empty($service->requested_time) ? date('d/m/Y', $service->requested_time) : '' }}</td>
-															<td>{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
-															<td>{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
-															<td>{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
-															<td>{{ !empty($service->service) ? $service->service : '' }} </br>
-																{{ !empty($service->comment) ? $service->comment : '' }}
+											<script>
+												var time = [];
+												var running = [];
+											</script>
+											@if (!empty($services))
+												@foreach($services as $service)
+													<script>
+														running[{{ $service->id }}] = {{ ($service->status == 1) ? 1 : 0 }};
+														time[{{ $service->id }}] = {{ ($service->status == 1) ? ((time() - $service->requested_time) * 10) : 1 * 10 }};
+													</script>
+													<tr>
+														<td>{{ !empty($service->requested_time) ? date('d/m/Y', $service->requested_time) : '' }}</td>
+														<td>{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
+														<td>{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
+														<td>{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
+														<td>{{ !empty($service->service) ? $service->service : '' }} </br>
+															{{ !empty($service->comment) ? $service->comment : '' }}
+														</td>
+														<td><input type="text" id="{{ $service->id . 'stopWatchDisplay' }}" style="font-weight:bold; font-family:cursive; width: 120px; height: 23px;" value="" class="input-sm" disabled></td>
+														@if ($service->service_type == 1)
+															<td>	
+																<button type="button" class="close mark-as-read"
+																	onclick="postData({{$service->id}}, 'closeservice');"
+																	aria-label="Close"
+																<span aria-hidden="true">&times;</span>
+																</button>
 															</td>
-															<td></td>
-															@if ($service->service_type == 1)
-																<td>	
-																	<button type="button" class="close mark-as-read"
-																		onclick="postData({{$service->id}}, 'closeservice');"
+														@elseif ($service->service_type == 2) 
+															<td>
+																<button type="button" class="close mark-as-read"
+																		onclick="postData({{$service->id}}, 'closeorder');"
 																		aria-label="Close"
 																	<span aria-hidden="true">&times;</span>
-																	</button>
-																</td>
-															@elseif ($service->service_type == 2) 
-																<td>
+																</button>
+															</td>
+														@elseif ($service->service_type == 3)
+															<td nowrap>
+																<div>
 																	<button type="button" class="close mark-as-read"
-																			onclick="postData({{$service->id}}, 'closeorder');"
-																			aria-label="Close"
-																		<span aria-hidden="true">&times;</span>
-																	</button>
-																</td>
-															@elseif ($service->service_type == 3)
-																<td nowrap>
-																	<div><button type="button" class="close mark-as-read"
 																			onclick="postData({{$service->id}}, 'closerequest');"
 																			aria-label="Close"
 																		<span aria-hidden="true">Yes</span>
-																	</button> </div>
-																	
-																	<div><button type="button" class="close mark-as-read"
+																	</button> 
+																</div>
+																<div>
+																	<button type="button" class="close mark-as-read"
 																			onclick="postData({{$service->id}}, 'closedenied');"
 																			aria-label="Close"
 																		<span aria-hidden="true">No</span>
-																	</button></div>
-																</td>
-															@endif
-														</tr>
-                                                    @endforeach
-                                                @else
-                                                    <p class="dropdown-item">There are no new notifications</p>
-                                                @endif
-                                            </td>
-                                        </tr>
+																	</button>
+																</div>
+															</td>
+														@endif
+													</tr>
+												@endforeach
+											@else
+												<p class="dropdown-item">There are no new notifications</p>
+											@endif
                                         </tbody>
                                     </table>
                                 </div> <!-- end table responsive-->
@@ -169,6 +171,7 @@
                             <div class="widget-chart text-center" dir="ltr">
                                 <div id="total-revenue" class="mt-0" data-colors="#f86262"></div>
                                 <h5>Total Revenue Made Today</h5>
+								<h2> R {{ number_format($totalPayment  , 2, ',', '.')  ?? 0}}</h2>
                             </div>
                         </div> <!-- end card-box -->
                     </div> <!-- end col-->
@@ -180,7 +183,7 @@
                                     <div class="col-4">
                                         <p class="text-muted font-15 mb-1 text-truncate">Target</p>
                                         <h4><i class="fe-arrow-down text-danger mr-1"></i>
-                                        </h4>
+										R {{ number_format($targetRevenue , 2, ',', '.')  }} </h4>
                                     </div>
                                     <div class="col-4">
                                     </div>
@@ -309,12 +312,7 @@
     <script src="{{ asset('libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
     <script src="{{ asset('libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('libs/moment/min/moment.min.js')}}"></script>
-    <script src="{{ asset('libs/@fullcalendar/core/main.min.js')}}"></script>
-    <script src="{{ asset('libs/@fullcalendar/bootstrap/main.min.js')}}"></script>
-    <script src="{{ asset('libs/@fullcalendar/daygrid/main.min.js')}}"></script>
-    <script src="{{ asset('libs/@fullcalendar/timegrid/main.min.js')}}"></script>
-    <script src="{{ asset('libs/@fullcalendar/list/main.min.js')}}"></script>
-    <script src="{{ asset('libs/@fullcalendar/interaction/main.min.js')}}"></script>
+
     <!-- Calendar init -->
     <script src="{{ asset('js/calendar.js')}}"></script>
     <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
@@ -337,11 +335,12 @@
 			else if (data == 'closerequest')
 				location.href = "{{route('request.close', '')}}" + "/" + id;
 			else if (data == 'closeorder')
-				location.href = "{{route('request.close', '')}}" + "/" + id;
+				location.href = "{{route('order.close', '')}}" + "/" + id;
 			else if (data == 'closedenied')
 				location.href = "{{route('request-denied.close', '')}}" + "/" + id;
         }
-        (function () {
+        (
+		function () {
             "use strict";
 			
 			let tableID;
@@ -390,9 +389,11 @@
                 return succeed;
             }
 
-            $("#copyButton, #copyTarget").on("click", function () {
-                copyToClipboard(document.getElementById("copyTarget"));
-            });
+            //Launch counter for running services
+            @foreach($services as $service)
+				increment({{ $service->id }});
+            @endforeach
+			
         })();
 
 
@@ -405,35 +406,30 @@
             labels: ["Revenue"]
         };
         (chart = new ApexCharts(document.querySelector("#total-revenue"), options)).render();
-        // chart.render();
-        // }
-        
+		
+		function increment(taskID) {
+			if (running[taskID] == 1) {
+				setTimeout(function() {
+					time[taskID]++;
+					var hours = Math.floor(time[taskID] / 10 / 60 / 60) % 60;
+					var mins = Math.floor(time[taskID] / 10 / 60) % 60;
+					var secs = Math.floor(time[taskID] / 10) % 60;
+					var tenths = time[taskID] % 10;
 
-        /*
-		function sendMarkRequest(id = null) {
-            
-            return $.ajax("{{ route('markNotification') }}", {
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id
-                }
-            });
-        }
-		$(function () {
-            $('.mark-as-read').click(function () {
-                let request = sendMarkRequest($(this).data('id'));
-                request.done(() => {
-                    console.log("removed")
-                    // $(this).parents('div.alert').remove();
-                });
-            });
-            $('#mark-all').click(function () {
-                let request = sendMarkRequest();
-                request.done(() => {
-                    $('div.alert').remove();
-                })
-            });
-        });*/
+					if (hours < 10) {
+						hours = "0" + hours;
+					}
+					if (mins < 10) {
+						mins = "0" + mins;
+					}
+					if (secs < 10) {
+						secs = "0" + secs;
+					}
+					//document.getElementById("stopWatchDisplay").innerHTML = mins + ":" + secs + ":" + "0" + tenths;  + "." + tenths
+					$('#' + taskID + 'stopWatchDisplay').val(hours + ":" + mins + ":" + secs);
+					increment(taskID);
+				}, 100);
+			}
+		}
     </script>
 @stop

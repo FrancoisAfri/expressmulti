@@ -111,7 +111,11 @@ Route::post('reset_password_without_token', [AccountsController::class, 'validat
 
 Route::post('reset_password_with_token', [AccountsController::class, 'resetPassword'])
     ->name('reset.token');
+// calculate profit
 
+Route::get('calculateMonthlyProfit', [DashboardController::class, 'calculateMonthlyProfit']);
+
+Route::get('getDailyProfit', [DashboardController::class, 'getDailyProfit']);
 
 Route::group(['middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('home')
@@ -297,6 +301,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('request-denied.close');
 	Route::get('service/close/{service}', [DashboardController::class, 'closeService'])
         ->name('service.close');
+	Route::get('order/close/{order}', [DashboardController::class, 'closeOrder'])
+        ->name('order.close');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

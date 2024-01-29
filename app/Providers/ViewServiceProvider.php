@@ -170,12 +170,6 @@ class ViewServiceProvider extends ServiceProvider
 			$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
 			$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
 			
-			// get orders and service history
-			$orders = Orders::getOderByTable($tableID,$scanned->id);
-			$ordersServices = OrdersServices::getServicesByTable($tableID,$scanned->id);
-			
-			$data['orders'] = $orders;
-			$data['ordersServices'] = $ordersServices;
 			$data['scanned'] = $scanned;
 			$data['scannedTime'] = $scannedTime;
 			$data['profilePic'] = $profilePic;

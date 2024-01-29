@@ -81,6 +81,12 @@ class RestaurantGuestController extends Controller
 			// get orders and service history
 			$menuTypes = MenuType::getMenuTypes();
 			$Categories = Categories::getCategories();
+			// get orders and service history
+			$orders = Orders::getOderByTable($table->id,$scanned->id);
+			$ordersServices = OrdersServices::getServicesByTable($table->id,$scanned->id);
+			
+			$data['orders'] = $orders;
+			$data['ordersServices'] = $ordersServices;
 			$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			$data['menus'] = Menu::getMenus($type, $categoty);
 			$data['manager'] = $manager;
@@ -271,6 +277,7 @@ class RestaurantGuestController extends Controller
 						'order_id' => $order->id,
 						'price' => $item->price,
 						'quantity' => $item->quantity,
+						'amount' => ($item->quantity * $item->price) ,
 						'status' => 1,
 					]);
 			// add service request variable
@@ -281,8 +288,6 @@ class RestaurantGuestController extends Controller
 			$item->delete();
 		}
 		// save service request
-		
-
 		$EventsServices = EventsServices::create([
 					'scan_id' => $scanned->id,
 					'table_id' => $item->table_id,
@@ -293,6 +298,7 @@ class RestaurantGuestController extends Controller
 					'item_id' => $order->id,
 					'status' => 1,
 				]);
+				
 		//Alert::toast('Your Order have been submitted.', 'success');
 		activity()->log('New Order Added');
 		return response()->json(['message' => 'success'], 200);
