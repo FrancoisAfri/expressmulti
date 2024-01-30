@@ -109,12 +109,6 @@ class DashboardController extends Controller
         return view('dashboard.index')->with($data);
     }
 
-    public function getBookingsDash()
-    {
-        $bookings = $this->bookingService->getAllBookings();
-        return response($bookings, 200);
-    }
-
 
     public function markNotification(Request $request)
     {
@@ -134,7 +128,7 @@ class DashboardController extends Controller
     public function closeTable(Tables $table)
     {
         $this->RestaurantService->closeTable($table); 
-        Alert::toast('Table Closed Successfully', 'success');
+        Alert::toast('Table closed successfully', 'success');
         activity()->log('Table Closed Successfully');
         return back();
 		
@@ -144,7 +138,7 @@ class DashboardController extends Controller
     {
 		
         $this->RestaurantService->closeService($service); 
-        Alert::toast('Service Request Successfully', 'success');
+        Alert::toast('Service request successfully', 'success');
         activity()->log('Service Request Closed Successfully');
         return back();
 		

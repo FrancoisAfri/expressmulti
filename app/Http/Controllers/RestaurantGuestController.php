@@ -53,7 +53,6 @@ class RestaurantGuestController extends Controller
     {
 		
 		// get table last scanned
-
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 		$type = !empty($request['type']) ? $request['type'] : 0;
 		$categoty = !empty($request['categoty']) ? $request['categoty'] : 0;
@@ -69,7 +68,7 @@ class RestaurantGuestController extends Controller
 				'Home Page',
 				'Restaurant Menu & Services'
 			);
-			
+
 			// get restaurant Manager
 			$user =  DB::table('users')->select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -103,8 +102,10 @@ class RestaurantGuestController extends Controller
 		}
 		else
 		{
+			$ipAddress = $this->getUserIpAddress($request);
+			
 			$scanned = TableScans::create([
-					'ip_address' => '',
+					'ip_address' => $ipAddress,
 					'table_id' => $table->id,
 					'scan_time' => time(),
 					'status' => 1,
@@ -348,4 +349,21 @@ class RestaurantGuestController extends Controller
         return  back();
 		
     }
+	// ip address
+	/*public function getUserIpAddress(Request $request)
+    {
+        $ipAddress = $request->ip();
+        if (empty($ipAddress)) {
+            $ipAddress = $request->server('REMOTE_ADDR');
+        }
+        
+    }*/
+	public function getUserIpAddress(Request $request)
+	{
+		$ipAddress = $request->ip();
+		if (empty($ipAddress)) {
+            $ipAddress = $request->server('REMOTE_ADDR');
+        }
+		return $ipAddress;
+	}
 }

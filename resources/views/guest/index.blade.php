@@ -469,8 +469,8 @@
 					if (secs < 10) {
 						secs = "0" + secs;
 					}
-					//document.getElementById("stopWatchDisplay").innerHTML = mins + ":" + secs + ":" + "0" + tenths;
-					$('#stopWatchDisplay').val(hours + ":" + mins + ":" + secs + "." + tenths);
+					//document.getElementById("stopWatchDisplay").innerHTML = mins + ":" + secs + ":" + "0" + tenths; + "." + tenths
+					$('#stopWatchDisplay').val(hours + ":" + mins + ":" + secs);
 					increment(taskID);
 				}, 100);
 			}

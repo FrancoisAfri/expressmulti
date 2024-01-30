@@ -17,7 +17,7 @@ class TableScans extends Model
 	protected $table = 'table_scans';
 
     protected $fillable = [
-        'ip_address', 'status', 'table_id', 'nickname', 'scan_time', 'comment'
+        'ip_address', 'status', 'table_id', 'nickname', 'scan_time', 'closed_time', 'comment'
 
     ];
 

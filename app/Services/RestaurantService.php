@@ -382,7 +382,34 @@ class RestaurantService //implements RestaurantServiceInterface
     {
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 
-        $scanned->status = 2;
+        // add code to close all open orders and service request
+		// close all order
+		$orders = Orders::getOderByTable($table->id, $scanned->id);
+		foreach ($orders as $order)
+		{
+			$order->status = 2;
+			$order->update();
+			// update order products.
+			foreach ($order->products as $product)
+			{
+				$product->status = 2;
+				$product->update();
+			}
+		}
+		// close all service requests
+		DB::table('events_services')
+            ->where('table_id', $table->id)
+            ->where('scan_id', $scanned->id)
+            ->update(['status' => 2, 'completed_time' => time()]); 
+			
+		// close all normal services
+		DB::table('orders_services')
+            ->where('table_id', $table->id)
+            ->where('scan_id', $scanned->id)
+            ->update(['status' => 2]);
+			
+		// close table
+		$scanned->status = 2;
         $scanned->closed_time = time();
         $scanned->update();
     }
@@ -459,4 +486,13 @@ class RestaurantService //implements RestaurantServiceInterface
 		$order->completed_time = time();
         $order->update();
     }
+	// get user ip address
+	/*public function getUserIpAddress(Request $request)
+    {
+        $ipAddress = $request->ip();
+        if (empty($ipAddress)) {
+            $ipAddress = $request->server('REMOTE_ADDR');
+        }
+        return $ipAddress;
+    }*/
 }
