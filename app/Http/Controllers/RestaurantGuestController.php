@@ -22,12 +22,14 @@ use App\Models\ServiceType;
 use App\Models\HRPerson;
 use App\Models\CloseRequests;
 use App\Models\TableScans;
+use App\Models\RestaurantSetup;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToText\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Events\NewRecordAdded;
 
 class RestaurantGuestController extends Controller
 {	
@@ -59,6 +61,7 @@ class RestaurantGuestController extends Controller
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
 			//  Restaurant ordering page
+			
 			$localName = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
 			// data to display on views
 			$data = $this->breadcrumb(
@@ -229,6 +232,9 @@ class RestaurantGuestController extends Controller
 				'item_id' => $closeRequests->id,
 				'status' => 1,
 			]);
+		// call event
+		// Dispatch the event
+		event(new NewRecordAdded($EventsServices));
 		//alert
         alert()->success('SuccessAlert', "Your request to close table have been submitted.");
         activity()->log("New close table Request Added");
@@ -248,10 +254,9 @@ class RestaurantGuestController extends Controller
 		
     }
 	//save order
-	public function storeOrder(Request $request, Tables $table)
+	public function storeOrder(Tables $table)
     {
 		///  save order 
-		
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 		// checck if product have already been added
 		$cart = Cart::where('table_id', $table->id)
@@ -299,10 +304,13 @@ class RestaurantGuestController extends Controller
 					'item_id' => $order->id,
 					'status' => 1,
 				]);
-				
-		//Alert::toast('Your Order have been submitted.', 'success');
+		// call event
+		// Dispatch the event
+		//event(new NewRecordAdded($EventsServices));	
+		Alert::toast('Your Order have been submitted.', 'success');
 		activity()->log('New Order Added');
-		return response()->json(['message' => 'success'], 200);
+		//return response()->json(['message' => 'success'], 200);
+		return  back();
     }
 	//save cart
 	public function saveCart(Request $request, Tables $table, Menu $menu)

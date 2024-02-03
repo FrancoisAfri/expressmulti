@@ -10,9 +10,11 @@ use App\Http\Requests\AddTableRequest;
 use App\Http\Requests\AssingnEmployeeRequest;
 use App\Http\Requests\AddServiceRequest;
 use App\Http\Requests\MenuTypeRequest;
+use App\Http\Requests\RestaurantSettingsRequest;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use App\Models\Categories;
+use App\Models\RestaurantSetup;
 use App\Models\Menu;
 use App\Models\MenuType;
 use App\Models\Tables;
@@ -403,5 +405,57 @@ class RestaurantController extends Controller
         Alert::toast('Record Deleted Successfully ', 'success');
 		activity()->log('Menu Type deleted');
         return redirect()->back();
+    }
+	// setup
+    public function setup()
+    {
+		$setup = RestaurantSetup::where('id',1)->first();
+		//return $setup ;
+		$data = $this->breadcrumb(
+            'Restaurant',
+            'Setup Page',
+            'setup_view',
+            'Setup Management',
+            'Setup'
+        );
+		
+		$data['setup'] = RestaurantSetup::where('id',1)->first();
+		 
+        return view('restaurant.setup')->with($data);
+    }
+	// store setup
+	// store ServiceType
+	public function storeSetup(RestaurantSettingsRequest $request)
+    {
+		
+        $requestData = $request->validationData();
+		$setupID = !empty($request['setup_id']) ? $request['setup_id'] : 0;
+		$setup = RestaurantSetup::where('id',$setupID)->first();
+		if (!empty($setup->id))
+		{ 
+			$setup->colour_one = $request['colour_one']; 
+			$setup->colour_two = $request['colour_two'];
+			$setup->colour_three = $request['colour_three'];
+			$setup->mins_one = $request['mins_one'];
+			$setup->mins_two = $request['mins_two'];
+			$setup->mins_three = $request['mins_three'];
+			$setup->update();
+			
+			activity()->log('Setup Updated');
+		}
+		else
+		{
+			RestaurantSetup::create([
+                'colour_one' => $request['colour_one'],
+                'colour_two' => $request['colour_two'],
+                'colour_three' => $request['colour_three'],
+                'mins_one' => $request['mins_one'],
+                'mins_two' => $request['mins_two'],
+                'mins_three' => $request['mins_three'],
+            ]);
+			activity()->log('Setup Created');
+		}
+        alert()->success('SuccessAlert', 'Record Created Successfully');
+		return back();
     }
 }

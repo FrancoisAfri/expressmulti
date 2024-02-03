@@ -436,17 +436,17 @@
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
 			/// place order
-			$('#place-order-cart').on('click', function () {
+			/*$('#place-order-cart').on('click', function () {
                 let strUrl = '/restaurant/place-order/{{$table->id}}/';
                 let modalID = 'view-cart-modal';
                 let formName = 'cart-form';
                 let submitBtnID = 'place-order-cart';
-                let redirectUrl = '{{route('seating.plan', $table->id) }}';
+                let redirectUrl = "restaurant/seating_plan/{{$table->id}}";
                 let successMsgTitle = 'Order Saved!';
                 let successMsg = 'Your order have been submitted successfully.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
-			
+			*/
             //Launch counter for running tasks
             increment();
 			

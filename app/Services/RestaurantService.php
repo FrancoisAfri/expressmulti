@@ -10,6 +10,7 @@ use App\Models\ServiceType;
 use App\Models\OrdersServices;
 use App\Models\EventsServices;
 use App\Models\OrdersHistory;
+use App\Models\OrdersProducts;
 use App\Models\TableScans;
 use App\Models\CloseRequests;
 use App\Models\Orders;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use PHPUnit\Exception;
 use Stancl\Tenancy\Tenant;
 use Illuminate\Http\Request;
+use App\Events\NewRecordAdded;
 
 class RestaurantService //implements RestaurantServiceInterface
 {
@@ -374,6 +376,9 @@ class RestaurantService //implements RestaurantServiceInterface
 					]);
 							
 			DB::commit();
+			// call event
+			// Dispatch the event
+			event(new NewRecordAdded($EventsServices));
 		}
 		
     }
@@ -485,6 +490,22 @@ class RestaurantService //implements RestaurantServiceInterface
         $order->status = 2;
 		$order->completed_time = time();
         $order->update();
+    }
+	// delete order
+	public function deleteOrders($order)
+    {
+		
+		//get order model
+		$orders = Orders::where('id',$order->item_id);
+		//get all order products
+		$OrdersProducts = OrdersProducts::where('order_id',$order->item_id);
+		foreach($OrdersProducts as $product) {
+			$product->delete();
+		}
+		// delete order
+		$orders->delete();
+		// delete event service
+		$order->delete();
     }
 	// get user ip address
 	/*public function getUserIpAddress(Request $request)

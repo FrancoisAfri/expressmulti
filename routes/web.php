@@ -53,15 +53,14 @@ Route::get('restaurant/seating_plan/{table}', [RestaurantGuestController::class,
 Route::get('/restaurant/close-table/request/{table}', 'App\Http\Controllers\RestaurantGuestController@closeTableRequest');
 Route::get('/restaurant/cart-trash/{cart}', 'App\Http\Controllers\RestaurantGuestController@deleteItems');
 Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
-Route::post('/restaurant/place-order/{table}', 'App\Http\Controllers\RestaurantGuestController@store');
 Route::post('restaurant/rate/service/{scan}', 'App\Http\Controllers\RestaurantGuestController@rateService');
 Route::post('restaurant/add-table-name/{scan}', 'App\Http\Controllers\RestaurantGuestController@saveName');
-Route::post('restaurant/make-order/{scan}', [RestaurantGuestController::class, 'storeOrder'])
-        ->name('order.store');
+//Route::post('restaurant/make-order/{scan}', [RestaurantGuestController::class, 'storeOrder'])
+ //       ->name('order.store');
 Route::post('restaurant/add-cart/{table}/{menu}', [RestaurantGuestController::class, 'saveCart'])
         ->name('cart.store');
-Route::post('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
-        ->name('cart.store');
+Route::get('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
+        ->name('order.store');
 	
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
     ->name('2fa.index');
@@ -303,6 +302,12 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('service.close');
 	Route::get('order/close/{order}', [DashboardController::class, 'closeOrder'])
         ->name('order.close');
+	Route::get('delete-order/{order}', [DashboardController::class, 'deleteOrder'])
+        ->name('delete.close');
+	Route::get('setup', [RestaurantController::class, 'setup'])
+        ->name('setup.res');
+	Route::post('settings_save', [RestaurantController::class, 'storeSetup'])
+        ->name('restaurant_settings.store');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

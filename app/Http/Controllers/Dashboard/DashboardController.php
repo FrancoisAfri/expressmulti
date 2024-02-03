@@ -19,6 +19,7 @@ use App\Models\OrdersProducts;
 use App\Models\TableScans;
 use App\Models\Orders;
 use App\Models\OrdersServices;
+use App\Models\RestaurantSetup;
 use App\Traits\CompanyIdentityTrait;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Contracts\Foundation\Application;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
 use RealRashid\SweetAlert\Facades\Alert;
+use DateTime;
 
 class DashboardController extends Controller
 {
@@ -47,13 +49,13 @@ class DashboardController extends Controller
      * @var Notification
      */
     private $notification;
-    private Booking $booking;
+    //private Booking $booking;
     //private BookingService $bookingService;
 
 
     public function __construct(
 
-        BookingNotification   $notification, RestaurantService $restaurantService
+        RestaurantService $restaurantService
     )
     {
 		$this->RestaurantService = $restaurantService;
@@ -91,12 +93,19 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $CompanyIdentity = $this->CompanyIdentityDetails();
+        $CompanyIdentity = $this->CompanyIdentityDetails(); 
+		$services = EventsServices::getRequests();
+		$setup = RestaurantSetup::where('id',1)->first();
 
+        $data['normal'] = !empty($setup->colour_one) ? $setup->colour_one : '';
+        $data['moderate'] = !empty($setup->colour_two) ? $setup->colour_two : '';
+        $data['critical'] = !empty($setup->colour_three) ? $setup->colour_three : '';
+        $data['normal_mins'] = !empty($setup->mins_one) ? $setup->mins_one : '';
+        $data['moderate_mins'] = !empty($setup->mins_two) ? $setup->mins_two : '';
+        $data['critical_mins'] = !empty($setup->mins_three) ? $setup->mins_three : '';
         $data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
         $data['totalPayment'] = OrdersProducts::getDailySummary()->sum('amount');
         // $data['activePatients'] = Patient::totalPatients();
-		$services = EventsServices::getRequests();
 		$data['dailyData'] = $this->getDailyProfit();
 		$data['activeModules'] = modules::where('active', 1)->get();
 		$data['ordersServices'] = OrdersServices::getAllRequest();
@@ -172,7 +181,18 @@ class DashboardController extends Controller
         return back();
 		
     }
-    /**
+    // delete order
+	// close order
+	public function deleteOrder(EventsServices $order)
+    {
+		//return $order;
+        $this->RestaurantService->deleteOrders($order); 
+        Alert::toast('Order deleted successfully', 'success');
+        activity()->log('Order deleted successfully');
+        return back();
+		
+    }
+	/**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -225,7 +245,32 @@ class DashboardController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //old code
+		/*if (!empty($services))
+		{
+			foreach ($services as $service) {
+				
+				$cur_date = new DateTime();
+				//$cur_date = $cur_date->modify("+1 hours");  //fix the time since its an hour behind
+				$cur_date = $cur_date->format('m/d/Y g:i A');
+				$to_time = $service->requested_time;
+				$from_time = strtotime($cur_date);
+
+				$mins = round(abs($from_time - $to_time) / 60,2); //check the time difference
+
+				// allocated color accordint to time
+				if ($mins < 4)
+					$color = "90EE90";
+				elseif ($mins > 4 && $mins < 6)
+					$color = "FFFF9E";
+				elseif ($mins > 7)
+					$color = "FF7F7F"; 
+				
+				$service->color = $color;
+				$color = '';
+				$mins = 0;
+			}
+		}*/
     }
 
 }

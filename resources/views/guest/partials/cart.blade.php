@@ -41,9 +41,7 @@
 									</div>
 								@endforeach
 								<div class="form-group text-center">
-									<button type="button" id="place-order-cart" class="btn btn-success waves-effect waves-light col-12 ">
-										Place Order
-									</button>
+									<a href="/restaurant/place-order/{{$table->id}}"><i class="btn btn-success waves-effect waves-light col-12 ">Place Order</i></a>
 								</div>
 							@else
 								<div class="alert alert-danger alert-dismissable">

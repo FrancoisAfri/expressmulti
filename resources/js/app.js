@@ -30,3 +30,10 @@ require('./bootstrap');
 // const app = new Vue({
 //     el: '#app',
 // });
+
+
+Vue.component('widget', require('./components/Widget.vue').default);
+
+const app = new Vue({
+    el: '#app',
+});

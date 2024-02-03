@@ -19,33 +19,33 @@
 						<div class="row">
 							<div class="col-sm-6 col-xl-3">
 								<div class="p-2 text-center">
-									<i class="mdi mdi-doctor text-primary mdi-24px"></i>
+									<i class="mdi mdi-cash text-primary mdi-24px"></i>
 									<h3><!-- {{ $activePatients ?? 0 }} --></h3>
-									<p class="text-muted font-15 mb-0">Total Requests</p>
+									<p class="text-muted font-15 mb-0">Total Orders</p>
 								</div>
 							</div>
 
 							<div class="col-sm-6 col-xl-3">
 								<div class="p-2 text-center">
-									<i class="mdi mdi-stethoscope text-success mdi-24px"></i>
+									<i class="mdi mdi-eye-outline text-success mdi-24px"></i>
 									<h3><!-- {{$bookingForMonth ?? 0}} --></h3>
-									<p class="text-muted font-15 mb-0">Monthly total Requests </p>
+									<p class="text-muted font-15 mb-0">Monthly Total Orders </p>
 								</div>
 							</div>
 
 							<div class="col-sm-6 col-xl-3">
 								<div class="p-2 text-center">
-									<i class="mdi mdi-account-group text-danger mdi-24px"></i>
+									<i class="mdi mdi-cart-arrow-down text-danger mdi-24px"></i>
 									<h3><!-- {{ $bookingForShowedUp ?? 0 }} --></h3>
-									<p class="text-muted font-15 mb-0"> Incomplete</p>
+									<p class="text-muted font-15 mb-0">Monthly Incomplete Orders</p>
 								</div>
 							</div>
 
 							<div class="col-sm-6 col-xl-3">
 								<div class="p-2 text-center">
-									<i class="mdi mdi-eye-outline text-blue mdi-24px"></i>
+									<i class="mdi mdi-basket text-blue mdi-24px"></i>
 									<h3><!-- {{ $bookingForNoShow ?? 0 }} --> </h3>
-									<p class="text-muted font-15 mb-0">Total  </p>
+									<p class="text-muted font-15 mb-0">Total Incomplete</p>
 								</div>
 							</div>
 
@@ -76,7 +76,8 @@
 												<th>Waiter</th>
 												<th>Request Details</th>
 												<th>Timer</th>
-												<th nowrap>#</th>
+												<th></th>
+												<th></th>
 											</tr>
                                         </thead>
                                         <tbody>
@@ -91,46 +92,53 @@
 														time[{{ $service->id }}] = {{ ($service->status == 1) ? ((time() - $service->requested_time) * 10) : 1 * 10 }};
 													</script>
 													<tr>
-														<td>{{ !empty($service->requested_time) ? date('d/m/Y', $service->requested_time) : '' }}</td>
-														<td>{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
-														<td>{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
-														<td>{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
-														<td>{{ !empty($service->service) ? $service->service : '' }} </br>
+														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->requested_time) ? date('d/m/Y', $service->requested_time) : '' }}</td>
+														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
+														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
+														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
+														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->service) ? $service->service : '' }} </br>
 															{{ !empty($service->comment) ? $service->comment : '' }}
 														</td>
-														<td><input type="text" id="{{ $service->id . 'stopWatchDisplay' }}" style="font-weight:bold; font-family:cursive; width: 120px; height: 23px;" value="" class="input-sm" disabled></td>
+														<td class="{{ $service->id . 'trElement' }}"><input type="text" id="{{ $service->id . 'stopWatchDisplay' }}" style="font-weight:bold; font-family:cursive; width: 120px; height: 23px;" value="" class="input-sm" disabled></td>
 														@if ($service->service_type == 1)
-															<td>	
+															
+															<td>
 																<button type="button" class="close mark-as-read"
-																	onclick="postData({{$service->id}}, 'closeservice');"
-																	aria-label="Close"
-																<span aria-hidden="true">&times;</span>
+																		onclick="postData({{$service->id}}, 'closeservice');"
+																		aria-label="Close">
+																	<span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
 																</button>
 															</td>
+															<td></td>
 														@elseif ($service->service_type == 2) 
 															<td>
 																<button type="button" class="close mark-as-read"
 																		onclick="postData({{$service->id}}, 'closeorder');"
-																		aria-label="Close"
-																	<span aria-hidden="true">&times;</span>
+																		aria-label="Close">
+																	<span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
+																</button>
+															</td>
+															<td>
+																<button type="button" class="close mark-as-read"
+																		onclick="postData({{$service->id}}, 'deleteorder');"
+																		aria-label="Close">
+																	<span aria-hidden="true" class="mdi mdi-delete" style="color: #8B0000;"></span>
 																</button>
 															</td>
 														@elseif ($service->service_type == 3)
-															<td nowrap>
-																<div>
-																	<button type="button" class="close mark-as-read"
-																			onclick="postData({{$service->id}}, 'closerequest');"
-																			aria-label="Close"
-																		<span aria-hidden="true">Yes</span>
-																	</button> 
-																</div>
-																<div>
-																	<button type="button" class="close mark-as-read"
-																			onclick="postData({{$service->id}}, 'closedenied');"
-																			aria-label="Close"
-																		<span aria-hidden="true">No</span>
-																	</button>
-																</div>
+															<td>
+																<button type="button" class="close mark-as-read"
+																		onclick="postData({{$service->id}}, 'closerequest');"
+																		aria-label="Close">
+																	<span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
+																</button> 
+															</td>
+															<td>
+																<button type="button" class="close mark-as-read"
+																		onclick="postData({{$service->id}}, 'closedenied');"
+																		aria-label="Close">
+																	<span aria-hidden="true" class="mdi mdi-delete" style="color: #8B0000;"></span>
+																</button>
 															</td>
 														@endif
 													</tr>
@@ -313,18 +321,19 @@
     <script src="{{ asset('libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('libs/moment/min/moment.min.js')}}"></script>
 
-    <!-- Calendar init -->
+    <!-- Calendar init 13trElement
     <script src="{{ asset('js/calendar.js')}}"></script>
-    <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
+    <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>-->
     <!-- toastr init js-->
-    <script src="{{ asset('js/pages/toastr.init.js')}}"></script>
-    <script src="{{ asset('js/pages/datatables.init.js') }}"></script>
+   <!-- <script src="{{ asset('js/pages/toastr.init.js')}}"></script>
+    <script src="{{ asset('js/pages/datatables.init.js') }}"></script>-->
     <!-- Dashboar 1 init js-->
     <script src="{{ asset('js/pages/dashboard-2.init.js')}}"></script>
     <script src="{{ asset('js/pages/dashboard-3.init.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- App js-->
     <script src="{{ asset('js/app.min.js')}}"></script>
+	<script src="{{ ('resources/js/js/app.js') }}"></script>
     <script>
 		function postData(id, data) {
 
@@ -338,6 +347,8 @@
 				location.href = "{{route('order.close', '')}}" + "/" + id;
 			else if (data == 'closedenied')
 				location.href = "{{route('request-denied.close', '')}}" + "/" + id;
+			else if (data == 'deleteorder')
+				location.href = "{{route('delete.close', '')}}" + "/" + id;
         }
         (
 		function () {
@@ -409,13 +420,13 @@
 		
 		function increment(taskID) {
 			if (running[taskID] == 1) {
-				setTimeout(function() {
+				setTimeout(function () {
 					time[taskID]++;
 					var hours = Math.floor(time[taskID] / 10 / 60 / 60) % 60;
 					var mins = Math.floor(time[taskID] / 10 / 60) % 60;
 					var secs = Math.floor(time[taskID] / 10) % 60;
 					var tenths = time[taskID] % 10;
-
+					
 					if (hours < 10) {
 						hours = "0" + hours;
 					}
@@ -425,11 +436,23 @@
 					if (secs < 10) {
 						secs = "0" + secs;
 					}
-					//document.getElementById("stopWatchDisplay").innerHTML = mins + ":" + secs + ":" + "0" + tenths;  + "." + tenths
+
+					// Update the display
 					$('#' + taskID + 'stopWatchDisplay').val(hours + ":" + mins + ":" + secs);
+					/*normal_mins']     $data[''] $data['critical_mins*/
+					// Change color with timer
+					if (mins <= {{$normal_mins}}) {
+						$('.' + taskID + 'trElement').css('background-color', "{{$normal}}"); // dark Green
+					} else if (mins > {{$normal_mins}} && mins < {{$moderate_mins}}) {
+						$('.' + taskID + 'trElement').css('background-color', "{{$moderate}}"); // orange
+					} else {
+						$('.' + taskID + 'trElement').css('background-color', "{{$critical}}"); // dark red 
+					}
+
 					increment(taskID);
 				}, 100);
 			}
 		}
+
     </script>
 @stop
