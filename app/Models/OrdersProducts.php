@@ -51,8 +51,60 @@ class OrdersProducts extends Model
     }
 	// get monthly income
 	public static function getSummaryByMonth($month){
-        return OrdersProducts::whereMonth(
-            'created_at',$month
-        )->where('status',2)->get();
+        return OrdersProducts::whereMonth('created_at',$month)
+				->where('status',2)->get();
+    }
+	//
+	public static function totalPaidThisMonth($year,$month)
+    {
+
+        $totalPaid =  OrdersProducts::whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->where('status', 2)
+            ->get();
+
+        if (isset($totalPaid))
+            return $totalPaid->sum('amount');
+        else return 0;
+
+    }
+	public static function totalPaidThisYear($year)
+    {
+
+        $totalPaid =  OrdersProducts::whereYear('created_at', '=', $year)
+			->where('status', 2)
+            ->get();
+
+        if (isset($totalPaid))
+            return $totalPaid->sum('amount');
+        else return 0;
+
+    }
+	
+	// Incomplete order
+	public static function totalUnpaidThisMonth($year,$month)
+    {
+
+        $totalPaid =  OrdersProducts::whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+			->where('status', 1)
+            ->get();
+
+        if (isset($totalPaid))
+            return $totalPaid->sum('amount');
+        else return 0;
+
+    }
+	public static function totalUnpaidThisYear($year)
+    {
+
+        $totalPaid =  OrdersProducts::whereYear('created_at', '=', $year)
+            ->where('status', 1)
+            ->get();
+
+        if (isset($totalPaid))
+            return $totalPaid->sum('amount');
+        else return 0;
+
     }
 }

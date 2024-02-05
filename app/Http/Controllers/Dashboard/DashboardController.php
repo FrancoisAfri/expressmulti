@@ -96,7 +96,10 @@ class DashboardController extends Controller
         $CompanyIdentity = $this->CompanyIdentityDetails(); 
 		$services = EventsServices::getRequests();
 		$setup = RestaurantSetup::where('id',1)->first();
-
+		// get this year and month
+		$year = date('Y');
+		$month = date('m');
+		
         $data['normal'] = !empty($setup->colour_one) ? $setup->colour_one : '';
         $data['moderate'] = !empty($setup->colour_two) ? $setup->colour_two : '';
         $data['critical'] = !empty($setup->colour_three) ? $setup->colour_three : '';
@@ -105,7 +108,7 @@ class DashboardController extends Controller
         $data['critical_mins'] = !empty($setup->mins_three) ? $setup->mins_three : '';
         $data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
         $data['totalPayment'] = OrdersProducts::getDailySummary()->sum('amount');
-        // $data['activePatients'] = Patient::totalPatients();
+        //$data['activePatients'] = Patient::totalPatients();
 		$data['dailyData'] = $this->getDailyProfit();
 		$data['activeModules'] = modules::where('active', 1)->get();
 		$data['ordersServices'] = OrdersServices::getAllRequest();
@@ -115,6 +118,10 @@ class DashboardController extends Controller
 		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
 		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTablesScans();
+		$data['totalOrders'] = OrdersProducts::totalPaidThisYear($year);
+        $data['monthlyOrders'] = OrdersProducts::totalPaidThisMonth($year,$month);
+        $data['totalIncompleteOrders'] = OrdersProducts::totalUnpaidThisYear($year);
+        $data['monthlyIncompleteOrders'] = OrdersProducts::totalUnpaidThisMonth($year,$month);
         return view('dashboard.index')->with($data);
     }
 
