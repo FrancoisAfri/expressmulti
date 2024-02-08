@@ -312,3 +312,5 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
 });
+// Api for services
+Route::get('/api/get-latest-services', 'DashboardController@getLatestServices');

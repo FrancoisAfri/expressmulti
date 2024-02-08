@@ -326,7 +326,7 @@
     <script src="{{ asset('libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
     <script src="{{ asset('libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('libs/moment/min/moment.min.js')}}"></script>
-
+	<script src="{{ mix('js/app.js') }}"></script>
     <!-- Calendar init 13trElement
     <script src="{{ asset('js/calendar.js')}}"></script>
     <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>-->

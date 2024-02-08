@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Booking Admin') }}</title>
+    <title>{{ config('app.name', 'Express Serve') }}</title>
 
         <link rel="shortcut icon" href="{{ $logo }} ">
 

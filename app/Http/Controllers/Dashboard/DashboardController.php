@@ -278,6 +278,14 @@ class DashboardController extends Controller
 				$mins = 0;
 			}
 		}*/
-    }
+    } 
+	
+	// get API services
+	public function getLatestServices()
+	{
+		$services = EventsServices::latest()->get(); // Retrieve the latest services from the database
+
+		return response()->json($services);
+	}
 
 }
