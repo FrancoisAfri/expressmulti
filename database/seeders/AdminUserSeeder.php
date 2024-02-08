@@ -37,7 +37,7 @@ class AdminUserSeeder extends Seeder
         $person = new HRPerson();
         $person->first_name = 'Francois';
         $person->surname = 'keou';
-        $person->initial = 'F';
+        $person->initial = 'FC';
         $person->email = 'info@mkhayamk.co.za';
         $person->phone_number = '0638943843';
         $person->status = 1;
@@ -68,9 +68,9 @@ class AdminUserSeeder extends Seeder
 
 
         $person = new HRPerson();
-        $person->first_name = 'Gift';
-        $person->initial = 'NG';
-        $person->surname = 'Ncube';
+        $person->first_name = 'Mkhaya';
+        $person->initial = 'MS';
+        $person->surname = 'Support';
         $person->email = 'support@mkhayamk.co.za';
         $person->status = 1;
         $person->phone_number = '0638943842';
@@ -78,7 +78,6 @@ class AdminUserSeeder extends Seeder
 
         PasswordHistory::createPassword($user->id, Hash::make('tempassword!'));
         PasswordSecurity::addExpiryDate($user->id);
-
 
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
