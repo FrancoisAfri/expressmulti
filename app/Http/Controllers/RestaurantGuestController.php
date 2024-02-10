@@ -79,7 +79,7 @@ class RestaurantGuestController extends Controller
 				->first();
 			$orders = Orders::getOderByTable($table->id, $scanned->id);
 			//return $orders;
-			$manager = HRPerson::where('user_id',$user ->id)->first();
+			$manager = HRPerson::where('user_id',$user->id)->first();
 			// get orders and service history
 			$menuTypes = MenuType::getMenuTypes();
 			$Categories = Categories::getCategories();
