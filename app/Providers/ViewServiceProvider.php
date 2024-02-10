@@ -166,10 +166,13 @@ class ViewServiceProvider extends ServiceProvider
 			$tableDetails = Tables::where('id', $tableID)->first();
 			
 			// get avatar
-			$hrUser = HRPerson::where('id', $tableDetails->employee_id)->first();
-			$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
-			$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
-			
+			if (!empty($tableDetails->employee_id))
+			{
+				$hrUser = HRPerson::where('id', $tableDetails->employee_id)->first();
+				$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
+				$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
+			}
+			else $profilePic = '';
 			$data['scanned'] = $scanned;
 			$data['scannedTime'] = $scannedTime;
 			$data['profilePic'] = $profilePic;
