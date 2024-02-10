@@ -77,10 +77,11 @@ class RestaurantGuestController extends Controller
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
 				->where('model_has_roles.role_id', 3)
 				->first();
-			$orders = Orders::getOderByTable($table->id, $scanned->id);
-			//return $orders;
-			$manager = HRPerson::where('user_id',$user->id)->first();
+			if (!empty($user->id))
+				$manager = HRPerson::where('user_id',$user->id)->first();
+			else $manager = '';
 			// get orders and service history
+			$orders = Orders::getOderByTable($table->id, $scanned->id);
 			$menuTypes = MenuType::getMenuTypes();
 			$Categories = Categories::getCategories();
 			// get orders and service history
@@ -89,7 +90,9 @@ class RestaurantGuestController extends Controller
 			
 			$data['orders'] = $orders;
 			$data['ordersServices'] = $ordersServices;
-			$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
+			if (!empty($user->id))
+				$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
+			else $data['avatar'] = '';
 			$data['menus'] = Menu::getMenus($type, $categoty);
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;
