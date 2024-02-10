@@ -183,10 +183,12 @@ class RestaurantController extends Controller
             'Menus Management',
             'Menu'
         );
-		
-		$data['categories'] = Categories::getCategories();
-		$data['menus'] = Menu::getMenus();
-		$data['menusTypes'] = MenuType::getMenuTypes();
+		$categories = Categories::getCategories();
+		$menus = Menu::getAllMenus();
+		$menusTypes = MenuType::getMenuTypes();
+		$data['categories'] = $categories;
+		$data['menus'] = $menus;
+		$data['menusTypes'] = $menusTypes;
 		 
         return view('restaurant.menus')->with($data);
     }

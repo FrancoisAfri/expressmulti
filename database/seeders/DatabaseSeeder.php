@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ModuleSeeder::class);
         $this->call(Public_holidays_Seeder::class);
         $this->call(Provinces_Seeder::class);
-        $this->call(Member_module_Seeder::class);
+        $this->call(RestaurantSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(RolesSeeder::class);
 

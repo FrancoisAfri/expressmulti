@@ -42,7 +42,7 @@ class Menu extends Model
         return $this->belongsTo(MenuType::class, 'menu_type', 'id');
     }
 	
-	// get all menus
+	// get all menus per categories and menu type
 	public static function getMenus($type, $categoty)
     {
 		$query = Menu::where('status',1);
@@ -55,6 +55,14 @@ class Menu extends Model
         }
 		$query->orderBy('menu_type','asc')->orderBy('category_id','asc')->get();
        
-	   return $query->get();	
+	   return $query;
+    }
+	/// get all menu
+	// get all menus
+	public static function getAllMenus()
+    {
+		$query = Menu::where('status',1)->get();
+       
+	   return $query;	
     }
 }
