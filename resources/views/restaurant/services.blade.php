@@ -33,7 +33,6 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Turn Around Time</th>
                             <th>Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
@@ -44,11 +43,6 @@
                                 <td>
 									<span>
 										 {{ $service->name ?? ''}}
-									</span>
-                                </td>
-								<td>
-									<span>
-										 {{ $service->turn_around_time ?? ''}}
 									</span>
                                 </td>
                                 <td>
@@ -70,8 +64,7 @@
 											<button type="button" id="edit_service" class="dropdown-item"
 													data-toggle="modal" title="Edit Service" data-target="#edit-service-modal"
 													data-id="{{ $service->id }}"
-													data-name="{{ $service->name }}"
-													data-turn_around_time="{{ $service->turn_around_time }}">
+													data-name="{{ $service->name }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
 											<button onclick="postData({{$service->id}}, 'actdeac');"
@@ -158,10 +151,8 @@
                 let btnEdit = $(e.relatedTarget);
                 serviceID = btnEdit.data('id');
                 let name = btnEdit.data('name');
-                let turnAroundTime = btnEdit.data('turn_around_time');
                 let modal = $(this);
                 modal.find('#name').val(name);
-                modal.find('#turn_around_time').val(turnAroundTime);
             });
 
             // update modal			
@@ -171,7 +162,6 @@
                 let modalID = 'edit-service-modal';
                 let objData = {
                     name: $('#' + modalID).find('#name').val(),
-                    turn_around_time: $('#' + modalID).find('#turn_around_time').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 

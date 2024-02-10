@@ -36,17 +36,6 @@
                                         </div>
                                     </div> 
                                 </div>
-								<div class="col-md-6">
-									<div class="form-group">
-                                        <label for="turn_around_time">Turn Around Time (In Minutes) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control"
-                                               id="turn_around_time" name="turn_around_time" placeholder="Enter Turn Around Time" required>
-
-                                        <div class="invalid-feedback">
-                                            Please provide Turn Around Time.
-                                        </div>
-                                    </div>
-								</div>
                             </div>
                             <div class="form-group text-center">
                                 <button type="button" id="add-service" class="btn btn-success waves-effect waves-light">

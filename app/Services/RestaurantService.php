@@ -234,7 +234,6 @@ class RestaurantService //implements RestaurantServiceInterface
 
 			$tableRecord = ServiceType::create([
                 'name' => $request['name'],
-                'turn_around_time' => $request['turn_around_time'],
                 'status' => 1,
             ]);
 						
@@ -249,7 +248,6 @@ class RestaurantService //implements RestaurantServiceInterface
 			$serviceRecord = ServiceType::find($id->id);
 			
 			$serviceRecord->name = $request['name'];
-			$serviceRecord->turn_around_time = $request['turn_around_time'];
 			$serviceRecord->update();
 						
 		DB::commit();
