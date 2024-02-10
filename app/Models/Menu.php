@@ -53,9 +53,9 @@ class Menu extends Model
 		if ($categoty > 0) {
             $query->where('category_id', $categoty);
         }
-		$query->orderBy('menu_type','asc')->orderBy('category_id','asc')->get();
+		$query->orderBy('menu_type','asc')->orderBy('category_id','asc');
        
-	   return $query;
+	   return $query->get();
     }
 	/// get all menu
 	// get all menus
