@@ -10,7 +10,7 @@
 
     <title>{{ config('app.name', 'Express Serve') }}</title>
 
-        <link rel="shortcut icon" href="{{ $logo }} ">
+        <link rel="shortcut icon" href="{{ $logo }} "> 
 
     <!-- core:css -->
     <link href="{{ mix('global.css') }}" rel="stylesheet" type="text/css"/>
