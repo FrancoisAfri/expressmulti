@@ -78,6 +78,7 @@
 												<th>Request type</th>
 												<th>Table</th>
 												<th>Waiter</th>
+												<th>Patron</th>
 												<th>Request Details</th>
 												<th>Timer</th>
 												<th></th>
@@ -100,6 +101,7 @@
 														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
 														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
 														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
+														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty(\App\Models\TableScans::getTableName($service->table_id)) ? \App\Models\TableScans::getTableName($service->table_id) : '' }}</td>
 														<td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->service) ? $service->service : '' }} </br>
 															{{ !empty($service->comment) ? $service->comment : '' }}
 														</td>
@@ -447,12 +449,17 @@
 					$('#' + taskID + 'stopWatchDisplay').val(hours + ":" + mins + ":" + secs);
 					/*normal_mins']     $data[''] $data['critical_mins*/
 					// Change color with timer
-					if (mins <= {{$normal_mins}}) {
+
+					if (mins < {{$normal_mins}}) {
 						$('.' + taskID + 'trElement').css('background-color', "{{$normal}}"); // dark Green
-					} else if (mins > {{$normal_mins}} && mins < {{$moderate_mins}}) {
+					} else if (mins >= {{$normal_mins}} && mins < {{$moderate_mins}}) {
 						$('.' + taskID + 'trElement').css('background-color', "{{$moderate}}"); // orange
-					} else {
+					} else if (mins >= {{$moderate_mins}} && mins < {{$critical_mins}}) {
 						$('.' + taskID + 'trElement').css('background-color', "{{$critical}}"); // dark red 
+					}
+					else
+					{
+						$('.' + taskID + 'trElement').css('background-color', "{{$critical}}"); // dark red
 					}
 
 					increment(taskID);

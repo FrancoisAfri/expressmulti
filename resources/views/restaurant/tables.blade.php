@@ -34,7 +34,6 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Employee</th>
                             <th>Number Customers</th>
                             <th>Qr Code</th>
                             <th>Status</th>
@@ -47,11 +46,6 @@
                                 <td>
 									<span>
 										 {{ $table->name ?? ''}}
-									</span>
-                                </td>
-								<td>
-									<span>
-										 {{ !empty($table->employees->first_name) && !empty($table->employees->surname) ? $table->employees->first_name." ".$table->employees->surname : ''}}
 									</span>
                                 </td>
 								<td>

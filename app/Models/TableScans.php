@@ -47,4 +47,16 @@ class TableScans extends Model
 			return 1;
 		else return 0;
     }
+	// get table name
+	public static function getTableName($id)
+    {
+		
+		$scan = TableScans::where('table_id', $id)
+			->where('status', 1)
+			->orderBy('id', 'desc')
+            ->first();
+		if (!empty($scan->nickname))
+			return $scan->nickname;
+		else return '';
+    }
 }
