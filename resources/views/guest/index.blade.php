@@ -157,23 +157,10 @@
 													@foreach($menus as $menu)
 														<div class="row justify-content-between">
 															<div class="col-6">
-																<div class="d-flex align-items-center gap-2 mb-3">
-																	<img src="{{ asset('libs/eatsome/img/veg.jpeg') }}" alt="Image"
-																   class="img-fluid ch-20">
-																   <div class="badge border border-warning text-warning">Bestseller</div>
-																</div>
 																<h3 class="fw-bold mb-1">{{ $menu->name ?? '' }}</h3>
 																<p class="small text-muted mb-3">{{ $menu->categories->name ?? '' }}</p>
 																<p class="small text-muted mb-3">{{ $menu->menuType->name ?? '' }}</p>
 																<h6 class="fw-bold">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</h6>
-																<div class="badge border border-warning">
-																	<span><i class="fa-solid fa-star text-warning"></i></span>
-																	<span><i class="fa-solid fa-star text-warning"></i></span>
-																	<span><i class="fa-solid fa-star text-warning"></i></span>
-																	<span><i class="fa-solid fa-star text-warning"></i></span>
-																	<span><i class="fa-solid fa-star text-dark"></i></span>
-																	<span class="text-dark">95</span>
-																</div>
 															</div>
 															<div class="col-4">
 																<div class="card border-0">

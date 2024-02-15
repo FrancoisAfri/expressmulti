@@ -26,11 +26,9 @@ class AddMenuRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'description' => 'required',
             'ingredients' => 'required',
             'category_id' => 'required',
             'menu_type' => 'required',
-            'calories' => 'required',
             'price' => 'required',
         ];
     }

@@ -18,13 +18,6 @@
 				 <h6 class="fw-bold" id="description"></h6>
 				 <h3 class="fw-bold mb-2" id="category"></h3>
 				 <h3 class="fw-bold mb-2" id="menu_type"></h3>
-				 <div class="badge border border-warning">
-					<span><i class="fa-solid fa-star text-warning"></i></span>
-					<span><i class="fa-solid fa-star text-warning"></i></span>
-					<span><i class="fa-solid fa-star text-warning"></i></span>
-					<span><i class="fa-solid fa-star text-warning"></i></span>
-					<span><i class="fa-solid fa-star text-dark"></i></span>
-				 </div>
 			  </div>
 			</div>
 			<div class="modal-footer d-flex justify-content-between">

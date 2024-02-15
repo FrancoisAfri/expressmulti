@@ -130,7 +130,7 @@
                                         <label for="description"> Video <span class="text-danger"></span></label>
                                         <input type="file" id="video" name="video" data-plugins="dropify"
                                    data-allowed-file-extensions='["mp4"]' data-show-upload="false">
-									<strong> Allowed filetypes are mp4. Max upload size allowed is 50M."</strong>
+									<strong> Allowed filetypes are mp4. Max upload size allowed is 20M."</strong>
                                     </div>
                                 </div>
                             </div>

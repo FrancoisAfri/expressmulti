@@ -49,7 +49,15 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with($data);
         });
+		view()->composer('layouts.main-guest', function ($view) use ( $companyDetails) {
 
+			$logo = (!empty($companyDetails['company_logo_url'])) ? asset('uploads/'.$companyDetails['company_logo_url'] ) : asset('images/logo_default.png');
+
+            $data['logo'] = $logo;
+
+            $view->with($data);
+        }); 
+		
         view()->composer('layouts.partials.top-bar', function ($view) use ( $companyDetails) {
 
           $id = Auth::user()->id;
