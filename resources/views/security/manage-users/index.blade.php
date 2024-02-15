@@ -93,14 +93,16 @@
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-
-
                                             <button onclick="postData({{$user->id}}, 'actdeac');"
                                                     class="dropdown-item"><i
                                                     class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
                                                 {{(!empty($user->activate) && $user->activate == 1) ? "De-Activate" : "Activate"}}
                                             </button>
-
+											<button onclick="postData({{$user->id}}, 'edit');"
+                                                    class="dropdown-item"><i
+                                                    class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+                                               Edit Profile
+                                            </button>
                                             <form action="{{ route('manage.destroy', $user->id ) }}" method="POST"
                                                   style="display: inline-block;">
                                                 <input type="hidden" name="_method" value="DELETE">
@@ -113,16 +115,13 @@
                                                     Delete
                                                 </button>
                                             </form>
-
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                         @endforeach
-
                         </tbody>
                     </table>
-
                 </div>
             </div><!-- end col -->
         </div>
@@ -170,11 +169,12 @@
             if (data == 'ribbons')
                 location.href = "/users/ribbons/" + id;
             else if (data == 'edit')
-                location.href = "/users/module_edit/" + id;
+                location.href = "/users/profile_edit/" + id;
             else if (data == 'actdeac')
                 location.href = "{{route('manageUsers.activate', '')}}" + "/" + id;
             else if (data == 'access')
                 location.href = "/users/module_access/" + id;
+                
 
         }
 

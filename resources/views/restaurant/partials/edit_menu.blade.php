@@ -39,9 +39,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="description"> Description <span class="text-danger"></span></label>
-                                        <input type="text" class="form-control"
-                                               id="description" name="description" placeholder="Enter Description">
-
+										<textarea id="description" class="form-control" name="description" rows="3" cols="50"></textarea>
                                         <div class="invalid-feedback">
                                             Please provide Description.
                                         </div>
@@ -74,9 +72,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="ingredients"> Ingredients <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control"
-                                               id="ingredients" name="ingredients" placeholder="Enter Ingredients" required>
-
+										<textarea id="ingredients" class="form-control" name="ingredients" rows="3" cols="50"></textarea>
                                         <div class="invalid-feedback">
                                             Please provide Ingredients.
                                         </div>

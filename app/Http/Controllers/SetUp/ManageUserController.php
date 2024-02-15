@@ -42,7 +42,7 @@ class ManageUserController extends Controller
      */
     public function index()
     {
-
+		
         $data = $this->breadcrumb(
             'Settings Modules',
             'Admin page for security related settings',

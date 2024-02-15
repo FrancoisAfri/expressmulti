@@ -14,7 +14,7 @@
 	<link href="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.css" rel="stylesheet">
 	 <link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css"/>
 	<link href="{{ asset('libs/dropify/css/dropify.min.css') }}" rel="stylesheet" type="text/css"/>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/> -->
 @endsection
 
 {{-- Page content --}}
@@ -64,7 +64,7 @@
 										@if($table->status == 1)
 											<span class="badge badge-success">Active</span>
 										@elseif($table->status == 0)
-											<span class="badge bg-soft-danger text-danger">No-Active</span>
+											<span class="badge bg-soft-danger text-danger">Not active</span>
 										@endif
 									</span>
                                 </td>

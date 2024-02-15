@@ -36,10 +36,6 @@
                     <h4 class="mb-0"> {{ $user->person->first_name . ' ' . $user->person->surname ?? '' }}</h4>
                     <p class="text-muted"> {{ $user->person->email }}</p>
                     <div class="text-left mt-3">
-                        <h4 class="font-13 text-uppercase">About Me :</h4>
-                        <p class="text-muted font-13 mb-3">
-                            {{ $user->person->bio ?? '' }}
-                        </p>
                         <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ml-2">
                                         {{ $user->person->first_name . ' ' . $user->person->surname ?? '' }}
                                     </span></p>
@@ -47,13 +43,6 @@
                         <p class="text-muted mb-2 font-13"><strong>Mobile :</strong><span class="ml-2">
                                     {{ $user->person->cell_number ?? '' }}
                                     </span></p>
-
-                        <p class="text-muted mb-2 font-13"><strong>Email :</strong> <span class="ml-2 ">
-                                        {{ $user->person->email ?? '' }}
-                                    </span></p>
-
-                        <p class="text-muted mb-1 font-13"><strong> City :</strong> <span
-                                class="ml-2">{{ $user->person->res_city }}</span></p>
                     </div>
                 </div> <!-- end card-box -->
             </div> <!-- end col-->
@@ -139,40 +128,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-{{--                                            <label for="id_number">ID Number</label>--}}
-                                            <label for="firstname">ID Number <span class="text-danger">*</span> </label>
-                                            <input type="text" class="form-control" id="id_number"
-                                                   value="{{  $user->person->id_number ?? '' }}" name="id_number"
-                                                   placeholder="Enter ID Number">
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="firstname">Passport Number <span class="text-danger">*</span> </label>
-                                            <input type="text" class="form-control" id="passport_number"
-                                                   name="passport_number"
-                                                   value="{{  $user->person->passport_number ?? '' }}"
-                                                   placeholder="Enter Passport Number (optional)">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Date of Birth</label>
-                                            <label for="firstname">Date of Birth <span class="text-danger">*</span> </label>
-                                            <input type="text"  name="date_of_birth"
-                                                   value="{{ ($user->person->date_of_birth) ? date('d/m/Y', strtotime($user->person->date_of_birth)) : '' }}"
-                                                   class="form-control human" placeholder="October 9, 2018">
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-
-                                <div class="row">
-                                    <div class="col-md-6">
+									<div class="col-md-6">
                                         <div class="form-group">
                                             <label for="firstname">Email <span class="text-danger">*</span> </label>
                                             <input type="email" class="form-control" id="email"
@@ -184,156 +140,7 @@
                                             <span class="form-text text-muted"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="gender"> Gender </label>
-                                            <select id="gender" name="gender" class="form-control">
-                                                <option value="">Select Your Gender</option>
-                                                <option
-                                                    value="1" {{ ($user->person->gender === 1) ? ' selected' : '' }}>
-                                                    Male
-                                                </option>
-                                                <option
-                                                    value="2" {{ ($user->person->gender === 2) ? ' selected' : '' }}>
-                                                    Female
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="heard"> Marital Status </label>
-                                            <select id="marital_status" name="marital_status"
-                                                    class="form-control">
-                                                <option value="">Select Your Marital Status ...</option>
-                                                <option
-                                                    value="1" {{ ($user->person->marital_status === 1) ? ' selected' : '' }}>
-                                                    Single
-                                                </option>
-                                                <option
-                                                    value="2" {{ ($user->person->marital_status === 2) ? ' selected' : '' }}>
-                                                    Married
-                                                </option>
-                                                <option
-                                                    value="3" {{ ($user->person->marital_status === 3) ? ' selected' : '' }}>
-                                                    Divorced
-                                                </option>
-                                                <option
-                                                    value="4" {{ ($user->person->marital_status === 4) ? ' selected' : '' }}>
-                                                    Widower
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <!-- end col -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="heard"> Ethnicity </label>
-                                            <select id="ethnicity" name="ethnicity" class="form-control">
-                                                <option value="">Select Your Ethnicity Group</option>
-                                                <option
-                                                    value="1" {{ ($user->person->ethnicity === 1) ? ' selected' : '' }}>
-                                                    African
-                                                </option>
-                                                <option
-                                                    value="2" {{ ($user->person->ethnicity === 2) ? ' selected' : '' }}>
-                                                    Asian
-                                                </option>
-                                                <option
-                                                    value="3" {{ ($user->person->ethnicity === 3) ? ' selected' : '' }}>
-                                                    Caucasian
-                                                </option>
-                                                <option
-                                                    value="4" {{ ($user->person->ethnicity === 4) ? ' selected' : '' }}>
-                                                    Coloured
-                                                </option>
-                                                <option
-                                                    value="5" {{ ($user->person->ethnicity === 5) ? ' selected' : '' }}>
-                                                    Indian
-                                                </option>
-                                                <option
-                                                    value="6" {{ ($user->person->ethnicity === 6) ? ' selected' : '' }}>
-                                                    White
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div> <!-- end col -->
                                 </div> <!-- end row -->
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="userbio">Bio</label>
-                                            <textarea class="form-control" id="userbio" name="bio" rows="4"
-                                                      value=""
-                                                      placeholder="Write something...">{{ $user->person->bio }}</textarea>
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-
-                                <!-- end row -->
-
-                                <h5 class="mb-3 text-uppercase bg-light p-2"><i
-                                        class="mdi mdi-office-building mr-1"></i> Residential Address</h5>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="res_address">Address </label>
-
-                                            <input type="text" class="form-control" id="res_address"
-                                                   name="res_address" value="{{ $user->person->res_address }}"
-                                                   placeholder="Enter res_address">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="res_suburb">Suburb </label>
-                                            <input type="text" class="form-control" id="res_suburb" name="res_suburb"
-                                                   value="{{ $user->person->res_suburb }}" placeholder="Enter Suburb ">
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="companyname">City </label>
-                                            <input type="text" class="form-control" id="res_city" name="res_city"
-                                                   value="{{ $user->person->res_city }}" placeholder="Enter City">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="res_postal_code">Postal Code</label>
-                                            <input type="number" class="form-control" id="res_postal_code"
-                                                   name="res_postal_code"
-                                                   value="{{ $user->person->res_postal_code }}"
-                                                   placeholder="Enter Postal Code">
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-
-                                <div class="row">
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="heard"> Provinces </label>
-                                            <select id="res_province_id" name="res_province_id"
-                                                    class="form-control" required="">
-                                                <option value="0">Select Provinces</option>
-                                                @foreach($provinces as $province)
-                                                    <option
-                                                        value="{{ $province->id }}" {{ ($user->person->res_province_id == $province->id) ? ' selected' : '' }}>{{ $province->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div> <!-- end col -->
-
-                                </div>
 
                                 <h5 class="mb-3 text-uppercase bg-light p-2"><i class="mdi mdi-earth mr-1"></i> Profile
                                     Image</h5>

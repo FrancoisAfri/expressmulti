@@ -27,16 +27,16 @@
 											<p class="small text-muted m-0">{{ $cart->product->menuType->name ?? '' }}</p>
 											<div class="btn btn-white btn-sm border border-danger px-2 rounded">
 												<div class="d-flex align-items-center justify-content-between gap-2">
-													<div class="minus"><i class="fa-solid fa-minus text-danger"></i></div>
+													
 													<input size="3" class="shadow-none form-control text-center border-0 p-0 box" type="text" placeholder=""
-													aria-label="default input example" value="{{ $cart->quantity?? ''}}" name="quantity">
-													<div class="plus"><i class="fa-solid fa-plus text-danger"></i></div>
+													aria-label="default input example" value="{{ $cart->quantity?? ''}}" name="quantity" disabled>
+													
 												</div>
 											</div>
 											<div class="trash">
 												<a href="/restaurant/cart-trash/{{$cart->id}}"><i class="fa-solid fa-trash text-danger"></i></a>
 											</div>
-											
+											<textarea id="comment" name="comment" rows="3" cols="12" disabled>{{ $cart->comment ?? ''}}</textarea>
 										</div>
 									</div>
 								@endforeach

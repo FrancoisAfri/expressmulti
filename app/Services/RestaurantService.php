@@ -177,7 +177,6 @@ class RestaurantService //implements RestaurantServiceInterface
 			$tableRecord = Tables::create([
                 'name' => $request['name'],
                 'number_customer' => $request['number_customer'],
-                'employee_id' => $request['employee_id'],
                 'status' => 1,
             ]);
 						
@@ -193,7 +192,6 @@ class RestaurantService //implements RestaurantServiceInterface
 			
 			$tableRecord->name= $request['name'];
 			$tableRecord->number_customer = $request['number_customer'];
-			$tableRecord->employee_id= $request['employee_id'];
 			$tableRecord->update();
 						
 		DB::commit();

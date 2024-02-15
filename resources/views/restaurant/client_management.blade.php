@@ -80,7 +80,7 @@
 										@if($client->is_active == 1)
 											<span class="badge badge-success">Active</span>
 										@elseif($client->is_active == 0)
-											<span class="badge bg-soft-danger text-danger">No-Active</span>
+											<span class="badge bg-soft-danger text-danger">Not active</span>
 										@endif
 									</span>
                                 </td>

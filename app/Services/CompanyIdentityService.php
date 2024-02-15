@@ -34,25 +34,7 @@ class CompanyIdentityService
             $CompanyIdentity = new CompanyIdentity($request->all());
             $CompanyIdentity->save();
         }
-        /*$CompanyIdentity = CompanyIdentity::updateOrCreate([
-            'company_name' => $request['company_name'],
-            'full_company_name' => $request['full_company_name'],
-            'mailing_name' => $request['mailing_name'],
-            'mailing_address' => $request['mailing_address'],
-            'support_email' => $request['support_email'],
-            'password_expiring_month' => $request['password_expiring_month'],
-            'company_website' => $request['company_website'],
-            'header_name_bold' => $request['header_name_bold'],
-            'header_acronym_bold' => $request['header_acronym_bold'],
-            'header_name_regular' => $request['header_name_regular'],
-            'header_acronym_regular' => $request['header_acronym_regular'],
-            'address' => $request['address'],
-            'suburb' => $request['suburb'],
-            'city' => $request['city'],
-            'postal_code' => $request['postal_code'],
-            'monthly_revenue_target' => $request['monthly_revenue_target'],
-            'daily_revenue_target' => $request['daily_revenue_target'],
-        ]);*/
+       
         /*
          * company_logo
          */
@@ -106,18 +88,6 @@ class CompanyIdentityService
                 'surname' => $request->get('surname'),
                 'initial' => $request->get('initial'),
                 'cell_number' => $mobile,
-                'id_number' => $request->get('id_number'),
-                'date_of_birth' => $person['date_of_birth'],
-                'gender' => $request->get('gender'),
-                'marital_status' => $request->get('marital_status'),
-                'ethnicity' => $request->get('ethnicity'),
-                'bio' => $request->get('bio'),
-                'passport_number' => $request->get('passport_number'),
-                'res_address' => $request['res_address'],
-                'res_suburb' => $request->get('res_suburb'),
-                'res_city' => $request->get('res_city'),
-                'res_postal_code' => $request->get('res_postal_code'),
-                'res_province_id' => $request->get('res_province_id'),
             ],
         );
 

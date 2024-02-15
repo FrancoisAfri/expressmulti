@@ -30,6 +30,8 @@ class AddMenuRequest extends FormRequest
             'category_id' => 'required',
             'menu_type' => 'required',
             'price' => 'required',
+            'image' => 'max:1',
+            'video' => 'max:20480',
         ];
     }
 }

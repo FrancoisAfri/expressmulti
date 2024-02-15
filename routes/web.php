@@ -138,9 +138,11 @@ Route::group(['prefix' => 'users', 'middleware' => [
     'web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
     Route::resource('module', ModuleController::class);
-
+	
     Route::get('module/act/{mod}', [ModuleController::class, 'activateModule'])
         ->name('module.activate');
+	Route::get('profile_edit/{user}', [UserProfileController::class, 'profile'])
+        ->name('user.edit');
 
     Route::resource('users-access', ModuleAccessController::class);
 

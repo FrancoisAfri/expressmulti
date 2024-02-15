@@ -50,7 +50,7 @@
 										@if($service->status == 1)
 											<span class="badge badge-success">Active</span>
 										@elseif($service->status == 0)
-											<span class="badge bg-soft-danger text-danger">No-Active</span>
+											<span class="badge bg-soft-danger text-danger">Not active</span>
 										@endif
 									</span>
                                 </td>

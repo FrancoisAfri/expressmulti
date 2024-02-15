@@ -84,23 +84,35 @@
 									</span>
                                 </td>
 								<td>
-									<div class="popup-thumbnail img-responsive">
-										<img src="{{ asset('storage/assets/Images/'.$menu->image) }} "
-											 height="35px" width="40px" alt="Image">
-									</div>
+									@if(!empty($menu->image))
+										<div class="popup-thumbnail img-responsive">
+											<img src="{{ asset('storage/Images/'.$menu->image) }} "
+												 height="35px" width="40px" alt="Image">
+										</div>
+									@else
+										<!-- Placeholder image or any alternative content -->
+										<span>No image Available</span>
+									@endif
+									
                                 </td>
 								<td>
-									<video  height="60" width="150" controls>
-										<source src="{{URL::asset("storage/public/Videos/$menu->video")}}" type="video/mp4">
-										Your browser does not support the video tag.
-									</video>
+									@if(!empty($menu->video))
+										<video  height="60" width="150" controls>
+											<source src="{{URL::asset("storage/public/Videos/$menu->video")}}" type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									@else
+										<!-- Placeholder video or any alternative content -->
+										<span>No video Available</span>
+									@endif
+									
                                 </td>
                                 <td>
 									<span>
 										@if($menu->status == 1)
 											<span class="badge badge-success">Active</span>
 										@elseif($menu->status == 0)
-											<span class="badge bg-soft-danger text-danger">No-Active</span>
+											<span class="badge bg-soft-danger text-danger">Not active</span>
 										@endif
 									</span>
                                 </td>

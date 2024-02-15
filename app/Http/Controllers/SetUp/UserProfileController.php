@@ -46,17 +46,32 @@ class UserProfileController extends Controller
             'User Profile'
         );
 
-
         $user = Auth::user()->load('person');
-
 
         $data['avatar'] = $this->companyIdentityService->getAvatar(Auth::id());
         $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
         $data['user'] =  Auth::user()->load('person');
-        $data['provinces'] = Province::getAllProvinces();
         return view('security.user-profile.index')->with($data);
     }
+	// edit profile by admin users
+	public function profile(User $user)
+    {
 
+        $data = $this->breadcrumb(
+            'Settings Modules',
+            'User Profile',
+            'User Profile',
+            'Settings',
+            'User Profile'
+        );
+
+        $user = $user->load('person');
+
+        $data['avatar'] = $this->companyIdentityService->getAvatar(Auth::id());
+        $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
+        $data['user'] =  $user;
+        return view('security.user-profile.index')->with($data);
+    }
     /**
      * Show the form for creating a new resource.
      *
