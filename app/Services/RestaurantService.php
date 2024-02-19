@@ -286,7 +286,6 @@ class RestaurantService //implements RestaurantServiceInterface
 
 			$tableRecord = MenuType::create([
                 'name' => $request['name'],
-                'description' => $request['description'],
                 'status' => 1,
             ]);
 						
@@ -301,7 +300,6 @@ class RestaurantService //implements RestaurantServiceInterface
 			$serviceRecord = MenuType::find($id->id);
 			
 			$serviceRecord->name = $request['name'];
-			$serviceRecord->description = $request['description'];
 			$serviceRecord->update();
 						
 		DB::commit();

@@ -18,11 +18,11 @@
 
                                     @if(!empty($companyDetails->company_logo))
                                         <span class="logo-lg">
-                                    <img src=" {{ asset('uploads/'.$companyDetails->company_logo ) }}" alt="" height="45">
+                                    <img src=" {{ asset('uploads/'.$companyDetails->company_logo ) }}" alt="" height="100">
                                 </span>
                                     @else
                                         <span class="logo-lg">
-                                       <img src=" {{ asset('images/logo_default.png') }}" alt="" height="45">
+                                       <img src=" {{ asset('images/logo_default.png') }}" alt="" height="100">
                                 </span>
                                     @endif
                                 </a>

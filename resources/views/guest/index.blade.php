@@ -104,7 +104,6 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
-									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
 									<a data-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
@@ -202,13 +201,12 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
-									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
 									<a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
 								<h4 class="header-title mb-0">Order History</h4>
 
-								<div id="cardCollpase6" class="collapse pt-3 hide">
+								<div id="cardCollpase6" class="collapse pt-3 show">
 									<div class="table-responsive">
 										<table class="table table-hover table-centered mb-0">
 											<thead>
@@ -243,13 +241,12 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
-									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
 									<a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
 								<h4 class="header-title mb-0">Query History & Acknowledgement</h4>
 
-								<div id="cardCollpase5" class="collapse pt-3 hide">
+								<div id="cardCollpase5" class="collapse pt-3 show">
 									<div class="table-responsive">
 										<table class="table table-hover table-centered mb-0">
 											<thead>
@@ -283,12 +280,11 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
-									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
 									<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
 								<h4 class="header-title mb-0">Customer Feedback</h4>
-								<div id="cardCollpase7" class="collapse pt-3 hide">
+								<div id="cardCollpase7" class="collapse pt-3 show">
 									<div class="table-responsive">
 										<form action="/restaurant/rate/service/{{$scanned->id}}" method="POST">
 										{{ csrf_field() }}
@@ -313,37 +309,37 @@
 				</div>	
 			@else
 				<div class="row">
-				<div class="col-xl-12">
-					<div class="card">
-						<div class="card-body">
-							<div class="card-widgets">
-								<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-								<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase7"><i class="mdi mdi-minus"></i></a>
-								<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
-							</div>
-							<h4 class="header-title mb-0">Fill in the form</h4>
-							<div id="cardCollpase7" class="collapse pt-3 show">
-								<div class="table-responsive">
-									<form action="/restaurant/add-table-name/{{$scanned->id}}" method="POST">
-									{{ csrf_field() }}
-										<div class="box-body">
-											<div class="form-group">
-												<label for="table_name" class="col-sm-2 control-label"></label>
-												<div class="col-sm-10">
-												<input type="text" name="nickname" id="nickname" value="" class="form-control"  placeholder="Please Enter Your Name">
+					<div class="col-xl-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="card-widgets">
+									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+									<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase7"><i class="mdi mdi-minus"></i></a>
+									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+								</div>
+								<h4 class="header-title mb-0">Fill in the form</h4>
+								<div id="cardCollpase7" class="collapse pt-3 show">
+									<div class="table-responsive">
+										<form action="/restaurant/add-table-name/{{$scanned->id}}" method="POST">
+										{{ csrf_field() }}
+											<div class="box-body">
+												<div class="form-group">
+													<label for="table_name" class="col-sm-2 control-label"></label>
+													<div class="col-sm-10">
+													<input type="text" name="nickname" id="nickname" value="" class="form-control"  placeholder="Please Enter Your Name">
+													</div>
 												</div>
 											</div>
-										</div>
-										<div class="box-footer">
-											<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Save">
-										</div>
-									</form>
-								</div> <!-- end table responsive-->
-							</div> <!-- collapsed end -->
-						</div> <!-- end card-body -->
-					</div> <!-- end card-->
+											<div class="box-footer">
+												<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Save">
+											</div>
+										</form>
+									</div> <!-- end table responsive-->
+								</div> <!-- collapsed end -->
+							</div> <!-- end card-body -->
+						</div> <!-- end card-->
+					</div>
 				</div>
-			</div>
 			@endif
         </div>
         <br><br>

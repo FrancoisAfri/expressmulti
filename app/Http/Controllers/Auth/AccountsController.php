@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ResetPasswordEmail;
+use App\Mail\ResetUserPassword;
+use App\Models\HRPerson;
 use App\Models\User;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -15,14 +20,14 @@ use Illuminate\Support\Facades\DB;
 class AccountsController extends Controller
 {
 
+    use Notifiable;
     public function resetPassword(Request $request)
     {
-
 
         //Validate input
         $validator = Validator::make($request->all(), [
                 'email' => 'required|email|exists:users,email',
-                'password' => 'required|confirmed',
+                'password' => 'required',
                 'token' => 'required'
             ]
         );
@@ -36,16 +41,12 @@ class AccountsController extends Controller
             );
         }
 
-
-
         $password = $request->password;// Validate the token
 
         $tokenData = DB::table('password_resets')
             ->where('token', $request->token)->first();//
         // Redirect the user back to the password reset request form if the token is invalid
         if (!$tokenData) return view('auth.passwords.email');
-
-
 
         $user = User::where('email', $tokenData->email)->first();
 // Redirect the user back if the email is invalid
@@ -71,23 +72,10 @@ class AccountsController extends Controller
 
         return redirect('/')->with("success", "Password changed successfully !");
 
-        //Send Email Reset Success Email
-//        if ($this->sendSuccessEmail($tokenData->email)) {
-//            return view('index');
-//        } else {
-//            return redirect()->back()->withErrors(
-//                [
-//                    'email' => trans('A Network Error occurred. Please try again.')
-//                ]);
-//        }
-
     }
 
     public function validatePasswordRequest(Request $request): \Illuminate\Http\RedirectResponse
     {
-
-//        $user = DB::table('users')->where('email', '=', $request->email)
-//            ->first();//Check if the user exists
 
         $user = User::where('email', $request->email)->first();
 
@@ -98,23 +86,35 @@ class AccountsController extends Controller
         $token = str::random(60);
 
         //Create Password Reset Token
-        DB::table('password_resets')->insert([
+       $hdghg =  DB::table('password_resets')->insert([
             'email' => $request->email,
             'token' => $token,
             'created_at' => Carbon::now()
         ]);
 
 
+
         //Get the token just created above
         $tokenData = DB::table('password_resets')
             ->where('email', $request->email)->first();
 
+        $urls = url(route('reset.password.get', [
+            'token' => $token,
+            'email' => $user->getEmailForPasswordReset(),
+        ], false));
 
+        $Hr = HRPerson::where('email', $request->email)->first();
 
         try {
-            $user->sendPasswordResetNotification($token);
+//            $user->sendPasswordResetNotification($token);
+            Mail::to($request->email)->send(new ResetUserPassword(
+                $urls,
+                $Hr->first_name
+            ));
+
             return redirect()->back()->with("success", "A reset link has been sent to your email address.");
         } catch (\Exception $e) {
+            dd($e);
             echo 'Error - ' . $e;
             return redirect()->back()->with("error", "A Network Error occurred. Please try again.");
         }
@@ -137,6 +137,5 @@ class AccountsController extends Controller
             return false;
         }
     }
-
 
 }

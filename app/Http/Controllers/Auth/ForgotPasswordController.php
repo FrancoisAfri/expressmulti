@@ -114,6 +114,7 @@ class ForgotPasswordController extends Controller
 
     public function showResetPasswordForm($token)
     {
+		
         $email = db::table('password_resets')
             ->where('token', $token)
             ->first();

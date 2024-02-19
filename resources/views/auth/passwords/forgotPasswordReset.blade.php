@@ -20,13 +20,13 @@
                                     @if(!empty($companyDetails->company_logo))
                                         <span class="logo-lg">
                                     <img src=" {{ asset('uploads/'.$companyDetails->company_logo ) }}" alt=""
-                                         height="50">
+                                         height="100">
                                     <br>
 {{--                                    <h2>{{ $companyDetails->full_company_name ?? '' }}</h2>--}}
                                 </span>
                                     @else
                                         <span class="logo-lg">
-                                       <img src=" {{ asset('images/logo_default.png') }}" alt="" height="50">
+                                       <img src=" {{ asset('images/logo_default.png') }}" alt="" height="100">
                                 </span>
                                     @endif
                                 </a>
@@ -55,7 +55,7 @@
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                                        name="email" value="{{$email ?? old('email') }}"
                                        placeholder="Enter your email" required autocomplete="new-password">
-
+								<input type="hidden" name="token" id="token" value="{{$token ?? old('token') }}"
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -114,19 +114,6 @@
 
                     </div> <!-- end card-body -->
                 </div>
-
-
-                <!-- end card -->
-
-                {{--                <div class="row mt-3">--}}
-                {{--                    <div class="col-12 text-center">--}}
-                {{--                        <p><a href="auth-recoverpw.html" class="text-white-50 ml-1">Forgot your password?</a></p>--}}
-
-                {{--                        <p class="text-white-50">Don't have an account? <a href="auth-register.html"--}}
-                {{--                                                                           class="text-white ml-1"><b>Sign Up</b></a>--}}
-                {{--                        </p>--}}
-                {{--                    </div> <!-- end col -->--}}
-                {{--                </div>--}}
                 <!-- end row -->
 
             </div> <!-- end col -->

@@ -61,7 +61,7 @@ class Menu extends Model
 	// get all menus
 	public static function getAllMenus()
     {
-		$query = Menu::where('status',1)->get();
+		$query = Menu::get();
        
 	   return $query;	
     }

@@ -86,8 +86,8 @@ class RestaurantSeeder extends Seeder
 		$ribbon = new module_ribbons();
         $ribbon->active = 1;
         $ribbon->sort_order = 7;
-        $ribbon->ribbon_name = 'Setup';
-        $ribbon->description = 'Setup';
+        $ribbon->ribbon_name = 'Limits';
+        $ribbon->description = 'Limits';
         $ribbon->ribbon_path = 'restaurant/setup';
         $ribbon->font_awesome = 'fe-settings';
         $ribbon->access_level = 4;

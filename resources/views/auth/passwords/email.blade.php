@@ -15,7 +15,7 @@
 
 
                                 <span class="logo-lg">
-                                       <img src=" {{ $logo }}" alt="" height="45">
+                                       <img src=" {{ $logo }}" alt="" height="100">
                                 </span>
 
                                 </a>

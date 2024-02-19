@@ -33,7 +33,6 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Description</th>
                             <th>Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
@@ -44,11 +43,6 @@
                                 <td>
 									<span>
 										 {{ $type->name ?? ''}}
-									</span>
-                                </td>
-								<td>
-									<span>
-										 {{ $type->description ?? ''}}
 									</span>
                                 </td>
                                 <td>
@@ -70,8 +64,7 @@
 											<button type="button" id="edit_type" class="dropdown-item"
 													data-toggle="modal" title="Edit Type" data-target="#edit-menu-type-modal"
 													data-id="{{ $type->id }}"
-													data-name="{{ $type->name }}"
-													data-description="{{ $type->description }}">
+													data-name="{{ $type->name }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
 											<button onclick="postData({{$type->id}}, 'actdeac');"

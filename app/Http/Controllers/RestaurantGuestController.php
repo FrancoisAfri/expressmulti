@@ -239,7 +239,7 @@ class RestaurantGuestController extends Controller
 		// Dispatch the event
 		event(new NewRecordAdded($EventsServices));
 		//alert
-        alert()->success('SuccessAlert', "Your request to close table have been submitted.");
+        alert()->success('SuccessAlert', "Your request to close table have been submitted. Your waiter will come to you shortly.");
         activity()->log("New close table Request Added");
 
 		return redirect()->back();

@@ -253,9 +253,56 @@ class RestaurantController extends Controller
 	public function menuUpdate(AddMenuRequest $request, Menu $menu)
     {
 		//return $menu;
-		
-        $requestData = $request->validationData();
-        $this->RestaurantService->persistMenuUpdate($requestData, $menu);
+		$requestData = $request->validationData();
+		// assign variable
+		$name = !empty($request['name']) ? $request['name'] : '';
+		$description = !empty($request['description']) ? $request['description'] : '';
+		$ingredients = !empty($request['ingredients']) ? $request['ingredients'] : '';
+		$category_id = !empty($request['category_id']) ? $request['category_id'] : 0;
+		$menu_type = !empty($request['menu_type']) ? $request['menu_type'] : 0;
+		$calories = !empty($request['calories']) ? $request['calories'] : 0;
+		$price = !empty($request['price']) ? $request['price'] : 0;
+		// save  menu
+		$menuRecord = Menu::create([
+                'name' => $name,
+                'description' => $description,
+                'ingredients' => $ingredients,
+                'category_id' => $category_id,
+                'menu_type' => $menu_type,
+                'calories' => $calories,
+                'price' => $price,
+                'status' => 1,
+            ]);
+		// save video
+		if ($request->hasFile('video')) {
+			$video_name = $request->file('video');
+			$File_ex = $video_name->extension();
+			$filePath = 'com_vid' . ' ' . str_random(16) . '.' . $File_ex;
+			$size = $request->file('video')->getSize();
+
+			$isFileUploaded = Storage::disk('public')->put('Video/' . $filePath,
+				file_get_contents($request->file('video')));
+
+			// File URL to access the video in frontend
+			$url = Storage::disk('public')->url($filePath);
+
+			// save vidoe details into the database
+			$menuRecord->video = $filePath;
+			$menuRecord->update();
+		}
+		//Upload Image picture
+        if ($request->hasFile('image')) {
+            $fileExt = $request->file('image')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
+                $fileName = time() . "image." . $fileExt;
+                $request->file('image')->storeAs('Image', $fileName);
+                //Update file name in the database
+                $menuRecord->image = $fileName;
+                $menuRecord->update();
+            }
+        }
+
+        //$this->RestaurantService->persistMenuUpdate($requestData, $menu);
         alert()->success('SuccessAlert', 'Record Updated Successfully');
 		activity()->log('Menu updated');
         return response()->json(['message' => 'success'], 200);
