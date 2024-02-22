@@ -38,7 +38,7 @@
                             <th>Category</th>
                             <th>Type</th>
                             <th>Price</th>
-                            <th>Calories</th>
+                            <th>kJ</th>
                             <th>Image</th>
                             <th>Video</th>
                             <th>Status</th>

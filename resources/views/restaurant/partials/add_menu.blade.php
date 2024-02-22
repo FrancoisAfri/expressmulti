@@ -59,11 +59,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="calories"> Calories <span class="text-danger"></span></label>
+                                        <label for="kJ"> kJ <span class="text-danger"></span></label>
                                         <input type="number" class="form-control"
-                                               id="calories" name="calories" placeholder="Enter Calories">
+                                               id="calories" name="calories" placeholder="Enter kJ">
                                         <div class="invalid-feedback">
-                                            Please provide Calories.
+                                            Please provide kJ.
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
 							<div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="ingredients"> Ingredients <span class="text-danger">*</span></label>
+                                        <label for="ingredients"> Ingredients <span class="text-danger"></span></label>
 										<textarea id="ingredients" class="form-control" name="ingredients" rows="3" cols="50"></textarea>
                                         <div class="invalid-feedback">
                                             Please provide Ingredients.
@@ -114,7 +114,7 @@
 							<div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="image">Image <span class="text-danger">*</span></label>
+                                        <label for="image">Image <span class="text-danger"></span></label>
                                         <input type="file" id="image" name="image" data-plugins="dropify"
                                        data-allowed-file-extensions='["jpg", "jpeg", "png"]'
                                        data-show-upload="false">
