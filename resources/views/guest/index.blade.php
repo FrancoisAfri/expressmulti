@@ -403,7 +403,7 @@
 				$('#price').html(price);
 				$('#category').html(category);
 				$('#menu_type').html(type);
-				$('#calories').html(calories + ' Calories');
+				$('#calories').html(calories + ' kJ');
 				$('#comment').html(comment);
 				modal.find('#quantity').val(quantity);
             });
