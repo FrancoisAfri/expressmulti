@@ -9,24 +9,9 @@
     <!-- Topbar Start -->
     <div class="navbar-custom">
         <div class="container-fluid">
-            <ul class="list-unstyled topnav-menu float-right mb-0">
-
-                <li class="dropdown d-none d-lg-inline-block">
-                    <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen" href="#">
-                        <i class="fe-maximize noti-icon"></i>
-                    </a>
-                </li>
-                <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <span class="pro-user-name ml-1">
-                                   <i class="mdi mdi-chevron-down"></i>
-                        </span>
-                    </a>
-
-                </li>
-            </ul>
+           
             <!-- LOGO -->
-            <div class="logo-box">
+            <!--<div class="logo-box">
 				<a href="{{ route('home') }}" class="logo logo-dark text-center">
 								<span class="logo-sm">
 									<img src="{{ asset('images/logo-sm.png') }}" alt="" height="22">
@@ -38,7 +23,7 @@
 
 				<a href="{{ route('home') }}" class="logo logo-light text-center">
 					<span class="logo-lg"><img src="{{ $logo }}" alt="" height="45"></span>
-				</a>
+				</a>-->
 			</div>
             <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
                 <li>
@@ -85,9 +70,7 @@
 						</li>
 					@endif
                     </ul> <!-- end navbar-->
-					<span style="text-align: right">
-                        <i class="mdi mdi-chevron-down"></i>
-					</span>
+					
                 </div> <!-- end .collapsed-->
             </nav>
         </div> <!-- end container-fluid -->
@@ -107,24 +90,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box">
-                            <div class="page-title-right">
-                                <ol class="breadcrumb m-0">
-
-                                    @if (isset($breadcrumb) && count($breadcrumb) > 0)
-                                        <ol class="breadcrumb">
-                                            @foreach($breadcrumb as $bc_item)
-                                                <li class="breadcrumb-item">
-                                                    <a href="{{ $bc_item['path'] ?? '' }}">{{ $bc_item['title'] }}</a>
-                                                </li>
-                                            @endforeach
-                                        </ol>
-                                    @endif
-                                </ol>
-                            </div>
                             <h4 class="page-title">
                                 {{ $page_title ?? '' }}
                                 <small>{{ $page_description ?? '' }}</small>
-								<a href="/restaurant/close-table/request/{{$tableID}}">Close Table</a>
+								@if (!empty($scanned->nickname))
+									<a href="/restaurant/close-table/request/{{$tableID}}">Close Table</a>
+								@endif
                             </h4>
                         </div>
                     </div>

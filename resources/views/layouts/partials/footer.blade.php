@@ -1,17 +1,11 @@
 <!-- partial:partials/_footer.html -->
 <footer class="footer d-flex flex-column justify-content-between">
-
-{{--        <p style="text-align:left; class=" text-muted text-center text-md-left"> Version 1.0.5.3--}}
-<div class="display: inline-block">
-    
-
-    <h4 style="text-align:right; class="text-muted text-center text-md-left"> Powered by
-    <span class="logo-lg">
-            <img src=" {{ asset('images/logo_default.png') }}" alt="" height="30">
-        </span>
-</div>
-
-
+	<div class="display: inline-block">
+		<h4 style="text-align:right;" class="text-muted text-center text-md-left"> Powered by
+		<span class="logo-lg">
+			<img src=" {{ asset('images/logo_default.png') }}" alt="" height="30">
+		</span>
+	</div>
 </footer>
 <!-- partial -->
 

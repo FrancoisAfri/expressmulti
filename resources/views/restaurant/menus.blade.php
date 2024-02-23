@@ -33,8 +33,8 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Description</th>
-                            <th>Ingredients</th>
+                            <th width="200">Description</th>
+                            <th width="200">Ingredients</th>
                             <th>Category</th>
                             <th>Type</th>
                             <th>Price</th>
@@ -49,19 +49,15 @@
                         @foreach ($menus as $key => $menu)
                             <tr>
                                 <td>
-									<span>
-										 {{ $menu->name ?? ''}}
-									</span>
+									{{ $menu->name ?? ''}}
                                 </td>
-								<td>
-									<span>
-										 {{ $menu->description ?? ''}}
-									</span>
+								<td width="200">
+									<span width="200">
+									 {{ $menu->description ?? ''}}
+									 </span>
                                 </td>
-								<td>
-									<span>
-										 {{ $menu->ingredients ?? ''}}
-									</span>
+								<td width="200">
+									{{ $menu->ingredients ?? ''}}
                                 </td>
 								<td>
 									<span>
@@ -141,7 +137,7 @@
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
                                                 {{(!empty($menu->status) && $menu->status == 1) ? "De-Activate" : "Activate"}}
                                             </button>
-                                            <form name="command"
+                                            <!--<form name="command"
                                                   onclick="if(confirm('Are you sure you want to delete this menu ?'))"
 
                                                   action="{{ route('menu.destroy', $menu->id) }}"
@@ -155,7 +151,13 @@
                                                     <i class="mdi mdi-delete-empty mr-2 text-muted font-18 vertical-middle delete_confirm"
                                                        data-toggle="tooltip" title='Delete'></i>Delete
                                                 </button>
-                                            </form>
+                                            </form>-->
+											<button onclick="postData({{$menu->id}}, 'deleterecord');"
+                                                    class="dropdown-item" data-toggle="tooltip"
+                                                    title='Delete'>
+													<i class="mdi mdi-delete-empty mr-2 text-muted font-18 vertical-middle delete_confirm"
+                                                       data-toggle="tooltip" title='Delete'></i>Delete
+                                            </button>
                                         </div>
                                     </div>
                                 </td>
@@ -201,6 +203,8 @@
 
             if (data == 'actdeac')
                 location.href = "{{route('menu.activate', '')}}" + "/" + id;
+			else if (data == 'deleterecord')
+				location.href = "{{route('menu.destroy', '')}}" + "/" + id;
         }
 
         $(function () {

@@ -142,18 +142,7 @@ class RestaurantService //implements RestaurantServiceInterface
 	
 	public function destroyMenu($menu)
     {
-
-        try {
-			
-			DB::beginTransaction();
-			
-				$menu->delete();
-
-            DB::commit();
-
-        } catch (\Exception $exp) {
-            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
-        }
+		$menu->delete();
     }
 
     /**
@@ -162,7 +151,6 @@ class RestaurantService //implements RestaurantServiceInterface
      */
     public function activeMenu($menu)
     {
-		
         $menu['status'] == 1 ? $status = 0 : $status = 1;
         $menu['status'] = $status;
         $menu->update();

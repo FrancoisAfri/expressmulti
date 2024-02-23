@@ -7,6 +7,8 @@
 	   </div>
 		<form class="needs-validation" novalidate method="Post" name="add-cart-form">
             {{ csrf_field() }}
+			<div id="invalid-input-alert"></div>
+            <div id="success-alert"></div>
 		   <div class="modal-body p-0">
 			  <div>
 			  <img

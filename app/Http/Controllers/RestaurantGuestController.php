@@ -53,7 +53,10 @@ class RestaurantGuestController extends Controller
      */
     public function index(Request $request, Tables $table)
     {
-		
+		if (empty($table->status))
+		{
+			return redirect()->route("qr_code.activate");
+		}
 		// get table last scanned
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 		$type = !empty($request['type']) ? $request['type'] : 0;
@@ -122,6 +125,12 @@ class RestaurantGuestController extends Controller
 			//return redirect('/patients/booking_calender');
 			//eturn redirect()->route("seating.plan", $table->id);
 		}
+    }
+	// inactive qr code
+	public function inactiveQrcode()
+    {
+		$data['localName'] = '';
+		return view('guest.inactive_qr_code')->with($data);
     }
 
     /**
@@ -263,7 +272,7 @@ class RestaurantGuestController extends Controller
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 		// checck if product have already been added
 		$cart = Cart::where('table_id', $table->id)
-				->where('scan_id', $scanned->id)
+				//->where('scan_id', $scanned->id)
 				->get();
 
 		$order = Orders::create([

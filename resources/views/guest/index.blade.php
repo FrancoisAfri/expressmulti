@@ -317,7 +317,7 @@
 									<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase7"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
-								<h4 class="header-title mb-0">Fill in the form</h4>
+								<h4 class="header-title mb-0">Please enter your details</h4>
 								<div id="cardCollpase7" class="collapse pt-3 show">
 									<div class="table-responsive">
 										<form action="/restaurant/add-table-name/{{$scanned->id}}" method="POST">
@@ -326,7 +326,7 @@
 												<div class="form-group">
 													<label for="table_name" class="col-sm-2 control-label"></label>
 													<div class="col-sm-10">
-													<input type="text" name="nickname" id="nickname" value="" class="form-control"  placeholder="Please Enter Your Name">
+													<input type="text" name="nickname" id="nickname" value="" class="form-control"  placeholder="Please Enter Name / Group name / Occasion">
 													</div>
 												</div>
 											</div>
@@ -415,7 +415,7 @@
                 let submitBtnID = 'add-item-cart';
                 let redirectUrl = '{{route('seating.plan', $table->id) }}';
                 let successMsgTitle = 'Item Saved!';
-                let successMsg = 'The item has been added successfully.';
+                let successMsg = 'The item has been added to cart. PLease click on the cart button to complete your order.';
                 modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
             });
 			/// place order

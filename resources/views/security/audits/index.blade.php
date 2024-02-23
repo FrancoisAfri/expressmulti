@@ -13,13 +13,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card-box">
-
-
                     <h4 class="header-title mb-4">Modules</h4>
-
                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100 data-table"
                            id="tickets-table">
-
                         <div class="row">
                             <div class="col-sm-2 pull-right">
                                 <div class="form-group">
@@ -54,16 +50,13 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-sm-2 float-sm-right">
                                 <div class="form-group">
                                     <label for="heard"> Date Range </label>
                                     <input type="text" id="range-datepicker" name="date_range" class="form-control">
                                 </div>
                             </div>
-
                         </div>
-
                         <thead>
                         <tr>
                             <th></th>
@@ -71,13 +64,11 @@
                             <th>Description</th>
                             <th>Table Affected</th>
                             <th>Causer</th>
-                                                                    <th>Email</th>
-                            {{--                                    <th width="100px">Action</th>--}}
+							<th>Email</th>
                         </tr>
                         </thead>
                         <tbody>
                         </tbody>
-
                     </table>
                 </div>
             </div><!-- end col -->
@@ -124,8 +115,6 @@
 
                 ]
             });
-
-
             $('#log_name').change(function () {
                 table.draw();
             });
@@ -139,7 +128,6 @@
             });
 
             window.alert = function() {};
-
         });
     </script>
 @stop

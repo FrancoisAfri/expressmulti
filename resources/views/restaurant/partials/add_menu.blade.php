@@ -82,7 +82,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Categories </label>
+                                        <label>Categories <span class="text-danger">*</span></label>
 										<select class="form-control" name="category_id"
 											  id="category_id"  data-toggle="select2"
 												data-placeholder="Choose ...">
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Menu Type </label>
+                                        <label>Menu Type <span class="text-danger">*</span></label>
 										<select class="form-control" name="menu_type"
 											  id="menu_type"  data-toggle="select2"
 												data-placeholder="Choose ...">

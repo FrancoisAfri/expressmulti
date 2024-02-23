@@ -49,6 +49,8 @@ Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrati
 // table scanning /2
 Route::get('restaurant/seating_plan/{table}', [RestaurantGuestController::class, 'index'])
     ->name('seating.plan');
+Route::get('restaurant/qr_code/', [RestaurantGuestController::class, 'inactiveQrcode'])
+    ->name('qr_code.activate');
 //Route::get('//{table}', 'App\Http\Controllers\RestaurantGuestController@');
 Route::get('/restaurant/close-table/request/{table}', 'App\Http\Controllers\RestaurantGuestController@closeTableRequest');
 Route::get('/restaurant/cart-trash/{cart}', 'App\Http\Controllers\RestaurantGuestController@deleteItems');
@@ -252,7 +254,7 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('category.update');
 	Route::get('menu', [RestaurantController::class, 'menus'])
         ->name('menus.view');
-	Route::delete('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
+	Route::get('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
         ->name('menu.destroy');
 	Route::post('add_menu', [RestaurantController::class, 'storeMenu'])
         ->name('menu.store');

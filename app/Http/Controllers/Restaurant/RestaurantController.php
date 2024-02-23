@@ -128,7 +128,7 @@ class RestaurantController extends Controller
 		 $data = $this->breadcrumb(
             'Restaurant',
             'Categories Management Page',
-            'categories_view',
+            '/restaurant/category',
             'Restaurant Management',
             'Menu Categories'
         );
@@ -179,7 +179,7 @@ class RestaurantController extends Controller
 		 $data = $this->breadcrumb(
             'Restaurant',
             'Menus Management Page',
-            'menus_view',
+            '/restaurant/menu',
             'Menus Management',
             'Menu'
         );
@@ -315,7 +315,7 @@ class RestaurantController extends Controller
         return back();
     }
 	// delete Menu
-    public function destroyMenu(Categories $menu)
+    public function destroyMenu(Menu $menu)
     {
         //$menu->delete();
 		//return $menu;
@@ -331,7 +331,7 @@ class RestaurantController extends Controller
 		 $data = $this->breadcrumb(
             'Restaurant',
             'Tables Management Page',
-            'tables_view',
+            '/restaurant/seating_plan',
             'Tables Management',
             'Tables'
         );
@@ -385,7 +385,7 @@ class RestaurantController extends Controller
 		 $data = $this->breadcrumb(
             'Restaurant',
             'Tables Services Type Page',
-            'service_type_view',
+            '/restaurant/service_type',
             'Services Type Management',
             'Services Type'
         );
@@ -458,7 +458,7 @@ class RestaurantController extends Controller
 		 $data = $this->breadcrumb(
             'Restaurant',
             'Menu Type Page',
-            'Menu_type_view',
+            '/restaurant/menu-type',
             'Menu Type Management',
             'Menu Type'
         );
@@ -510,7 +510,7 @@ class RestaurantController extends Controller
 		$data = $this->breadcrumb(
             'Restaurant',
             'Setup Page',
-            'setup_view',
+            '/restaurant/setup',
             'Setup Management',
             'Setup'
         );

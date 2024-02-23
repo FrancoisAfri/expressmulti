@@ -55,8 +55,9 @@ class ResetPasswordEmail extends Mailable
             'mailing_name' => $companyUser
         ];
 
-        return $this->subject( 'Reset Your Password !' )
+        return $this->subject('Reset Your Password !')
             ->view('Email.NewUser.ResetPassword')
+			->from($companyDetails['mailing_address'], $companyDetails['mailing_name'])
             ->with('mailData', $mailData);
     }
 }

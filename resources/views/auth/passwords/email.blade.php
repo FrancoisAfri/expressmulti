@@ -81,10 +81,12 @@
 </div>
 <!-- end page -->
 <footer class="footer footer-alt text-white-50">
-    Powered by
-    <span class="logo-lg">
-            <img src=" {{ asset('images/logo_default.png') }}" alt="" height="30">
-        </span>
+    <div class="display: inline-block">
+		<h4 class="text-muted text-center text-md-center"> Powered by
+		<span class="logo-lg">
+			<img src=" {{ asset('images/logo_default.png') }}" alt="" height="30">
+		</span>
+	</div>
 </footer>
 
 @include('layouts.partials.scripts')
