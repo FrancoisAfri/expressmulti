@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="needs-validation" novalidate method="Post" name="add-category-form">
+                <form class="needs-validation" novalidate method="Post" name="add-category-form" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -25,7 +25,7 @@
                         <div id="success-alert"></div>
                         <div class="modal-body p-4">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name"> Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control"
@@ -33,6 +33,15 @@
                                         <div class="invalid-feedback">
                                             Please Enter Name.
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="image">Image <span class="text-danger"></span></label>
+                                        <input type="file" id="image" name="image" data-plugins="dropify"
+                                       data-allowed-file-extensions='["jpg", "jpeg", "png"]'
+                                       data-show-upload="false">
+										<strong> Allowed filetypes are jpg, jpeg, png."</strong>
                                     </div>
                                 </div>
                             </div>

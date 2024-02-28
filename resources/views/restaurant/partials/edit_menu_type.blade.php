@@ -36,6 +36,16 @@
                                         </div>
                                     </div>
                                 </div>
+								<div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sequence"> Sequence <span class="text-danger"></span></label>
+                                        <input type="number" class="form-control"
+                                               id="sequence" name="sequence" placeholder="Enter Sequence">
+                                        <div class="invalid-feedback">
+                                            Please provide sequence.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group text-center">
                                 <button type="button" id="edit-type" class="btn btn-success waves-effect waves-light">

@@ -139,12 +139,15 @@
 											<div class="store-list-2">
 												@if (!empty($menus))
 													@foreach($menus as $menu)
+														@if($loop->first || (isset($prevType) && $prevType != $menu->menu_type))
+															<?php $prevType = 0; ?>
+															<h6 class="fw-bold mb-1" style="text-align:center;">{{ $menu->type_name }}</h6>
+														@endif
 														<div class="row justify-content-between">
 															<div class="col-6">
-																<h3 class="fw-bold mb-1">{{ $menu->name ?? '' }}</h3>
-																<p class="small text-muted mb-3">{{ $menu->categories->name ?? '' }}</p>
-																<p class="small text-muted mb-3">{{ $menu->menuType->name ?? '' }}</p>
-																<h6 class="fw-bold">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</h6>
+																<p class="small text-muted mb-6">{{ $menu->name ?? '' }}</p>
+																<p class="small text-muted mb-6">{{ $menu->categories->name ?? '' }}</p>
+																<p class="small text-muted mb-6">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</p>
 															</div>
 															<div class="col-4">
 																<div class="card border-0">
@@ -159,7 +162,7 @@
 																			data-price="{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}"
 																			data-calories="{{ (!empty($menu->calories)) ? $menu->calories : ''}}"
 																			data-category="{{ (!empty($menu->categories->name)) ? $menu->categories->name : ''}}"
-																			data-type="{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}{{ $menu->menuType->name }}"
+																			data-type="{{ (!empty($menu->type_name)) ? $menu->type_name : ''}}"
 																			data-quantity="{{ (!empty(\App\Models\cart::getQuantity($menu->id,$table->id))) ? \App\Models\cart::getQuantity($menu->id,$table->id) : 1}}"
 																			data-comment="{{ (!empty(\App\Models\cart::getComment($menu->id,$table->id))) ? \App\Models\cart::getComment($menu->id,$table->id) : ''}}"
 																			>
@@ -169,6 +172,7 @@
 																</div>
 															</div>
 														</div>
+														<?php $prevType = $menu->category_id; ?>
 													@endforeach
 												@endif
 											</div>

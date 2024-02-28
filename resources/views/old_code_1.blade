@@ -1,0 +1,100 @@
+<div class="col-12">
+    <div class="card">
+        <div class="card-body" id="app">
+            <!-- Vue component will be inserted here -->
+            <widget></widget> <!-- Replace 'widget' with the appropriate tag name of your Vue component -->
+            <div class="card-widgets">
+                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false"
+                   aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
+                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+            </div>
+            <h4 class="header-title mb-0">Service Requests</h4>
+            <div id="cardCollpase5" class="collapse pt-3 show">
+                <div class="table-responsive">
+                    <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100" id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Request time</th>
+                                <th>Request type</th>
+                                <th>Table</th>
+                                <th>Waiter</th>
+                                <th>Request Details</th>
+                                <th>Timer</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <script>
+                                var time = [];
+                                var running = [];
+                            </script>
+                            @if (!empty($services))
+                                @foreach($services as $service)
+                                    <script>
+                                        running[{{ $service->id }}] = {{ ($service->status == 1) ? 1 : 0 }};
+                                        time[{{ $service->id }}] = {{ ($service->status == 1) ? ((time() - $service->requested_time) * 10) : 1 * 10 }};
+                                    </script>
+                                    <tr>
+                                        <td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->requested_time) ? date('d/m/Y', $service->requested_time) : '' }}</td>
+                                        <td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
+                                        <td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
+                                        <td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->tables->employees->first_name) && !empty($service->tables->employees->surname) ? $service->tables->employees->first_name." ".$service->tables->employees->surname : '' }}</td>
+                                        <td  style="color: white;" class="{{ $service->id . 'trElement' }}">{{ !empty($service->service) ? $service->service : '' }} </br>
+                                            {{ !empty($service->comment) ? $service->comment : '' }}
+                                        </td>
+                                        <td class="{{ $service->id . 'trElement' }}"><input type="text" id="{{ $service->id . 'stopWatchDisplay' }}" style="font-weight:bold; font-family:cursive; width: 120px; height: 23px;" value="" class="input-sm" disabled></td>
+                                        @if ($service->service_type == 1)
+                                            
+                                            <td>
+                                                <button type="button" class="close mark-as-read"
+                                                        onclick="postData({{$service->id}}, 'closeservice');"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
+                                                </button>
+                                            </td>
+                                            <td></td>
+                                        @elseif ($service->service_type == 2) 
+                                            <td>
+                                                <button type="button" class="close mark-as-read"
+                                                        onclick="postData({{$service->id}}, 'closeorder');"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="close mark-as-read"
+                                                        onclick="postData({{$service->id}}, 'deleteorder');"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true" class="mdi mdi-delete" style="color: #8B0000;"></span>
+                                                </button>
+                                            </td>
+                                        @elseif ($service->service_type == 3)
+                                            <td>
+                                                <button type="button" class="close mark-as-read"
+                                                        onclick="postData({{$service->id}}, 'closerequest');"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
+                                                </button> 
+                                            </td>
+                                            <td>
+                                                <button type="button" class="close mark-as-read"
+                                                        onclick="postData({{$service->id}}, 'closedenied');"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true" class="mdi mdi-delete" style="color: #8B0000;"></span>
+                                                </button>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            @else
+                                <p class="dropdown-item">There are no new notifications</p>
+							@endif
+						</tbody>
+					</table>
+				</div> <!-- end table responsive-->
+			</div> <!-- collapsed end -->
+		</div> <!-- end card-body -->
+	</div> <!-- end card-->
+</div>

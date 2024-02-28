@@ -32,6 +32,7 @@
                            id="tickets-table">
                         <thead>
                         <tr>
+							<th>Order</th>
                             <th>Name</th>
                             <th width="200">Description</th>
                             <th width="200">Ingredients</th>
@@ -48,8 +49,13 @@
                         <tbody>
                         @foreach ($menus as $key => $menu)
                             <tr>
+								<td style="text-align: center;">
+									<span>
+										 {{ $menu->sequence ?? ''}}
+									</span>
+								</td>
                                 <td>
-									{{ $menu->name ?? ''}}
+									 {{ $menu->name ?? ''}}
                                 </td>
 								<td width="200">
 									<span width="200">
@@ -82,7 +88,7 @@
 								<td>
 									@if(!empty($menu->image))
 										<div class="popup-thumbnail img-responsive">
-											<img src="{{ asset('storage/Images/'.$menu->image) }} "
+											<img src="{{ asset('Images/'.$menu->image) }} "
 												 height="35px" width="40px" alt="Image">
 										</div>
 									@else
@@ -94,7 +100,7 @@
 								<td>
 									@if(!empty($menu->video))
 										<video  height="60" width="150" controls>
-											<source src="{{URL::asset("storage/public/Videos/$menu->video")}}" type="video/mp4">
+											<source src="{{URL::asset("Videos/$menu->video")}}" type="video/mp4">
 											Your browser does not support the video tag.
 										</video>
 									@else
@@ -128,6 +134,7 @@
 													data-description="{{ $menu->description }}"
 													data-ingredients="{{ $menu->ingredients }}"
 													data-category_id="{{ $menu->category_id }}"
+													data-sequence="{{ $menu->sequence }}"
 													data-menu_type="{{ $menu->menu_type }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
@@ -137,21 +144,6 @@
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
                                                 {{(!empty($menu->status) && $menu->status == 1) ? "De-Activate" : "Activate"}}
                                             </button>
-                                            <!--<form name="command"
-                                                  onclick="if(confirm('Are you sure you want to delete this menu ?'))"
-
-                                                  action="{{ route('menu.destroy', $menu->id) }}"
-                                                  method="POST"
-                                                  style="display: inline-block;">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <button type="submit"
-                                                        class="dropdown-item delete_confirm namespac"
-                                                        data-toggle="tooltip" title='Delete'>
-                                                    <i class="mdi mdi-delete-empty mr-2 text-muted font-18 vertical-middle delete_confirm"
-                                                       data-toggle="tooltip" title='Delete'></i>Delete
-                                                </button>
-                                            </form>-->
 											<button onclick="postData({{$menu->id}}, 'deleterecord');"
                                                     class="dropdown-item" data-toggle="tooltip"
                                                     title='Delete'>
@@ -231,6 +223,7 @@
                 let menu_type = btnEdit.data('menu_type');
                 let calories = btnEdit.data('calories');
                 let price = btnEdit.data('price');
+                let sequence = btnEdit.data('sequence');
                 let modal = $(this);
                 modal.find('#name').val(name);
                 modal.find('#description').val(description);
@@ -239,6 +232,7 @@
                 modal.find('#menu_type').val(menu_type);
                 modal.find('#calories').val(calories);
                 modal.find('#price').val(price);
+                modal.find('#sequence').val(sequence);
             });
 
             // update modal			
@@ -254,6 +248,7 @@
                     menu_type: $('#' + modalID).find('#menu_type').val(),
                     price: $('#' + modalID).find('#price').val(),
                     calories: $('#' + modalID).find('#calories').val(),
+                    sequence: $('#' + modalID).find('#sequence').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 

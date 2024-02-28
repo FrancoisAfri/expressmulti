@@ -11,6 +11,8 @@
     <link href="{{asset('libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{asset('libs/intl-tel-input/build/css/intlTelInput.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('libs/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('libs/dropify/css/dropify.min.css') }}" rel="stylesheet" type="text/css"/>
 @endsection
 
 {{-- Page content --}}
@@ -30,6 +32,7 @@
                         <thead>
                         <tr>
                             <th> Name</th>
+							<th>Image</th>
                             <th> Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
@@ -41,6 +44,17 @@
 									<span>
 										 {{ $category->name ?? ''}}
 									</span>
+                                </td>
+								<td>
+									@if(!empty($category->image))
+										<div class="popup-thumbnail img-responsive">
+											<img src="{{ asset('storage/Images/'.$category->image) }} "
+												 height="35px" width="40px" alt="Image">
+										</div>
+									@else
+										<!-- Placeholder image or any alternative content -->
+										<span>No image Available</span>
+									@endif
                                 </td>
                                 <td>
 									<span>
@@ -117,6 +131,9 @@
     <script src="{{ asset('libs/iCheck/icheck.min.js') }}"></script>
     <!-- Tickets js -->
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
+	<script src="{{ asset('libs/dropzone/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('libs/dropify/js/dropify.min.js') }}"></script>
+	<script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
     <script>
         function deleteRecord(id) {
             location.href = "{{route('client_details.destroy', '')}}" + "/" + id;

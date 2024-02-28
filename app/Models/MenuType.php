@@ -17,7 +17,7 @@ class MenuType extends Model
     protected $table = 'menu_types';
 			
     protected $fillable = [
-        'name', 'status', 'description'
+        'name', 'status', 'description', 'sequence'
 
     ];
 
@@ -30,6 +30,6 @@ class MenuType extends Model
 	// get all service type
 	public static function getMenuTypes()
     {
-        return MenuType::where('status',1)->get();
+        return MenuType::where('status',1)->orderBy('sequence','asc')->get();
 	}
 }

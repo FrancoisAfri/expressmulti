@@ -107,9 +107,9 @@ class RestaurantService //implements RestaurantServiceInterface
             ]);
 			
 			// save image
-			$this->uploadImage($request, 'image', 'Image', $menuRecord);
+			//$this->uploadImage($request, 'image', 'Image', $menuRecord);
 			// save video
-			$this->uploadVideo($request, 'video', 'Video', $menuRecord);
+			//$this->uploadVideo($request, 'video', 'Video', $menuRecord);
 			
 		DB::commit();
     }
@@ -131,11 +131,11 @@ class RestaurantService //implements RestaurantServiceInterface
 			$menu->price= $request['price'];
 			$menu->update();
 			// save image
-			if (!empty($request['image'])) 
-				$this->uploadImage($request, 'image', 'Image', $menu);
+			//if (!empty($request['image'])) 
+				//$this->uploadImage($request, 'image', 'Image', $menu);
 			// save video
-			if (!empty($request['video']))
-				$this->uploadVideo($request, 'video', 'Video', $menu);
+			//if (!empty($request['video']))
+			//	$this->uploadVideo($request, 'video', 'Video', $menu);
 			
 		DB::commit();
     }
@@ -274,6 +274,7 @@ class RestaurantService //implements RestaurantServiceInterface
 
 			$tableRecord = MenuType::create([
                 'name' => $request['name'],
+                'sequence' => !empty($request['sequence']) ? $request['sequence'] : 0,
                 'status' => 1,
             ]);
 						
@@ -288,6 +289,7 @@ class RestaurantService //implements RestaurantServiceInterface
 			$serviceRecord = MenuType::find($id->id);
 			
 			$serviceRecord->name = $request['name'];
+			$serviceRecord->sequence = !empty($request['sequence']) ? $request['sequence'] : 0;
 			$serviceRecord->update();
 						
 		DB::commit();

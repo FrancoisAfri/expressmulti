@@ -32,6 +32,7 @@
                            id="tickets-table">
                         <thead>
                         <tr>
+                            <th>Order</th>
                             <th>Name</th>
                             <th>Status</th>
                             <th class="hidden-sm">Action</th>
@@ -40,6 +41,11 @@
                         <tbody>
                         @foreach ($menuTypes as $key => $type)
                             <tr>
+								<td>
+									<span>
+										 {{ $type->sequence ?? ''}}
+									</span>
+                                </td>
                                 <td>
 									<span>
 										 {{ $type->name ?? ''}}
@@ -64,7 +70,8 @@
 											<button type="button" id="edit_type" class="dropdown-item"
 													data-toggle="modal" title="Edit Type" data-target="#edit-menu-type-modal"
 													data-id="{{ $type->id }}"
-													data-name="{{ $type->name }}">
+													data-name="{{ $type->name }}"
+													data-sequence="{{ $type->sequence }}">
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
 											</button>
 											<button onclick="postData({{$type->id}}, 'actdeac');"
@@ -151,10 +158,10 @@
                 let btnEdit = $(e.relatedTarget);
                 typeID = btnEdit.data('id');
                 let name = btnEdit.data('name');
-                let description = btnEdit.data('description');
+                let sequence = btnEdit.data('sequence');
                 let modal = $(this);
                 modal.find('#name').val(name);
-                modal.find('#description').val(description);
+                modal.find('#sequence').val(sequence);
             });
 
             // update modal			
@@ -164,7 +171,7 @@
                 let modalID = 'edit-menu-type-modal';
                 let objData = {
                     name: $('#' + modalID).find('#name').val(),
-                    description: $('#' + modalID).find('#description').val(),
+                    sequence: $('#' + modalID).find('#sequence').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
 

@@ -95,7 +95,8 @@ class RestaurantGuestController extends Controller
 			if (!empty($user->id))
 				$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			else $data['avatar'] = '';
-
+			$menus = Menu::getMenus($type, $categoty);
+			//return $menus;
 			$data['menus'] = Menu::getMenus($type, $categoty);
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;

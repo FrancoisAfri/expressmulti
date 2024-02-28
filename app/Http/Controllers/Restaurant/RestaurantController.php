@@ -141,8 +141,26 @@ class RestaurantController extends Controller
 	public function storeCategory(AddMenuCategoryRequest $request)
     {
         $requestData = $request->validationData();
-        $this->RestaurantService->persistCategorySave($requestData);
-        alert()->success('SuccessAlert', 'Record Created Successfully');
+		// assign variable
+		$name = !empty($request['name']) ? $request['name'] : '';
+		// save  menu
+		$category = Categories::create([
+                'name' => $name,
+                'status' => 1,
+            ]);
+		//Upload Image picture
+        if ($request->hasFile('image')) {
+            $fileExt = $request->file('image')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
+                $fileName = time() . "image." . $fileExt;
+                $request->file('image')->storeAs('Image', $fileName);
+                //Update file name in the database
+                $category->image = $fileName;
+                $category->update();
+            }
+        }
+        //$this->RestaurantService->persistCategorySave($requestData);
+        alert()->success('SuccessAlert', 'Category Created Successfully');
 		activity()->log('Category Created');
         return response()->json(['message' => 'success'], 200);
     }
@@ -151,7 +169,25 @@ class RestaurantController extends Controller
 	public function categoryUpdate(AddMenuCategoryRequest $request, Categories $category)
     {
         $requestData = $request->validationData();
-        $this->RestaurantService->persistCategoryUpdate($requestData, $category);
+		// assign variable
+		$name = !empty($request['name']) ? $request['name'] : '';
+		
+		// update  menu
+		$category->name= $name;
+		$category->update();
+		
+		//Upload Image picture
+        if ($request->hasFile('image')) {
+            $fileExt = $request->file('image')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
+                $fileName = time() . "image." . $fileExt;
+                $request->file('image')->storeAs('Image', $fileName);
+                //Update file name in the database
+                $category->image = $fileName;
+                $category->update();
+            }
+        }
+       // $this->RestaurantService->persistCategoryUpdate($requestData, $category);
         alert()->success('SuccessAlert', 'Record Updated Successfully');
 		activity()->log('Category updated');
         return response()->json(['message' => 'success'], 200);
@@ -186,6 +222,7 @@ class RestaurantController extends Controller
 		$categories = Categories::getCategories();
 		$menus = Menu::getAllMenus();
 		$menusTypes = MenuType::getMenuTypes();
+		//return $menus;
 		$data['categories'] = $categories;
 		$data['menus'] = $menus;
 		$data['menusTypes'] = $menusTypes;
@@ -204,6 +241,7 @@ class RestaurantController extends Controller
 		$menu_type = !empty($request['menu_type']) ? $request['menu_type'] : 0;
 		$calories = !empty($request['calories']) ? $request['calories'] : 0;
 		$price = !empty($request['price']) ? $request['price'] : 0;
+		$sequence = !empty($request['sequence']) ? $request['sequence'] : 0;
 		// save  menu
 		$menuRecord = Menu::create([
                 'name' => $name,
@@ -214,6 +252,7 @@ class RestaurantController extends Controller
                 'calories' => $calories,
                 'price' => $price,
                 'status' => 1,
+                'sequence' => $sequence,
             ]);
 		// save video
 		if ($request->hasFile('video')) {
@@ -262,17 +301,18 @@ class RestaurantController extends Controller
 		$menu_type = !empty($request['menu_type']) ? $request['menu_type'] : 0;
 		$calories = !empty($request['calories']) ? $request['calories'] : 0;
 		$price = !empty($request['price']) ? $request['price'] : 0;
-		// save  menu
-		$menuRecord = Menu::create([
-                'name' => $name,
-                'description' => $description,
-                'ingredients' => $ingredients,
-                'category_id' => $category_id,
-                'menu_type' => $menu_type,
-                'calories' => $calories,
-                'price' => $price,
-                'status' => 1,
-            ]);
+		$sequence = !empty($request['sequence']) ? $request['sequence'] : 0;
+		// update  menu
+		$menu->name= $name;
+		$menu->description = $description;
+		$menu->ingredients= $ingredients;
+		$menu->category_id= $category_id;
+		$menu->menu_type= $menu_type;
+		$menu->calories= $calories;
+		$menu->price= $price;
+		$menu->sequence = $sequence;
+		$menu->update();
+		
 		// save video
 		if ($request->hasFile('video')) {
 			$video_name = $request->file('video');
@@ -287,8 +327,8 @@ class RestaurantController extends Controller
 			$url = Storage::disk('public')->url($filePath);
 
 			// save vidoe details into the database
-			$menuRecord->video = $filePath;
-			$menuRecord->update();
+			$menu->video = $filePath;
+			$menu->update();
 		}
 		//Upload Image picture
         if ($request->hasFile('image')) {
@@ -297,13 +337,13 @@ class RestaurantController extends Controller
                 $fileName = time() . "image." . $fileExt;
                 $request->file('image')->storeAs('Image', $fileName);
                 //Update file name in the database
-                $menuRecord->image = $fileName;
-                $menuRecord->update();
+                $menu->image = $fileName;
+                $menu->update();
             }
         }
 
         //$this->RestaurantService->persistMenuUpdate($requestData, $menu);
-        alert()->success('SuccessAlert', 'Record Updated Successfully');
+        alert()->success('SuccessAlert', 'Category Updated Successfully');
 		activity()->log('Menu updated');
         return response()->json(['message' => 'success'], 200);
     }

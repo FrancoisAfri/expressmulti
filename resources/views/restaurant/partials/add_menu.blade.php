@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="needs-validation" novalidate method="Post" name="add-menu-form"  enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="Post" name="add-menu-form" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -127,6 +127,18 @@
                                         <input type="file" id="video" name="video" data-plugins="dropify"
                                    data-allowed-file-extensions='["mp4"]' data-show-upload="false">
 									<strong> Allowed filetypes are mp4. Max upload size allowed is 20M."</strong>
+                                    </div>
+                                </div>
+                            </div>
+							<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sequence"> Sequence <span class="text-danger"></span></label>
+                                        <input type="number" class="form-control"
+                                               id="sequence" name="sequence" placeholder="Enter Sequence">
+                                        <div class="invalid-feedback">
+                                            Please provide sequence.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
