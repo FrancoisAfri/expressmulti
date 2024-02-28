@@ -49,4 +49,11 @@ class EventsServices extends Model
             ->where('status', 1)
             ->get();
     }
+	// get requests
+	public static function getUserRequests($tableID, $can)
+    {
+        return EventsServices::where('table_id', $tableID)
+            ->where('scan_id', $can)
+            ->get();
+    }
 }

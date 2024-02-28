@@ -64,7 +64,7 @@ class RestaurantGuestController extends Controller
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
 			//  Restaurant ordering page
-			
+			//return $services;
 			$localName = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
 			// data to display on views
 			$data = $this->breadcrumb(
@@ -90,12 +90,12 @@ class RestaurantGuestController extends Controller
 			// get orders and service history
 			$orders = Orders::getOderByTable($table->id,$scanned->id);
 			$ordersServices = OrdersServices::getServicesByTable($table->id,$scanned->id);
-			
 			$data['orders'] = $orders;
 			$data['ordersServices'] = $ordersServices;
 			if (!empty($user->id))
 				$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			else $data['avatar'] = '';
+
 			$data['menus'] = Menu::getMenus($type, $categoty);
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;
@@ -106,7 +106,11 @@ class RestaurantGuestController extends Controller
 			$data['carts'] = Cart::getCart($table->id);
 			$data['table'] = $table;
 			$data['localName'] = $localName;
-			$data['services'] = ServiceType::getServices();
+			//return $services;
+			//$data['services'] = $services;
+			$data['events'] =  EventsServices::getUserRequests($table->id, $scanned->id);
+			$data['serviceRequests'] = ServiceType::getServices();
+			$data['resquest_type'] = EventsServices::SERVICES_SELECT;
 			return view('guest.index')->with($data);
 		}
 		else
@@ -169,8 +173,16 @@ class RestaurantGuestController extends Controller
     public function rateService(Request $request, TableScans $scan)
     {
 		$comment = !empty($request['comments']) ? $request['comments'] : '';
+		$q_one = !empty($request['q_one']) ? $request['q_one'] : '';
+		$q_two = !empty($request['q_two']) ? $request['q_two'] : '';
+		$q_three = !empty($request['q_three']) ? $request['q_three'] : '';
+		$q_four = !empty($request['q_four']) ? $request['q_four'] : '';
 
 		$scan->comment = $comment;
+		$scan->q_one = $q_one;
+		$scan->q_two = $q_two;
+		$scan->q_three = $q_three;
+		$scan->q_four = $q_four;
 		$scan->update();
 		
 		Alert::toast('Thank you for your comment. We looking for to your next visist', 'success');

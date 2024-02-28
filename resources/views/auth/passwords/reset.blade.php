@@ -1,17 +1,13 @@
 @include('layouts.partials.head')
 @section('page_dependencies')
 @endsection
-
 <body class="authentication-bg" style="background: url( '{{ $loginBackground }}' ); height: fit-content">
-
 <div class="account-pages mt-5 mb-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6 col-xl-5">
                 <div class="card bg-pattern">
-
                     <div class="card-body p-4">
-
                         <div class="text-center w-75 m-auto">
                             <div class="auth-logo">
                                 <a href=" {{ route('login') }}" class="logo logo-dark text-center">
@@ -29,7 +25,6 @@
                             </div>
                             <p class="text-muted mb-4 mt-3">Don't have an account? Create your account, it takes less than a minute</p>
                         </div>
-
                         @if (session('error'))
                             <div class="alert alert-danger">
                                 {{ session('error') }}
@@ -40,24 +35,19 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-
                         <form method="POST" action="{{ route('reset.password.post') }}">
                             @csrf
-
                             <input type="hidden" name="token" value="{{ $token }}">
-
                             <div class="form-group">
                                 <label for="fullname"> Email</label>
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{$email ?? old('email') }}"
                                        placeholder="Enter your email"     required autocomplete="new-password" >
-
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-
                             <div class="form-group">
                                 <label for="password">OLd Password</label>
                                 <div class="input-group input-group-merge">
@@ -88,31 +78,21 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="form-group mb-0 text-center">
                                 <button type="submit" class="btn btn-primary waves-effect waves-light btn-block" >
                                     {{ __('Reset Password') }}
                                 </button>
                             </div>
-
                         </form>
-
-
                     </div> <!-- end card-body -->
                 </div>
-                <!-- end card -->
-
-
-                <!-- end row -->
-
-            </div> <!-- end col -->
+            </div>
         </div>
         <!-- end row -->
     </div>
     <!-- end container -->
 </div>
 <!-- end page -->
-
 <footer class="footer footer-alt text-white-50">
     <div class="display: inline-block">
 		<h4 class="text-muted text-center text-md-center"> Powered by
@@ -121,6 +101,5 @@
 		</span>
 	</div>
 </footer>
-
 @include('layouts.partials.scripts')
 </body>

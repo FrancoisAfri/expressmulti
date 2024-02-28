@@ -10,28 +10,13 @@
 
     <title>{{ config('app.name', 'xpresserv') }}</title>
 
-        <link rel="shortcut icon" href="{{ $logo }} "> 
-
+    <link rel="shortcut icon" href="{{ $logo }} "> 
     <!-- core:css -->
     <link href="{{ mix('global.css') }}" rel="stylesheet" type="text/css"/>
-{{--    <link href="{{ asset('libs/selectize/css/selectize.bootstrap3.css') }}" rel="stylesheet" type="text/css"/>--}}
     <!-- App css -->
-{{--    <link href=" {{ asset('css/bootstrap-creative.min.css') }}" rel="stylesheet" type="text/css"--}}
-{{--          id="bs-default-stylesheet"/>--}}
-
-{{--    <link rel="stylesheet" href="{{ mix('css/app.css') }}">--}}
-
-{{--    <link href=" {{ asset('css/app-creative.min.css') }}" rel="stylesheet" type="text/css" id="app-default-stylesheet"/>--}}
-
-{{--    --}}{{--    <link href=" {{ asset('css/bootstrap-creative-dark.min.css') }}" rel="stylesheet" type="text/css"--}}
-{{--    --}}{{--          id="bs-dark-stylesheet" disabled/>--}}
-
-{{--    --}}{{--    <link href=" {{ asset('css/app-creative-dark.min.css') }}" rel="stylesheet" type="text/css" id="bs-dark-stylesheet"--}}
-{{--    --}}{{--          disabled/>--}}
-{{--    <!-- icons -->--}}
     <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- core:css -->
-
+	
 </head>
 
 <div id="preloader">

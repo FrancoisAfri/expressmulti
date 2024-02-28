@@ -25,7 +25,7 @@
 					<button type="button" class="btn btn-sm btn-blue waves-effect waves-light float-right"
 							data-toggle="modal" data-target="#add-new-menu-modal">
 						<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-						Add Menu
+						Add Menu Item
 					</button>
                     <h4 class="header-title mb-4">Menus</h4>
                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
