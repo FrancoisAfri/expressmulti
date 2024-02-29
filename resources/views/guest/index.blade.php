@@ -172,7 +172,7 @@
 																</div>
 															</div>
 														</div>
-														<?php $prevType = $menu->category_id; ?>
+														<?php $prevType = $menu->menu_type; ?>
 													@endforeach
 												@endif
 											</div>
