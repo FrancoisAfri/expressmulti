@@ -10,7 +10,7 @@
 
     <title>{{ config('app.name', 'xpresserv') }}</title>
 
-    <link rel="shortcut icon" href="{{ $logo }} "> 
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}"> 
     <!-- core:css -->
     <link href="{{ mix('global.css') }}" rel="stylesheet" type="text/css"/>
     <!-- App css -->
