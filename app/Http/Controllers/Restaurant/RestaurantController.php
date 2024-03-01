@@ -283,7 +283,7 @@ class RestaurantController extends Controller
             }
         }
 
-        alert()->success('SuccessAlert', 'Record Created Successfully');
+        alert()->success('SuccessAlert', 'Menu Created Successfully');
 		activity()->log('Menu Created');
         return response()->json(['message' => 'success'], 200);
     }
@@ -343,7 +343,7 @@ class RestaurantController extends Controller
         }
 
         //$this->RestaurantService->persistMenuUpdate($requestData, $menu);
-        alert()->success('SuccessAlert', 'Category Updated Successfully');
+        alert()->success('SuccessAlert', 'Menu Updated Successfully');
 		activity()->log('Menu updated');
         return response()->json(['message' => 'success'], 200);
     }
