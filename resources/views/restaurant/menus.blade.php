@@ -100,7 +100,7 @@
 								<td>
 									@if(!empty($menu->video))
 										<video  height="60" width="150" controls>
-											<source src="{{URL::asset("videos/menus/$menu->video")}}" type="video/mp4">
+											<source src="{{URL::asset("videos/menus/menus/$menu->video")}}" type="video/mp4">
 											Your browser does not support the video tag.
 										</video>
 									@else
