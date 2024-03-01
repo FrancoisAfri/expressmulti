@@ -243,17 +243,17 @@ class RestaurantController extends Controller
 		$price = !empty($request['price']) ? $request['price'] : 0;
 		$sequence = !empty($request['sequence']) ? $request['sequence'] : 0;
 		// save  menu
-		$menuRecord = Menu::create([
-                'name' => $name,
-                'description' => $description,
-                'ingredients' => $ingredients,
-                'category_id' => $category_id,
-                'menu_type' => $menu_type,
-                'calories' => $calories,
-                'price' => $price,
-                'status' => 1,
-                'sequence' => $sequence,
-            ]);
+		$menuRecord = new Menu();
+        $menuRecord->name = $name;
+        $menuRecord->description = $description;
+        $menuRecord->ingredients = $ingredients;
+        $menuRecord->category_id = $category_id;
+        $menuRecord->menu_type = $menu_type;
+        $menuRecord->calories = $calories;
+        $menuRecord->price = $price;
+        $menuRecord->status = 1;
+        $menuRecord->sequence = $sequence;
+        $menuRecord->save();
 		// save video
 		if ($request->hasFile('video')) {
 			$video_name = $request->file('video');
@@ -261,7 +261,7 @@ class RestaurantController extends Controller
 			$filePath = 'com_vid' . ' ' . str_random(16) . '.' . $File_ex;
 			$size = $request->file('video')->getSize();
 
-			$isFileUploaded = Storage::disk('public')->put('Video/' . $filePath,
+			$isFileUploaded = Storage::disk('public')->put('videos/menus/' . $filePath,
 				file_get_contents($request->file('video')));
 
 			// File URL to access the video in frontend
@@ -276,7 +276,7 @@ class RestaurantController extends Controller
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
-                $request->file('image')->storeAs('Image', $fileName);
+                $request->file('image')->storeAs('images/menus', $fileName);
                 //Update file name in the database
                 $menuRecord->image = $fileName;
                 $menuRecord->update();
@@ -321,7 +321,7 @@ class RestaurantController extends Controller
 			$size = $request->file('video')->getSize();
 
 			$isFileUploaded = Storage::disk('public')->put('Video/' . $filePath,
-				file_get_contents($request->file('video')));
+				file_get_contents($request->file('videos/menus')));
 
 			// File URL to access the video in frontend
 			$url = Storage::disk('public')->url($filePath);
@@ -335,7 +335,7 @@ class RestaurantController extends Controller
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
-                $request->file('image')->storeAs('Image', $fileName);
+                $request->file('image')->storeAs('images/menus', $fileName);
                 //Update file name in the database
                 $menu->image = $fileName;
                 $menu->update();

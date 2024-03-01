@@ -94,7 +94,7 @@ class CompanyIdentityService
         /*
         * avatar
         */
-        $this->uploadImage($request, 'profile_pic', 'profile_pic', $userDetails);
+        $this->uploadImage($request, 'uploads', 'profile_pic', $userDetails);
 
         return $userDetails;
     }
