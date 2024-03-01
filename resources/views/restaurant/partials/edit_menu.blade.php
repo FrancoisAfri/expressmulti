@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-scrollable  modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="needs-validation" novalidate method="Post" name="add-menu-form" enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="Post" name="edit-menu-form" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if ($errors->any())
                         <div class="alert alert-danger">

@@ -48,7 +48,7 @@
 								<td>
 									@if(!empty($category->image))
 										<div class="popup-thumbnail img-responsive">
-											<img src="{{ asset('storage/Images/'.$category->image) }} "
+											<img src="{{ asset('Images/categories/'.$category->image) }} "
 												 height="35px" width="40px" alt="Image">
 										</div>
 									@else

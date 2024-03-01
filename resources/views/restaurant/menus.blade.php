@@ -88,7 +88,7 @@
 								<td>
 									@if(!empty($menu->image))
 										<div class="popup-thumbnail img-responsive">
-											<img src="{{ asset('images/menus/'.$menu->image) }} "
+											<img src="{{ asset('images/menus/'.$menu->image) }}"
 												 height="35px" width="40px" alt="Image">
 										</div>
 									@else
@@ -100,7 +100,7 @@
 								<td>
 									@if(!empty($menu->video))
 										<video  height="60" width="150" controls>
-											<source src="{{URL::asset("videos/menus/menus/$menu->video")}}" type="video/mp4">
+											<source src="{{URL::asset("videos/menus/$menu->video")}}" type="video/mp4">
 											Your browser does not support the video tag.
 										</video>
 									@else
@@ -259,6 +259,7 @@
                 let Method = 'PATCH';
                 modalAjaxSubmit(strUrl, objData, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg, Method);
             });
+
         });
     </script>
 @endsection

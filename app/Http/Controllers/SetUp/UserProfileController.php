@@ -67,7 +67,7 @@ class UserProfileController extends Controller
 
         $user = $user->load('person');
 
-        $data['avatar'] = $this->companyIdentityService->getAvatar(Auth::id());
+        $data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
         $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
         $data['user'] =  $user;
         return view('security.user-profile.index')->with($data);

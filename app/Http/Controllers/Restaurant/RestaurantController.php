@@ -153,7 +153,7 @@ class RestaurantController extends Controller
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
-                $request->file('image')->storeAs('Image', $fileName);
+                $request->file('image')->storeAs('Images/categories/', $fileName);
                 //Update file name in the database
                 $category->image = $fileName;
                 $category->update();
@@ -181,7 +181,7 @@ class RestaurantController extends Controller
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
-                $request->file('image')->storeAs('Image', $fileName);
+                $request->file('image')->storeAs('Images/categories', $fileName);
                 //Update file name in the database
                 $category->image = $fileName;
                 $category->update();

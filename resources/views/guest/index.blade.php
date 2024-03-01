@@ -122,13 +122,15 @@
 													</div>
 												</div>
 												<div class="box-footer">
-													<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded"
-															data-toggle="modal" data-target="#view-cart-modal">
-														<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-														Cart 
-													</button>
-													<button type="submit" class="btn btn-primary pull-left">Search</button><br>
-												</div>
+    <button type="submit" class="btn btn-primary float-left">Search</button>
+    <div class="float-right">
+        <button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded" data-toggle="modal" data-target="#view-cart-modal">
+            <i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
+            <i class="mdi mdi-cart"></i>
+        </button>
+    </div>
+</div>
+
 											</div>
 										</form>
 									</div>
@@ -151,7 +153,7 @@
 															</div>
 															<div class="col-4">
 																<div class="card border-0">
-																	<img src="{{ asset('libs/eatsome/img/veg.jpeg') }}"
+																	<img src="{{ asset('images/menus/'.$menu->image) }}"
 																   class="card-img-top rounded-3" alt="...">
 																	<div class="card-body d-grid px-0 pt-2 pb-0">
 																		<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded"

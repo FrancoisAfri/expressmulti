@@ -12,6 +12,8 @@ use App\Traits\FileUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyIdentityService
 {
@@ -94,7 +96,18 @@ class CompanyIdentityService
         /*
         * avatar
         */
-        $this->uploadImage($request, 'uploads', 'profile_pic', $userDetails);
+		
+		if ($request->hasFile('profile_pic')) {
+            $fileExt = $request->file('profile_pic')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('profile_pic')->isValid()) {
+                $fileName = time() . "image." . $fileExt;
+                $request->file('profile_pic')->storeAs('uploads', $fileName);
+                //Update file name in the database
+                $userDetails->profile_pic = $fileName;
+                $userDetails->update();
+            }
+        }
+        //$this->uploadImage($request, 'uploads', '', $userDetails);
 
         return $userDetails;
     }
