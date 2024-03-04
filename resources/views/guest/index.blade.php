@@ -46,12 +46,12 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
-									<a data-toggle="collapse" href="#cardCollpase6" role="button" aria-expanded="false" aria-controls="cardCollpase6"><i class="mdi mdi-minus"></i></a>
+									<a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
 								<h3 class="header-title mb-0">Table:{{$tableDetails->name}} | Seat(s):{{$tableDetails->number_customer}}</h5>
 								<!--<h4 class="header-title mb-0">Quick Service Buttons</h4>-->
-								<div id="cardCollpase6" class="collapse pt-3 show">
+								<div id="cardCollpase5" class="collapse pt-3 show">
 									<div class="table-responsive">
 										<div style="max-height: 200px; overflow-y: scroll;">
 											@if (!empty($serviceRequests))

@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-lg-4 col-xl-4">
                 <div class="card-box text-center">
-                    <img src="{{ $avatar }}" class="rounded-circle avatar-lg img-thumbnail"
+                    <img src="{{ $avatar }}" class="rounded-circle img-thumbnail"
                          alt="profile-image">
 
                     <h4 class="mb-0"> {{ $user->person->first_name . ' ' . $user->person->surname ?? '' }}</h4>
