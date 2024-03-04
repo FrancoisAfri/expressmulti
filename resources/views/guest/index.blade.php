@@ -149,7 +149,8 @@
 														@endif
 														<div class="row justify-content-between">
 															<div class="col-6">
-																<p class="small text-muted mb-6">{{ $menu->name ?? '' }}</p>
+																<p class="fw-bold mb-1">{{ $menu->name ?? '' }}</p>
+																<p class="small text-muted mb-6">{{ $menu->description ?? '' }}</p>
 																<p class="small text-muted mb-6">{{ $menu->categories->name ?? '' }}</p>
 																<p class="small text-muted mb-6">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</p>
 															</div>
@@ -158,9 +159,6 @@
 																	@if(!empty($menu->image))
 																		<img src="{{ asset('images/menus/'.$menu->image) }}"
 																   class="card-img-top rounded-3" alt="...">
-																	@else
-																		<!-- Placeholder image or any alternative content -->
-																		<span>No image Available</span>
 																	@endif
 																	<div class="card-body d-grid px-0 pt-2 pb-0">
 																		<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded"
