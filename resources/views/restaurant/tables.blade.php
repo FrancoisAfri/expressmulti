@@ -56,8 +56,6 @@
 								<td>
 									<div class="card-body">
 										{!! QrCode::size(200)->generate($current_url.'/'.$table->id) !!}
-
-
 									</div>
                                 </td>
                                 <td>

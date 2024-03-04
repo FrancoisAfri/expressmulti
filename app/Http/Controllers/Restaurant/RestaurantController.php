@@ -375,10 +375,10 @@ class RestaurantController extends Controller
             'Tables Management',
             'Tables'
         );
-
+		$url = config('app.url') . '/restaurant/scan/' ;
 		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTables();
-		$data['current_url'] = url()->current();
+		$data['current_url'] = $url;
 		 
         return view('restaurant.tables')->with($data);
     }

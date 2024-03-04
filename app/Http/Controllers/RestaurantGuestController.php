@@ -122,7 +122,7 @@ class RestaurantGuestController extends Controller
 					'status' => 1,
 				]);
 			$localName = '';
-			Alert::toast('This table have been closed !!! Please scan a qr code', 'warning');
+			//Alert::toast('This table have been closed !!! Please scan a qr code', 'warning');
 			return back();
 		}
     }
@@ -269,9 +269,8 @@ class RestaurantGuestController extends Controller
 		$scan->nickname = $nickname;
 		$scan->update();
 		Alert::toast('Thank you!!! You may continue.', 'success');
-        activity()->log('Table Closed Successfully');
+        activity()->log('Table Name Saved Successfully');
 		return back();
-		
     }
 	//save order
 	public function storeOrder(Tables $table)

@@ -122,18 +122,20 @@
 													</div>
 												</div>
 												<div class="box-footer">
-    <button type="submit" class="btn btn-primary float-left">Search</button>
-    <div class="float-right">
-        <button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded" data-toggle="modal" data-target="#view-cart-modal">
-            <i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-            <i class="mdi mdi-cart"></i>
-        </button>
-    </div>
-</div>
-
+													<button type="submit" class="btn btn-primary float-left">Search</button>
+													<div class="float-right">
+														<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded" data-toggle="modal" data-target="#view-cart-modal">
+															<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
+															<i class="mdi mdi-cart"></i>
+														</button>
+													</div>
+												</div>
 											</div>
 										</form>
 									</div>
+									</br>
+									</br>
+									</br>
 									<div class="tab-content" id="pills-tabContent" >
 										<!-- 1st tab -->
 										<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">

@@ -47,7 +47,7 @@ Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationG
 Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
 
 // table scanning /2
-Route::get('restaurant/seating_plan/{table}', [RestaurantGuestController::class, 'index'])
+Route::get('restaurant/scan/{table}', [RestaurantGuestController::class, 'index'])
     ->name('seating.plan');
 Route::get('restaurant/qr_code/', [RestaurantGuestController::class, 'inactiveQrcode'])
     ->name('qr_code.activate');
