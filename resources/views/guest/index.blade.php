@@ -165,6 +165,7 @@
 																		data-bs-toggle="modal" data-bs-target="#view-more-modal"
 																		 data-id="{{ $menu->id }}"
 																			data-name="{{ (!empty($menu->name)) ? $menu->name : ''}}"
+																			data-path="{{ asset('images/menus/'.$menu->image) }}"
 																			data-description="{{ (!empty($menu->description)) ? $menu->description : ''}}"
 																			data-price="{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}"
 																			data-calories="{{ (!empty($menu->calories)) ? $menu->calories : ''}}"
@@ -399,11 +400,6 @@
 			
 		$(function () {
 			
-			// with plugin options
-			//$("#input-id").rating({min:1, max:10, step:2, size:'lg'});
-			//$("#input-id").rating({min:1, max:10, step:2, size:'lg'});
-			//$("#input-id").rating({min:1, max:10, step:2, size:'lg'});
-			//$("#input-id").rating({min:1, max:10, step:2, size:'lg'});
 			// get view more modal
 			let menuID;
             $('#view-more-modal').on('show.bs.modal', function (e) {
@@ -416,16 +412,21 @@
 				let type = btnEdit.data('type');
 				let quantity = btnEdit.data('quantity');
 				let comment = btnEdit.data('comment');
-				
 				let calories = btnEdit.data('calories');
+				let path = btnEdit.data('path');
+
                 let modal = $(this);
 				$('#name').html(name);
 				$('#description').html(description);
 				$('#price').html(price);
 				$('#category').html(category);
 				$('#menu_type').html(type);
-				$('#calories').html(calories + ' kJ');
+				if (calories !== '') {
+					$('#calories').html(calories + ' kJ');
+				}
+				//$('#calories').html(calories + ' kJ');
 				$('#comment').html(comment);
+				$('#item_image').attr('src', path);
 				modal.find('#quantity').val(quantity);
             });
 			// add item to cart
@@ -441,7 +442,7 @@
             });
 			
             //Launch counter for running tasks
-            increment();
+           // increment();
         });
 		function increment(taskID) {
 			if (running == 1) {

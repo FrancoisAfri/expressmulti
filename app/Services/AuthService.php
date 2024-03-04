@@ -137,6 +137,7 @@ class AuthService
                 'email' => $request['email'],
                 'password' => $password,
                 'phone_number' => $mobile,
+                'lockout_time' => 50,
                 'type' => 0,
                 'status' => 1,
             ]

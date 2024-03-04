@@ -10,16 +10,14 @@
 			<div id="invalid-input-alert"></div>
             <div id="success-alert"></div>
 		   <div class="modal-body p-0">
-			  <div>
-			  <img
-				 src="{{ asset('libs/eatsome/img/veg.jpeg') }}"
-				 alt="" class="img-fluid"></div>
+				<div>
+					<img id="item_image" src="" alt="" class="img-fluid">
+				</div>
 			  <div class="p-3">
-				 
-				 <p class="fw-bold mb-2" id="name"></p> <h6 class="fw-bold" id="price"></h6> <h3 class="fw-bold mb-2" id="calories"></h3>
-				 <h6 class="fw-bold" id="description"></h6>
-				 <h3 class="fw-bold mb-2" id="category"></h3>
-				 <h3 class="fw-bold mb-2" id="menu_type"></h3>
+				 <p class="small text-muted mb-6" id="name"></p> <h6 class="small text-muted mb-6" id="price"></h6> <h3 class="small text-muted mb-6" id="calories"></h3>
+				 <h6 class="small text-muted mb-6" id="description"></h6>
+				 <h3 class="small text-muted mb-6" id="category"></h3>
+				 <h3 class="small text-muted mb-6" id="menu_type"></h3>
 			  </div>
 			</div>
 			<div class="modal-footer d-flex justify-content-between">
@@ -31,7 +29,7 @@
 						<div class="plus"><i class="fa-solid fa-plus text-danger"></i></div>
 					</div>
 				</div>
-				<textarea id="comment" name="comment" rows="3" cols="40"></textarea>
+				<textarea id="comment" name="comment" rows="3" cols="40" placeholder="Enter your comment here"></textarea>
 			</div>	
 			<button type="button" id="add-item-cart" class="btn btn-success waves-effect waves-light col-12 ">
 				Add item

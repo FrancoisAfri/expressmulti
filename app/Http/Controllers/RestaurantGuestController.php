@@ -95,9 +95,7 @@ class RestaurantGuestController extends Controller
 			if (!empty($user->id))
 				$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			else $data['avatar'] = '';
-			$menus = Menu::getMenus($type, $categoty);
 
-			//return $menus;
 			$data['menus'] = Menu::getMenus($type, $categoty);
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;
@@ -108,8 +106,6 @@ class RestaurantGuestController extends Controller
 			$data['carts'] = Cart::getCart($table->id);
 			$data['table'] = $table;
 			$data['localName'] = $localName;
-			//return $services;
-			//$data['services'] = $services;
 			$data['events'] =  EventsServices::getUserRequests($table->id, $scanned->id);
 			$data['serviceRequests'] = ServiceType::getServices();
 			$data['resquest_type'] = EventsServices::SERVICES_SELECT;
@@ -128,8 +124,6 @@ class RestaurantGuestController extends Controller
 			$localName = '';
 			Alert::toast('This table have been closed !!! Please scan a qr code', 'warning');
 			return back();
-			//return redirect('/patients/booking_calender');
-			//eturn redirect()->route("seating.plan", $table->id);
 		}
     }
 	// inactive qr code

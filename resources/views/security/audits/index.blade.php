@@ -62,9 +62,8 @@
                             <th></th>
                             <th>Log Name</th>
                             <th>Description</th>
-                            <th>Table Affected</th>
-                            <th>Causer</th>
-							<th>Email</th>
+                            <th>date</th>
+                            <th>User</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -92,7 +91,42 @@
 
 
         $(function () {
+			let table = $('.data-table').DataTable({
+				processing: true,
+				serverSide: true,
+				ajax: {
+					url: "{{ route('audits.index') }}",
+					data: function (d) {
+						d.log_name = $('#log_name').val();
+						d.date_range = $('#range-datepicker').val();
+						d.user = $('input[type="user"]').val();
+					}
+				},
+				columns: [
+					{data: 'id', name: 'id'},
+					{data: 'log_name', name: 'log_name'},
+					{data: 'description', name: 'description'},
+					{ 
+						data: 'created_at', 
+						name: 'created_at',
+						render: function (data, type, row) {
+							// Convert date to desired format
+							var formattedDate = new Date(data).toLocaleString('en-US', {
+								year: 'numeric',
+								month: '2-digit',
+								day: '2-digit',
+								hour: '2-digit',
+								minute: '2-digit',
+								second: '2-digit'
+							});
+							return formattedDate;
+						}
+					},
+					{data: 'firstname', name: 'firstname'}
+				]
+			});
 
+/*
             let table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -102,16 +136,14 @@
                         d.log_name = $('#log_name').val(),
                             d.date_range = $('#range-datepicker').val(),
                             d.user = $('input[type="user"]').val()
-
                     }
                 },
                 columns: [
                     {data: 'id', name: 'id'},
                     {data: 'log_name', name: 'log_name'},
                     {data: 'description', name: 'description'},
-                    {data: 'causer_type', name: 'causer_type'},
-                    {data: 'firstname', name: 'firstname'},
                     {data: 'created_at', name: 'created_at'},
+                    {data: 'firstname', name: 'User'},
 
                 ]
             });
@@ -126,7 +158,7 @@
             $('#range-datepicker').change(function () {
                 table.draw();
             });
-
+*/
             window.alert = function() {};
         });
     </script>

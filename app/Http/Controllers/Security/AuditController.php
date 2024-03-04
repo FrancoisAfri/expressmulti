@@ -22,9 +22,6 @@ class AuditController extends Controller
 
     public function index(Request $request)
     {
-
-
-
         $date_range = "2022-12-01 to 2022-12-26";
         $dates = explode("to", $date_range);
 
@@ -43,8 +40,6 @@ class AuditController extends Controller
 
         if ($request->ajax()) {
 
-
-
             $data = Activity::select(
                 'activity_log.*',
                 'hr_people.first_name as firstname')
@@ -53,6 +48,13 @@ class AuditController extends Controller
                     'activity_log.causer_id',
                     '=', 'hr_people.id'
                 );
+			// convert good day format
+			foreach ($data as $row)
+			{
+				$date = !empty($row->created_at) ? strtotime($row->created_at) : 0;
+				$row->created_at = date("Y-m-d: H-s-i",$date);
+			}
+			
             return Datatables::of($data)
                 ->filter(function ($instance) use ($request) {
 
