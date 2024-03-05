@@ -222,6 +222,8 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
 
 Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
+	Route::get('download-qr-code/{table}', [RestaurantController::class, 'printQrCode'])
+        ->name('qr-code.download'); 
 	Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
         ->name('client_details.update');
     Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])

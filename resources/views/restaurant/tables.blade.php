@@ -89,9 +89,9 @@
                                             </button>
 											<button onclick="postData({{$table->id}}, 'printCode');"
                                                     class="dropdown-item" data-toggle="tooltip"
-                                                    title='Print Qr Code'>
+                                                    title='Download Qr Code'>
 													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-                                                Print Qr Code
+                                                Download Qr Code
                                             </button>
                                             <form name="command"
                                                   onclick="if(confirm('Are you sure you want to delete this table ?'))"
@@ -151,8 +151,8 @@
 
             if (data == 'actdeac')
                 location.href = "{{route('table.activate', '')}}" + "/" + id;
-			elseif (data == 'printCode')
-				location.href = "{{route('print.qr_code', '')}}" + "/" + id;
+			else if (data == 'printCode')
+				location.href = "{{route('qr-code.download', '')}}" + "/" + id;
         }
 
         $(function () {

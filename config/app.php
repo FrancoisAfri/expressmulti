@@ -193,7 +193,7 @@ return [
         Barryvdh\Snappy\ServiceProvider::class,
 		
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-
+		
     ],
 
     /*

@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToText\Pdf;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class RestaurantController extends Controller
 {
@@ -469,16 +472,7 @@ class RestaurantController extends Controller
         return redirect()->back();
     }
 	// delete ServiceType
-    public function printQrCode(Tables $table)
-    {
-		
-		die('Qr Code');
-		
-		$this->RestaurantService->destroyService($service); 
-        Alert::toast('Record Deleted Successfully ', 'success');
-		activity()->log('Services deleted');
-        return redirect()->back();
-    }
+
 	// assign employee
 	// store Tables
 	public function assignEmployee(AssingnEmployeeRequest $request, Tables $table)
@@ -594,4 +588,105 @@ class RestaurantController extends Controller
         alert()->success('SuccessAlert', 'Record Created Successfully');
 		return back();
     }
+	// donwload code
+	public function printQrCode(Tables $table)
+    {
+		if ($table->status == 1)
+		{
+			// Generate QR code content with the table name
+			$url = config('app.url') . '/restaurant/scan/' . $table->id;
+			$qrCodeContent = "Table: $table->name\nURL: $url";
+			$tableName = $table->name;
+			// Generate QR code
+			//$url = config('app.url') . '/restaurant/seating_plan/' . $table->id;
+			$qrCode = QrCode::size(200)->generate($url);
+
+			// Set headers for download
+			/*$headers = [
+				'Content-Type' => 'image/png',
+				'Content-Disposition' => 'attachment; filename="qr_code.png"',
+			];
+
+			// Return response with QR code image for download
+			return response($qrCode, 200, $headers);*/
+			// Generate PDF
+			activity()->log('Qr code donwloaded');
+			$pdf = new Dompdf();
+			$pdf->loadHtml("<img src='data:image/png;base64," . base64_encode($qrCode) . "' alt='QR Code'><br>Table Name: $tableName");
+			$pdf->setPaper('A4');
+			$pdf->render();
+
+			// Download PDF
+			return $pdf->stream("$tableName qr_code.pdf");
+			// Save QR code image to storage
+			
+
+		}
+		else 
+		{
+			Alert::toast('This table is not active. You can not download this qr code', 'warning');
+			return redirect()->back();
+		}
+        
+    }
+	/*
+	use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+class QRCodeController extends Controller
+{
+    public function downloadQRCode($tableId)
+    {
+        // Get the table name
+        $tableName = Table::find($tableId)->name; // Assuming you have a Table model and a 'name' attribute
+
+        // Generate QR code content with the table name
+        $url = config('app.url') . '/restaurant/seating_plan/' . $tableId;
+        $qrCodeContent = "Table: $tableName\nURL: $url";
+
+        // Generate QR code
+        $qrCode = QrCode::size(200)->generate($qrCodeContent);
+
+        // Set headers for download
+        $headers = [
+            'Content-Type' => 'image/png',
+            'Content-Disposition' => 'attachment; filename="qr_code.png"',
+        ];
+
+        // Return response with QR code image for download
+        return response($qrCode, 200, $headers);
+    }
+}
+*/
+/*
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
+
+class QRCodeController extends Controller
+{
+    public function downloadQRCode($tableId)
+    {
+        // Get the table name
+        $tableName = Table::find($tableId)->name; // Assuming you have a Table model and a 'name' attribute
+
+        // Generate QR code content with the table name
+        $url = config('app.url') . '/restaurant/seating_plan/' . $tableId;
+        $qrCodeContent = "Table: $tableName\nURL: $url";
+
+        // Generate QR code
+        $qrCode = QrCode::size(200)->generate($qrCodeContent);
+
+        // Save QR code image to storage
+        $filename = 'qr_code_' . $tableId . '.png';
+        Storage::put('public/qr_codes/' . $filename, $qrCode);
+
+        // Generate URL for the stored QR code image
+        $qrCodeUrl = Storage::url('public/qr_codes/' . $filename);
+
+        // Return response with QR code image for download
+        return response()->download(storage_path('app/public/qr_codes/' . $filename), $filename);
+    }
+}
+
+
+*/
 }

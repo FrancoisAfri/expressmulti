@@ -160,7 +160,7 @@
                                 </div>
                                 <!-- end row -->
                                 <div class="form-group mb-3">
-                                    <label for="validationCustom04">Company Logo</label>
+                                    <label for="validationCustom04">Company Logo </br>Allowed max upload size allowed is 500x500.</label>
                                     <div class="mt-3">
                                         <input type="file" id="company_logo" name="company_logo"
                                                data-plugins="dropify"
