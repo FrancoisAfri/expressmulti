@@ -40,13 +40,34 @@ class CompanyIdentityService
         /*
          * company_logo
          */
-        $this->uploadImage($request, 'company_logo', 'companyIdentity', $CompanyIdentity);
+		//Upload Image picture
+        if ($request->hasFile('company_logo')) {
+            $fileExt = $request->file('company_logo')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('company_logo')->isValid()) {
+                $fileName = time() . "company_logo." . $fileExt;
+                $request->file('company_logo')->storeAs('uploads', $fileName);
+                //Update file name in the database
+                $CompanyIdentity->company_logo = $fileName;
+                $CompanyIdentity->update();
+            }
+        }
+        //$this->uploadImage($request, 'company_logo', 'companyIdentity', $CompanyIdentity);
 
         /**
          * save login image
          */
-
-        $this->uploadImage($request, 'login_background_image', 'companyIdentity', $CompanyIdentity);
+		//Upload Image picture
+        if ($request->hasFile('login_background_image')) {
+            $fileExt = $request->file('login_background_image')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('login_background_image')->isValid()) {
+                $fileName = time() . "login_background_image." . $fileExt;
+                $request->file('login_background_image')->storeAs('uploads', $fileName);
+                //Update file name in the database
+                $CompanyIdentity->login_background_image = $fileName;
+                $CompanyIdentity->update();
+            }
+        }
+        //$this->uploadImage($request, 'login_background_image', 'companyIdentity', $CompanyIdentity);
 
         /*
             Write Code Here for
