@@ -232,6 +232,25 @@ class RestaurantController extends Controller
 		 
         return view('restaurant.menus')->with($data);
     }
+	// edit menu
+	public function menuEdit(Menu $menu)
+    {
+		 $data = $this->breadcrumb(
+            'Restaurant',
+            'Menus Management Page',
+            '/restaurant/menu',
+            'Menus Management',
+            'Menu'
+        );
+		$categories = Categories::getCategories();
+		$menus = Menu::getAllMenus();
+		$menusTypes = MenuType::getMenuTypes();
+		$data['categories'] = $categories;
+		$data['menu'] = $menu;
+		$data['menusTypes'] = $menusTypes;
+		 
+        return view('restaurant.menu_edit')->with($data);
+    }
 	// store Menu
 	public function storeMenu(AddMenuRequest $request)
     {
@@ -335,11 +354,13 @@ class RestaurantController extends Controller
 		}
 		//Upload Image picture
         if ($request->hasFile('image')) {
+			
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
                 $request->file('image')->storeAs('images/menus', $fileName);
                 //Update file name in the database
+				//die('ssssssseeeeeeeimage');
                 $menu->image = $fileName;
                 $menu->update();
             }
@@ -348,7 +369,8 @@ class RestaurantController extends Controller
         //$this->RestaurantService->persistMenuUpdate($requestData, $menu);
         alert()->success('SuccessAlert', 'Menu Updated Successfully');
 		activity()->log('Menu updated');
-        return response()->json(['message' => 'success'], 200);
+        //return response()->json(['message' => 'success'], 200);
+		return redirect()->route('menus.view');
     }
 	public function activateMenu(Menu $menu): RedirectResponse
     {
@@ -624,7 +646,7 @@ class RestaurantController extends Controller
 		}
 		else 
 		{
-			Alert::toast('This table is not active. You can not download this qr code', 'warning');
+			Alert::toast('You can not download this qr code because this table is not active', 'warning');
 			return redirect()->back();
 		}
         

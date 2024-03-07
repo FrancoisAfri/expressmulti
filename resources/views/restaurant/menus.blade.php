@@ -125,19 +125,12 @@
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-											<button type="button" id="edit_menu" class="dropdown-item"
-													data-toggle="modal" title="Edit Menu" data-target="#edit-menu-modal"
-													data-id="{{ $menu->id }}"
-													data-name="{{ $menu->name }}"
-													data-price="{{ $menu->price }}"
-													data-calories="{{ $menu->calories }}"
-													data-description="{{ $menu->description }}"
-													data-ingredients="{{ $menu->ingredients }}"
-													data-category_id="{{ $menu->category_id }}"
-													data-sequence="{{ $menu->sequence }}"
-													data-menu_type="{{ $menu->menu_type }}">
-													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
-											</button>
+											<button onclick="postData({{$menu->id}}, 'edit');"
+                                                    class="dropdown-item" data-toggle="tooltip"
+                                                    title='Edit Menu'>
+													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+                                                Edit
+                                            </button>
 											<button onclick="postData({{$menu->id}}, 'actdeac');"
                                                     class="dropdown-item" data-toggle="tooltip"
                                                     title='change Active status'>
@@ -187,9 +180,6 @@
 	<script src="https://unpkg.com/cloudinary-video-player@1.9.0/dist/cld-video-player.min.js"
             type="text/javascript"></script> 
     <script>
-        function deleteRecord(id) {
-            location.href = "{{route('client_details.destroy', '')}}" + "/" + id;
-        }
 
         function postData(id, data) {
 
@@ -197,6 +187,8 @@
                 location.href = "{{route('menu.activate', '')}}" + "/" + id;
 			else if (data == 'deleterecord')
 				location.href = "{{route('menu.destroy', '')}}" + "/" + id;
+			else if (data == 'edit')
+				location.href = "{{route('menu.edit', '')}}" + "/" + id;
         }
 
         $(function () {
@@ -236,7 +228,7 @@
             });
 
             // update modal			
-            $('#edit-menu').on('click', function () {
+           /* $('#edit-menu').on('click', function () {
 				let com = 'menu';
                 let strUrl = '/restaurant/update/menu/' + menuID;
                 let modalID = 'edit-menu-modal';
@@ -258,8 +250,7 @@
                 let successMsg = 'The Record has been updated successfully.';
                 let Method = 'PATCH';
                 modalAjaxSubmit(strUrl, objData, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg, Method);
-            });
-
+            });*/
         });
     </script>
 @endsection

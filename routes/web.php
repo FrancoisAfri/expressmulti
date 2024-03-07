@@ -256,13 +256,15 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('category.update');
 	Route::get('menu', [RestaurantController::class, 'menus'])
         ->name('menus.view');
+	Route::get('menu-edit/{menu}', [RestaurantController::class, 'menuEdit'])
+        ->name('menu.edit');
 	Route::get('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
         ->name('menu.destroy');
 	Route::post('add_menu', [RestaurantController::class, 'storeMenu'])
         ->name('menu.store');
 	Route::get('menu/act/{menu}', [RestaurantController::class, 'activateMenu'])
         ->name('menu.activate');
-	Route::PATCH('update/menu/{menu}', [RestaurantController::class, 'menuUpdate'])
+	Route::post('update/menu/{menu}', [RestaurantController::class, 'menuUpdate'])
         ->name('menu.update');
 	Route::get('seating_plan', [RestaurantController::class, 'plans'])
         ->name('tables.view');
