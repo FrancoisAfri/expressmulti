@@ -365,7 +365,6 @@
 				location.href = "{{route('delete.close', '')}}" + "/" + id;
         }
         
-		
 		(
 		function () {
 			// Call the function initially
