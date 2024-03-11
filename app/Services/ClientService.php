@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Artisan; 
 use App\Models\Accounts;
 use App\Models\Packages;
@@ -9,6 +10,10 @@ use App\Models\Dependencies;
 use App\Models\Doctor;
 use App\Models\EmergencyContact;
 use App\Models\Employer;
+use App\Models\User;
+use App\Models\PasswordHistory;
+use App\Models\PasswordSecurity;
+use App\Models\HRPerson;
 use App\Models\Guarantor;
 use App\Models\MainMember;
 use App\Models\MedicalAid;
@@ -16,8 +21,10 @@ use App\Models\Patient;
 use App\Services\BillingService;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PHPUnit\Exception;
 use Stancl\Tenancy\Tenant;
+use Illuminate\Support\Str;
 
 class ClientService
 {
@@ -43,32 +50,39 @@ class ClientService
     public function persistClientData($request)
     {
 		
-		DB::beginTransaction();
+		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
+		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
+		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
+		$request->merge(array('phone_number' => $mobile));
+		$request->merge(array('cell_number' => $cellNumber));
+		$request->merge(array('contact_number' => $contactNumber));
 
-			$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
-			$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
-			$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
-			$request->merge(array('phone_number' => $mobile));
-			$request->merge(array('cell_number' => $cellNumber));
-			$request->merge(array('contact_number' => $contactNumber));
-
-			$patientRecord = Patient::create($request->all());
-			
-			$request->request->add(['company_id' => $patientRecord['id']]);
-			
-			// save contact person
-			ContactPerson::create([
-				'company_id' => $patientRecord->id,
-				'first_name' => $request['first_name'],
-				'surname' => $request['surname'],
-				'contact_number' => $request['contact_number'],
-				'email' => $request['email'],
-				'status' => 1
-			]);
-			// save logo
-			$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
-			
-		DB::commit();
+		$patientRecord = Patient::create($request->all());
+		
+		$request->request->add(['company_id' => $patientRecord['id']]);
+		
+		// save contact person
+		ContactPerson::create([
+			'company_id' => $patientRecord->id,
+			'first_name' => $request['first_name'],
+			'surname' => $request['surname'],
+			'contact_number' => $request['contact_number'],
+			'email' => $request['contact_email'],
+			'status' => 1
+		]);
+		// save logo
+		if ($request->hasFile('client_logo')) {
+            $fileExt = $request->file('client_logo')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('client_logo')->isValid()) {
+                $fileName = time() . "client_logo." . $fileExt;
+                $request->file('client_logo')->storeAs('Images/client_logo/', $fileName);
+                //Update file name in the database
+                $category->client_logo = $fileName;
+                $category->update();
+            }
+        }
+		//$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
+		
 		/*
 		 * create a new database
 		 */
@@ -76,19 +90,12 @@ class ClientService
 		$name = str_replace(' ', '', $patientRecord['name']);
 		$name = strtolower($name);
 		
-		$url = $this->createTenant($name, $firstname, $surname, $email);
+		$url = $this->createTenant($name, $request['first_name'], $request['surname'], $request['contact_email'], $contactNumber);
 
 		// update database name in the system
 		$patientRecord['database_name'] = $url;
 		$patientRecord->update();
 		
-		/*
-	  * avatar
-	  */
-		
-
-		//DB::commit();
-
 		return $url;
     }
 
@@ -287,11 +294,11 @@ class ClientService
 		return $dbname;
 	}
 	// create new tenant  
-	public function createTenant($dbname)
+	public function createTenant($dbname, $firstname, $surname,$email,$contactNumber)
 	{
-		
+		$centralDomains = env('CENTRAL_DOMAINS');
 		$tenant_id = '-' . Str::slug($dbname, '');
-        $domain = $tenant_id . '.' . 'localhost';
+        $domain = $tenant_id . '.' . $centralDomains;
 		
 		// save tenant and domain
 		$tenant = Tenant::create([
@@ -309,14 +316,35 @@ class ClientService
 		Artisan::call('tenants:seed', [
 			'--tenants' => [$tenant['id']]
 		]);
-		
+		$random_pass = Str::random(10);
+        $password = Hash::make($random_pass);
         $tenant->run(function()
         {
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
+            $user = User::create([
+                'name' => $firstname,
+                'email' => $email,
+                'password' => $password,
+                'phone_number' => $contactNumber,
+                'lockout_time' => 10,
+                'type' => 0,
+                'status' => 1,
             ]);
+			
+			$person = new HRPerson();
+			$person->first_name = $firstname;
+			$person->surname = $surname;
+			$person->email = $email;
+			$person->cell_number = $contactNumber;
+			$person->status = 1;
+			$user->addPerson($person);
+			
+			PasswordHistory::createPassword($user->id ,$password);
+			//Assign roles
+			$user->assignRole(5);
+			PasswordSecurity::addExpiryDate($user->id);
+			// send email
+			$forgotPassword =  new ForgotPasswordController();
+			$forgotPassword->sendResetEmail($email , $random_pass ,$user,$domain);
         });
 
         //tenancy()->initialize($tenant);

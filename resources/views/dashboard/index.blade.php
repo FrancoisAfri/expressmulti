@@ -4,8 +4,6 @@
           type="text/css"/>
     <link href="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.css')}}"
           rel="stylesheet" type="text/css" />
-{{--    <link href="{{ asset('copyLink.css') }}" rel="stylesheet" type="text/css"/>--}}
-{{--    <link href="{{ asset('toast.css') }}" rel="stylesheet" type="text/css"/>--}}
     <link href="{{ asset('libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet"
           type="text/css"/>
 @endsection
@@ -347,9 +345,9 @@
     <script src="{{ asset('js/pages/dashboard-2.init.js')}}"></script>
     <script src="{{ asset('js/pages/dashboard-3.init.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- App js-->
-    <script src="{{ asset('js/app.min.js')}}"></script>
-	<script src="{{ ('resources/js/js/app.js') }}"></script>
+
+	<!--<script src="{{ ('resources/js/js/app.js') }}"></script>-->
+	<script src="{{ asset('js/ion.sound.js') }}"></script>
     <script>
 		function postData(id, data) {
 
@@ -366,8 +364,13 @@
 			else if (data == 'deleteorder')
 				location.href = "{{route('delete.close', '')}}" + "/" + id;
         }
-        (
+        
+		
+		(
 		function () {
+			// Call the function initially
+			//checkAndUpdateTable();
+			
             "use strict";
 			
 			let tableID;
@@ -421,6 +424,47 @@
 				increment({{ $service->id }});
             @endforeach
 			
+			// Use setInterval to call the function periodically
+			//setInterval(checkAndUpdateTable, 10000); // Check every 10 seconds
+			setInterval(function () {
+				
+                fetch('{{ route('service.check') }}')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Handle the response from the server
+
+                        if (data.table_updated === true) {
+
+                            console.log('refreshed');
+                            // Reload the table data
+
+                            ion.sound({
+                                sounds: [
+                                    {
+                                        name: "bell_ring"
+                                    }
+                                ],
+                                volume: 0.5,
+                                path: "/sounds/",
+                                preload: true
+                            });
+
+                            ion.sound.play("bell_ring");
+                            window.location.reload();
+                            // Add sound or any other actions upon table update
+                        }
+
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error:', error);
+                    });
+            }, 10000); // Check every 30 second
         })();
 
 
@@ -474,6 +518,49 @@
 				}, 100);
 			}
 		}
+		
+		// Define the function to perform the fetch and handle the response
+		/*function checkAndUpdateTable() {
+			fetch('{{ route('service.check') }}')
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					// Handle the response from the server
+					if (data.table_updated === true) {
+						console.log('refreshed');
+						// Initialize ion.sound and play the sound
+						playNotificationSound();
+						// Reload the table data after playing the sound
+						//window.location.reload();
+					}
+				})
+				.catch(error => {
+					// Handle errors
+					console.error('Error:', error);
+				});
+		}
+		
+		// Define a function to initialize ion.sound and play the sound
+		function playNotificationSound() {
+			// Initialize ion.sound with your sound settings
+			ion.sound({
+				sounds: [
+					{
+						name: "bell_ring"
+					}
+				],
+				volume: 0.5,
+				path: "/sounds/",
+				preload: true
+			});
+
+			// Play the sound
+			ion.sound.play("bell_ring");
+		}*/
 
     </script>
 @stop

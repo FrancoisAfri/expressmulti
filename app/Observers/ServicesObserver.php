@@ -3,10 +3,9 @@
 namespace App\Observers;
 
 use App\Models\EventsServices;
-
-use App\Events\NewRecordAdded;
-
-class RecordObserver
+//use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+class ServicesObserver
 {
     /**
      * Handle the EventsServices "created" event.
@@ -16,7 +15,9 @@ class RecordObserver
      */
     public function created(EventsServices $eventsServices)
     {
-        event(new NewRecordAdded($record));
+		//Session::put('event_session', true);
+		// insert into table
+		DB::table('events_sessions_check')->insert(['session_check' => '1']);
     }
 
     /**

@@ -321,4 +321,7 @@ Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock
 
 });
 // Api for services
-Route::get('/api/get-latest-services', 'DashboardController@getLatestServices');
+Route::get('/api/get-check-services', [RestaurantController::class, 'create'])
+        ->name('service.check');
+Route::get('/api/get-latest-services', [DashboardController::class, 'getLatestServices'])
+        ->name('services.load');

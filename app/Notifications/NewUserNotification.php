@@ -15,6 +15,7 @@ class NewUserNotification extends Notification
     public $token;
     public $temp_password;
     private $user;
+    private $domain;
 
     /**
      * Create a new notification instance.
@@ -26,6 +27,7 @@ class NewUserNotification extends Notification
         $this->token = $token;
         $this->temp_password = $temp_password;
         $this->user = $user;
+        //$this->domain = $domain;
     }
 
     /**
@@ -42,11 +44,19 @@ class NewUserNotification extends Notification
 
     public function toMail($notifiable)
     {
-
-        $url = url(route('password.reset', [
+		/*$tenant = $this->domain;
+		if (!empty($tenant))
+		{
+			$url = $tenant."/reset-password/".$this->token."?email=".$notifiable->getEmailForPasswordReset();
+		}
+		else 
+		{*/
+			$url = url(route('password.reset', [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
-        ], false));
+			], false));
+		//}
+        
 
 
         $companyDetails = $this->CompanyIdentityDetails();

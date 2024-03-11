@@ -62,7 +62,15 @@ class RestaurantController extends Controller
      */
     public function create()
     {
-        //
+        $value = ['table_updated' => 0];
+		$tableCreated = DB::table('events_sessions_check')
+            ->select('session_check')->where('session_check',1 )->first();
+		if (!empty($tableCreated->session_check) && $tableCreated->session_check == 1)
+		{
+			$value = ['table_updated' => true];
+			DB::table('events_sessions_check')->truncate();
+		}
+        return response()->json($value);
     }
 
     /**
@@ -651,6 +659,7 @@ class RestaurantController extends Controller
 		}
         
     }
+
 	/*
 	use SimpleSoftwareIO\QrCode\Facades\QrCode;
 

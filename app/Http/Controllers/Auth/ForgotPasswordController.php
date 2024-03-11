@@ -109,6 +109,28 @@ class ForgotPasswordController extends Controller
 
         //Here send the link with CURL with an external email API return true;
         $userSchema->sendNewUserPasswordResetNotification($token, $temp_password, $user);
+    } 
+	
+	public function sendResetEmail($email, $password, $user, $domain)
+    {
+        $token = str::random(60);
+        //Create Password Reset Token
+        DB::table('password_resets')->insert([
+            'email' => $email,
+            'token' => $token,
+            'created_at' => Carbon::now()
+        ]);
+
+        //Get the token just created above
+
+        $userSchema = User::where('email', $email)
+            ->select('id', 'name', 'email')
+            ->first();
+
+        $temp_password = $password;
+
+        //Here send the link with CURL with an external email API return true;
+        $userSchema->sendNewUserPasswordResetNotification($token, $temp_password, $user, $domain);
     }
 
 

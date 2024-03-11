@@ -22,6 +22,7 @@ use PHPUnit\Exception;
 use Stancl\Tenancy\Tenant;
 use Illuminate\Http\Request;
 use App\Events\NewRecordAdded;
+use App\Events\PlaySoundAndRefreshWidget;
 
 class RestaurantService //implements RestaurantServiceInterface
 {
@@ -362,7 +363,7 @@ class RestaurantService //implements RestaurantServiceInterface
 			DB::commit();
 			// call event
 			// Dispatch the event
-			event(new NewRecordAdded($EventsServices));
+			//event(new NewRecordAdded($EventsServices));
 		}
 		
     }

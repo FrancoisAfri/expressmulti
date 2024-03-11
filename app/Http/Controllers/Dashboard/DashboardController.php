@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
 use RealRashid\SweetAlert\Facades\Alert;
 use DateTime;
-
+use Yajra\DataTables\DataTables;
 class DashboardController extends Controller
 {
 
@@ -49,14 +49,9 @@ class DashboardController extends Controller
      * @var Notification
      */
     private $notification;
-    //private Booking $booking;
-    //private BookingService $bookingService;
 
 
-    public function __construct(
-
-        RestaurantService $restaurantService
-    )
+    public function __construct(RestaurantService $restaurantService)
     {
 		$this->RestaurantService = $restaurantService;
     }
@@ -93,6 +88,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
+
         $CompanyIdentity = $this->CompanyIdentityDetails(); 
 		$services = EventsServices::getRequests();
 		$setup = RestaurantSetup::where('id',1)->first();
@@ -283,9 +279,9 @@ class DashboardController extends Controller
 	// get API services
 	public function getLatestServices()
 	{
-		$services = EventsServices::latest()->get(); // Retrieve the latest services from the database
-
-		return response()->json($services);
+		$services = EventsServices::getRequests(); // Retrieve the latest services from the database
+		
+		return DataTables::of($services)->make(true);
 	}
 
 }

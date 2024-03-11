@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddDependencyRequest;
 use App\Models\CompanyIdentity;
 use App\Services\CommunicationService;
-use App\Services\PatientService;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use App\Models\ContactPerson;
@@ -17,19 +16,20 @@ use Illuminate\Http\RedirectResponse;
 use App\Services\ClientService;
 //use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
+use Stancl\Tenancy\Tenant;
 
 class ClientRegistrationGuestController extends Controller
 {
 	use BreadCrumpTrait, CompanyIdentityTrait;
 	
 	/**
-     * @var PatientService
+     * @var ClientService
      */
-    private $patientService;
+    private $clientService;
 	
-	public function __construct(PatientService $patientService)
+	public function __construct(ClientService $clientService)
     {
-        $this->patientService = $patientService;
+        $this->clientService = $clientService;
     }
 	
     /**
@@ -50,7 +50,7 @@ class ClientRegistrationGuestController extends Controller
 		// views call
         
 		$data['packages'] = Packages::getPackages();
-        return view('guest.index')->with($data);
+        return view('guest.client_management')->with($data);
     }
 
     /**
@@ -79,8 +79,8 @@ class ClientRegistrationGuestController extends Controller
 		 //'email' => 'unique:users,email',
          //'email' => 'unique:hr_people,email',
         //]);
-
-        $newClientUrl = $this->ClientService->persistClientData($request);
+		//die('ddddd');
+        $newClientUrl = $this->clientService->persistClientData($request);
 		
         alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('New Client Registration');

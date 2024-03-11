@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-
+use App\Models\User;
+use App\Models\EventsServices;
 use App\Channels\DatabaseChannel;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->instance(IlluminateDatabaseChannel::class, new DatabaseChannel);
+		User::observe(\App\Observers\UserObserver::class);
+		EventsServices::observe(\App\Observers\ServicesObserver::class);
+        
+		$this->app->instance(IlluminateDatabaseChannel::class, new DatabaseChannel);
     }
 
     /**
