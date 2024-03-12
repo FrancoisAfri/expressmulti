@@ -16,14 +16,14 @@ use App\Models\PasswordSecurity;
 use App\Models\HRPerson;
 use App\Models\Guarantor;
 use App\Models\MainMember;
-use App\Models\MedicalAid;
+use App\Models\Tenant;
 use App\Models\Patient;
-use App\Services\BillingService;
+//use App\Services\BillingService;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Exception;
-use Stancl\Tenancy\Tenant;
+//use Stancl\Tenancy\Tenant; 
 use Illuminate\Support\Str;
 
 class ClientService
@@ -33,12 +33,11 @@ class ClientService
     /**
      * @var \App\Services\BillingService
      */
-    private $billingService;
-
-    public function __construct(
-        BillingService $billingService
-    ){
-        $this->billingService = $billingService;
+    //private $billingService;
+	//BillingService $billingService
+    public function __construct()
+	{
+        //$this->billingService = $billingService;
     }
 
 
@@ -297,14 +296,14 @@ class ClientService
 	public function createTenant($dbname, $firstname, $surname,$email,$contactNumber)
 	{
 		$centralDomains = env('CENTRAL_DOMAINS');
-		$tenant_id = '-' . Str::slug($dbname, '');
-        $domain = $tenant_id . '.' . $centralDomains;
+		$tenant_id = Str::slug($dbname, '');
 		
 		// save tenant and domain
 		$tenant = Tenant::create([
             'id' => $tenant_id
         ]);
 
+        $domain = $tenant['id'] . '.' . $centralDomains;
         $tenant->createDomain([
             'domain' => $domain
         ]);
@@ -318,7 +317,7 @@ class ClientService
 		]);
 		$random_pass = Str::random(10);
         $password = Hash::make($random_pass);
-        $tenant->run(function()
+        $tenant->run(function() use ($firstname, $surname, $email, $contactNumber, $password, $random_pass, $domain) 
         {
             $user = User::create([
                 'name' => $firstname,
@@ -347,7 +346,7 @@ class ClientService
 			$forgotPassword->sendResetEmail($email , $random_pass ,$user,$domain);
         });
 
-        //tenancy()->initialize($tenant);
+        tenancy()->initialize($tenant);
 		
 		return $domain;
 	

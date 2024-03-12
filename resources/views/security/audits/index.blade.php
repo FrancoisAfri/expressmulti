@@ -62,7 +62,7 @@
                             <th></th>
                             <th>Log Name</th>
                             <th>Description</th>
-                            <th>date</th>
+                            <th>Date</th>
                             <th>User</th>
                         </tr>
                         </thead>

@@ -130,7 +130,7 @@ class ForgotPasswordController extends Controller
         $temp_password = $password;
 
         //Here send the link with CURL with an external email API return true;
-        $userSchema->sendNewUserPasswordResetNotification($token, $temp_password, $user, $domain);
+        $userSchema->sendOwnerPasswordResetNotification($token, $temp_password, $user, $domain);
     }
 
 

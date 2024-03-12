@@ -49,13 +49,73 @@ class AdminUserSeeder extends Seeder
         //access level
         ModuleService::giveUserAccess($user->id, 1, 5);
 
-
         $role = Role::create(['name' => 'Admin']);
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);
+		
+		####### renju
+		$user = new User;
+        $user->name = 'Renju';
+        $user->email = 'renju@xpresserv.co.za';
+        $user->password = Hash::make('XpresservAstra@1');
+        $user->type = 5;
+        $user->lockout_time = 25;
+        $user->phone_number = '0641683882';
+        $user->status = 1;
+        $user->save();
 
+        $person = new HRPerson();
+        $person->first_name = 'Renju';
+        $person->surname = 'Mathew';
+        $person->initial = 'R';
+        $person->email = 'renju@xpresserv.co.za';
+        $person->phone_number = '0641683882';
+        $person->status = 1;
+        $user->addPerson($person);
 
+        PasswordHistory::createPassword($user->id, Hash::make('XpresservAstra@1'));
+        PasswordSecurity::addExpiryDate($user->id);
+
+        //access level
+        ModuleService::giveUserAccess($user->id, 1, 5);
+
+        //$role = Role::create(['name' => 'Admin']);
+        $permissions = Permission::pluck('id', 'id')->all();
+        $role->syncPermissions($permissions);
+        $user->assignRole([$role->id]);
+	
+		##### Shraaven
+		$user = new User;
+        $user->name = 'Shraveen';
+        $user->email = 'shraveen@xpresserv.co.za';
+        $user->password = Hash::make('XpresservAstra@2');
+        $user->type = 5;
+        $user->lockout_time = 25;
+        $user->phone_number = '0634042750';
+        $user->status = 1;
+        $user->save();
+
+        $person = new HRPerson();
+        $person->first_name = 'Shraveen';
+        $person->surname = 'Ramdhar';
+        $person->initial = 'S';
+        $person->email = 'shraveen@xpresserv.co.za';
+        $person->phone_number = '0634042750';
+        $person->status = 1;
+        $user->addPerson($person);
+
+        PasswordHistory::createPassword($user->id, Hash::make('XpresservAstra@2'));
+        PasswordSecurity::addExpiryDate($user->id);
+
+        //access level
+        ModuleService::giveUserAccess($user->id, 1, 5);
+
+        //$role = Role::create(['name' => 'Admin']);
+        $permissions = Permission::pluck('id', 'id')->all();
+        $role->syncPermissions($permissions);
+        $user->assignRole([$role->id]);
+		
         $user = new User;
         $user->name = 'Mkhaya';
         $user->email = 'support@mkhayamk.co.za';
@@ -65,7 +125,6 @@ class AdminUserSeeder extends Seeder
         $user->phone_number = '0638943842';
         $user->status = 1;
         $user->save();
-
 
         $person = new HRPerson();
         $person->first_name = 'Mkhaya';
@@ -82,7 +141,6 @@ class AdminUserSeeder extends Seeder
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);
-
 
         $user = new User;
         $user->name = 'User001';
@@ -107,7 +165,6 @@ class AdminUserSeeder extends Seeder
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);
-
 
     }
 }

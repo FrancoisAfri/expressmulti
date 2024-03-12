@@ -14,7 +14,7 @@ use App\Models\Packages;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use App\Services\ClientService;
-//use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
 use Stancl\Tenancy\Tenant;
 
@@ -71,23 +71,18 @@ class ClientRegistrationGuestController extends Controller
      */
     public function store(Request $request)
     {
-        //  $request->validate([
-         //   'name' => 'required|max:255',
-         //   'package_id' => 'required',
-         //   'email' => 'required|unique:companies',
-         //   'phone_number' => 'required|unique:companies'
-		 //'email' => 'unique:users,email',
-         //'email' => 'unique:hr_people,email',
-        //]);
-		//die('ddddd');
-        $newClientUrl = $this->clientService->persistClientData($request);
 		
-        alert()->success('SuccessAlert', 'New record have been saved successfully');
+        $newClientUrl = $this->clientService->persistClientData($request);
+		$newClientUrl = "http://".$newClientUrl;
+        //alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('New Client Registration');
 		if (!empty($newClientUrl))
-			return redirect()->away($newClientUrl);
-			//return redirect()->route('client_details.show', $patientRecord->uuid);
+			return Redirect::away($newClientUrl); //'https://example.com'
+			//return redirect::away($newClientUrl);
 		else return redirect()->back();
+		//return Redirect::away('https://example.com');
+		//return redirect('https://example.com');
+		//return redirect()->route('client_details.show', $patientRecord->uuid);
     }
 
     /**

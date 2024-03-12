@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\module_access;
+use App\Models\module_ribbons;
+use App\Models\modules;
 
 class RestaurantSeeder extends Seeder
 {

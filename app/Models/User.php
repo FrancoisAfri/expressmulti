@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Controllers\Sms\BulkSmsController;
 use App\Notifications\NewUserNotification;
+use App\Notifications\NewRestaurantOwner;
 use App\Traits\LockableTrait;
 use Haruncpi\LaravelUserActivity\Traits\Loggable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -106,7 +107,11 @@ class User extends Authenticatable
     {
         $this->notify(new NewUserNotification($token, $temp_password ,$user));
     }
-
+	
+	public function sendOwnerPasswordResetNotification($token, $temp_password ,$user, $domain)
+    {
+        $this->notify(new NewRestaurantOwner($token, $temp_password ,$user, $domain));
+    }
 
 
 
