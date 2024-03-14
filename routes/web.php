@@ -250,9 +250,11 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('category.destroy');
 	Route::post('add_category', [RestaurantController::class, 'storeCategory'])
         ->name('category.store');
+	Route::get('category-edit/{category}', [RestaurantController::class, 'categoryEdit'])
+        ->name('category.edit');
 	Route::get('category/act/{category}', [RestaurantController::class, 'activateCategory'])
         ->name('category.activate');
-	Route::PATCH('update/category/{category}', [RestaurantController::class, 'categoryUpdate'])
+	Route::post('update/category/{category}', [RestaurantController::class, 'categoryUpdate'])
         ->name('category.update');
 	Route::get('menu', [RestaurantController::class, 'menus'])
         ->name('menus.view');

@@ -48,7 +48,7 @@
 								<td>
 									@if(!empty($category->image))
 										<div class="popup-thumbnail img-responsive">
-											<img src="{{ asset('Images/categories/'.$category->image) }} "
+											<img src="{{ asset('Images/categories/'.$category->image) }}"
 												 height="35px" width="40px" alt="Image">
 										</div>
 									@else
@@ -72,12 +72,12 @@
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-											<button type="button" id="edit_package" class="dropdown-item"
-													data-toggle="modal" title="Edit Category" data-target="#edit-category-modal"
-													data-id="{{ $category->id }}"
-													data-name="{{ $category->name }}">
-													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i> Edit
-											</button>
+											<button onclick="postData({{$category->id}}, 'edit');"
+                                                    class="dropdown-item" data-toggle="tooltip"
+                                                    title='Edit Category'>
+													<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+                                                Edit
+                                            </button>
 											<button onclick="postData({{$category->id}}, 'actdeac');"
                                                     class="dropdown-item" data-toggle="tooltip"
                                                     title='change Active status'>
@@ -143,6 +143,8 @@
 
             if (data == 'actdeac')
                 location.href = "{{route('category.activate', '')}}" + "/" + id;
+			else if (data == 'edit')
+				location.href = "{{route('category.edit', '')}}" + "/" + id;
         }
 
         $(function () {

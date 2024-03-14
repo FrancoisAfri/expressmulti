@@ -113,10 +113,10 @@
 													<div class="col-sm-4">
 														<label>Categories</label>
 														<select class="form-control select2 " style="width: 100%;"
-															 id="categoty" name="categoty"   data-select2-id="1" tabindex="-1" aria-hidden="true">
+															 id="category" name="category"   data-select2-id="1" tabindex="-1" aria-hidden="true">
 															<option value="0">*** Select Category ***</option>
 															@foreach ($Categories as $cat)
-																<option value="{{ $cat->id }}" {{ ($cat->id == $categoty) ? ' selected' : '' }}>{{ $cat->name }}</option>
+																<option value="{{ $cat->id }}" {{ ($cat->id == $category) ? ' selected' : '' }}>{{ $cat->name }}</option>
 															@endforeach
 														</select>
 													</div>
@@ -151,7 +151,10 @@
 															<div class="col-6">
 																<p class="fw-bold mb-1">{{ $menu->name ?? '' }}</p>
 																<p class="small text-muted mb-6">{{ $menu->description ?? '' }}</p>
-																<p class="small text-muted mb-6">{{ $menu->categories->name ?? '' }}</p>
+																@if(!empty($menu->cat_image))
+																	<img src="{{ asset('Images/categories/'.$menu->cat_image) }}"
+																		class="img-fluid  rounded-3" alt="..." width="35" height="35">
+																@endif
 																<p class="small text-muted mb-6">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</p>
 															</div>
 															<div class="col-4">

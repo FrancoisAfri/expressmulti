@@ -60,7 +60,7 @@ class RestaurantGuestController extends Controller
 		// get table last scanned
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 		$type = !empty($request['type']) ? $request['type'] : 0;
-		$categoty = !empty($request['categoty']) ? $request['categoty'] : 0;
+		$category = !empty($request['category']) ? $request['category'] : 0;
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
 			//  Restaurant ordering page
@@ -96,11 +96,11 @@ class RestaurantGuestController extends Controller
 				$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			else $data['avatar'] = '';
 
-			$data['menus'] = Menu::getMenus($type, $categoty);
+			$data['menus'] = Menu::getMenus($type, $category);
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;
 			$data['Categories'] = $Categories;
-			$data['categoty'] = $categoty;
+			$data['category'] = $category;
 			$data['menu_type'] = $type;
 			$data['orders'] = Orders::getOderByTable($table->id, $scanned->id);
 			$data['carts'] = Cart::getCart($table->id);

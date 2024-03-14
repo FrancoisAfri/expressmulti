@@ -47,9 +47,11 @@ class Menu extends Model
 	public static function getMenus($type, $categoty)
     {
 		$query = DB::table('menus')
-            ->select('menus.*', 'menu_types.sequence as type_sequence', 'menu_types.name as type_name')
+            ->select('menus.*', 'menu_types.sequence as type_sequence', 'menu_types.name as type_name'
+			, 'categories.image as cat_image')
 			->where('menus.status',1)
-            ->leftJoin('menu_types', 'menus.menu_type', '=', 'menu_types.id');
+            ->leftJoin('menu_types', 'menus.menu_type', '=', 'menu_types.id')
+            ->leftJoin('categories', 'menus.category_id', '=', 'categories.id');
 			if ($type > 0) {
 				$query->where('menus.menu_type', $type);
 			}
@@ -66,7 +68,7 @@ class Menu extends Model
 	// get all menus
 	public static function getAllMenus()
     {
-		$query = Menu::orderBy('sequence','asc')->get();
+		$query = Menu::with('categories')->orderBy('sequence','asc')->get();
        
 	   return $query;	
     }

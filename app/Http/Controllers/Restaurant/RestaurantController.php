@@ -175,7 +175,22 @@ class RestaurantController extends Controller
 		activity()->log('Category Created');
         return response()->json(['message' => 'success'], 200);
     }
+	// edit category
+	public function categoryEdit(Categories $category)
+    {
+		 $data = $this->breadcrumb(
+            'Restaurant',
+            'Categories Management Page',
+            '/category',
+            'Categories Management',
+            'Categories'
+        );
+		
 	
+		$data['category'] = $category;
+		 
+        return view('restaurant.category_edit')->with($data);
+    }
 	// Categories update
 	public function categoryUpdate(AddMenuCategoryRequest $request, Categories $category)
     {
@@ -198,10 +213,9 @@ class RestaurantController extends Controller
                 $category->update();
             }
         }
-       // $this->RestaurantService->persistCategoryUpdate($requestData, $category);
-        alert()->success('SuccessAlert', 'Record Updated Successfully');
+		alert()->success('SuccessAlert', 'Record Updated Successfully');
 		activity()->log('Category updated');
-        return response()->json(['message' => 'success'], 200);
+		return redirect()->route('categories.view');
     }
 	public function activateCategory(Categories $category): RedirectResponse
     {
