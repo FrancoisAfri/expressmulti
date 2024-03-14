@@ -26,13 +26,11 @@
 
     @section('content_data')
         <!-- end page title -->
-
         <div class="row">
             <div class="col-lg-4 col-xl-4">
                 <div class="card-box text-center">
                     <img src="{{ $avatar }}" class="rounded-circle img-thumbnail"
                          alt="profile-image">
-
                     <h4 class="mb-0"> {{ $user->person->first_name . ' ' . $user->person->surname ?? '' }}</h4>
                     <p class="text-muted"> {{ $user->person->email }}</p>
                     <div class="text-left mt-3">
@@ -48,9 +46,7 @@
             </div> <!-- end col-->
             <div class="col-lg-8 col-xl-8">
                 <div class="card-box">
-
                     <div class="tab-content">
-
                         <div>
                             <form class="needs-validation" novalidate method="Post" action="{{ route('user_profile.store') }}"
                                   enctype="multipart/form-data">
@@ -65,35 +61,27 @@
                                         </ul>
                                     </div>
                                 @endif
-
-
                                 <input type="hidden" name="user_id" value="{{ $user->id }}">
-
                                 <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle mr-1"></i> Personal
                                     Info</h5>
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="form-group">
-
                                             <label for="firstname">First Name <span class="text-danger">*</span> </label>
                                             <input type="text" class="form-control" id="first_name"
                                                    name="first_name" value="{{ $user->person->first_name }}"
                                                    placeholder="Enter first name" required>
-
                                             <div class="invalid-feedback">
                                                 Please provide First Name.
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-2">
                                         <div class="form-group">
-
                                             <label for="firstname">Initial <span class="text-danger">*</span> </label>
                                             <input type="text" class="form-control" id="initial"
                                                    name="initial" value="{{ $user->person->initial }}"
                                                    placeholder="Enter initial" required>
-
                                             <div class="invalid-feedback">
                                                 Please provide initials.
                                             </div>
@@ -105,14 +93,12 @@
                                             <input type="text" class="form-control" id="surname"
                                                    name="surname" value="{{ $user->person->surname }}"
                                                    placeholder="Enter last name" required>
-
                                             <div class="invalid-feedback">
                                                 Please provide First Name.
                                             </div>
                                         </div>
                                     </div> <!-- end col -->
                                 </div> <!-- end row -->
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -121,11 +107,9 @@
                                             <input type="text" class="form-control" id="cell_number"
                                                    name="cell_number" value="{{ $user->person->cell_number }}"
                                                    placeholder="Enter Cell Number" required>
-
                                             <div class="invalid-feedback">
                                                 Please provide Cell Number.
                                             </div>
-
                                         </div>
                                     </div>
 									<div class="col-md-6">
@@ -141,11 +125,22 @@
                                         </div>
                                     </div>
                                 </div> <!-- end row -->
-
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="name"> Roles</label>
+											<select id="roles" name="roles"
+													class="form-control" required="">
+												<option value="0">Select Role</option>
+												@foreach($roles as $role)
+													<option value="{{ $role->id }}" {{ ($role->id == $user_role) ? ' selected' : '' }}>{{ $role->name }}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+                                </div> <!-- end row -->
                                 <h5 class="mb-3 text-uppercase bg-light p-2"><i class="mdi mdi-earth mr-1"></i> Profile
                                     Image</h5>
-
-
                                 <div class="form-group mb-3">
                                     <label for="validationCustom04">Profile Picture</label>
                                     <div class="mt-3">
@@ -154,12 +149,9 @@
                                                @if(!empty($user->person->profile_pic))
                                                    data-default-file="{{ asset('uploads/'.$user->person->profile_pic) }}"/>
                                         @endif
-
                                         <p class="text-muted text-center mt-2 mb-0">Profile Picture</p>
                                     </div>
                                 </div>
-
-
                                 <div class="text-right">
                                     <button type="submit" class="btn btn-success waves-effect waves-light mt-2"><i
                                             class="mdi mdi-content-save"></i> Save
@@ -168,10 +160,8 @@
                             </form>
                         </div>
                         <!-- end settings content-->
-
                     </div> <!-- end tab-content -->
                 </div> <!-- end card-box-->
-
             </div> <!-- end col -->
         </div>
         <!-- end row-->

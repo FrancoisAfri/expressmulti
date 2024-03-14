@@ -62,7 +62,6 @@ class AuthService
     public function locked()
     {
 
-
         $user = Auth::user()->load('person');
         $defaultAvatar = ($user->person->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
         $avatar = $user->person->profile_pic;
@@ -142,11 +141,6 @@ class AuthService
                 'status' => 1,
             ]
         );
-
-        $newUserArr = [
-
-        ];
-
 
         $person = new HRPerson();
         $person->first_name = $request['first_name'];

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HRPerson;
 use App\Models\Province;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use App\Services\CompanyIdentityService;
 use App\Traits\BreadCrumpTrait;
 use Illuminate\Contracts\Foundation\Application;
@@ -15,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class UserProfileController extends Controller
 {
@@ -47,7 +49,8 @@ class UserProfileController extends Controller
         );
 
         $user = Auth::user()->load('person');
-
+		
+		$data['roles'] = Role::select('id', 'name')->get();
         $data['avatar'] = $this->companyIdentityService->getAvatar(Auth::id());
         $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
         $data['user'] =  Auth::user()->load('person');
@@ -66,10 +69,15 @@ class UserProfileController extends Controller
         );
 
         $user = $user->load('person');
-
+		$role =  DB::table('model_has_roles')->select('model_has_roles.role_id')
+				->where('model_has_roles.model_id', $user->id)
+				->first();
+				//return $role;
+		$data['roles'] = Role::select('id', 'name')->get();
         $data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
         $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
         $data['user'] =  $user;
+        $data['user_role'] =  !empty($role->role_id) ? $role->role_id : 0;
         return view('security.user-profile.index')->with($data);
     }
     /**
@@ -97,7 +105,6 @@ class UserProfileController extends Controller
             'email' => 'required',
         ]);
 
-
         $this->companyIdentityService->createOrUpdateUser($request);
         alert()->success('SuccessAlert', 'Your changes have been saved successfully');
         activity()->log('Updated User Information');
@@ -120,7 +127,6 @@ class UserProfileController extends Controller
             'Settings',
             'User Profile'
         );
-
 
         $userDetails = HRPerson::where('uuid',$id)->first();
 

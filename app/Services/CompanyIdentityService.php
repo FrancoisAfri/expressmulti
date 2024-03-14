@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Crypt;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class CompanyIdentityService
 {
@@ -129,7 +130,15 @@ class CompanyIdentityService
             }
         }
         //$this->uploadImage($request, 'uploads', '', $userDetails);
-
+		// assign role
+		
+		$user = User::where('id',$request->get('user_id'))->first();
+		$role =  DB::table('model_has_roles')->select('model_has_roles.role_id')
+				->where('model_has_roles.model_id', $user->id)
+				->first();
+		if (!empty($role->role_id))
+			$user->removeRole($role->role_id);
+		$user->assignRole($request->get('roles'));
         return $userDetails;
     }
 

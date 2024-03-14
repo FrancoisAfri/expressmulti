@@ -174,8 +174,6 @@
                 location.href = "{{route('manageUsers.activate', '')}}" + "/" + id;
             else if (data == 'access')
                 location.href = "/users/module_access/" + id;
-                
-
         }
 
         document.querySelectorAll('#phone ,#cell_number').forEach(item => {
