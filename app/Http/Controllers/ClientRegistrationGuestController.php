@@ -72,17 +72,12 @@ class ClientRegistrationGuestController extends Controller
     public function store(Request $request)
     {
 		
-        $newClientUrl = $this->clientService->persistClientData($request);
-		$newClientUrl = "http://".$newClientUrl;
+        $clientID = $this->clientService->persistClientTempData($request);
+		//$newClientUrl = "http://".$newClientUrl;
         //alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('New Client Registration');
-		if (!empty($newClientUrl))
-			return Redirect::away($newClientUrl); //'https://example.com'
-			//return redirect::away($newClientUrl);
-		else return redirect()->back();
-		//return Redirect::away('https://example.com');
-		//return redirect('https://example.com');
-		//return redirect()->route('client_details.show', $patientRecord->uuid);
+		//return redirect()->back();
+		return redirect("/make-payment/$clientID"); 
     }
 
     /**

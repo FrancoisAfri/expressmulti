@@ -150,11 +150,11 @@
 														<div class="row justify-content-between">
 															<div class="col-6">
 																<p class="fw-bold mb-1">{{ $menu->name ?? '' }}</p>
-																<p class="small text-muted mb-6">{{ $menu->description ?? '' }}</p>
 																@if(!empty($menu->cat_image))
 																	<img src="{{ asset('Images/categories/'.$menu->cat_image) }}"
-																		class="img-fluid  rounded-3" alt="..." width="35" height="35">
+																		class="img-fluid  rounded-3" alt="..." width="25">
 																@endif
+																<p class="small text-muted mb-6">{{ $menu->description ?? '' }}</p>
 																<p class="small text-muted mb-6">{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}</p>
 															</div>
 															<div class="col-4">
@@ -169,7 +169,7 @@
 																		 data-id="{{ $menu->id }}"
 																			data-name="{{ (!empty($menu->name)) ? $menu->name : ''}}"
 																			data-path="{{ asset('images/menus/'.$menu->image) }}"
-																			data-description="{{ (!empty($menu->description)) ? $menu->description : ''}}"
+																			data-ingredients="{{ (!empty($menu->ingredients)) ? $menu->ingredients : ''}}"
 																			data-price="{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}"
 																			data-calories="{{ (!empty($menu->calories)) ? $menu->calories : ''}}"
 																			data-category="{{ (!empty($menu->categories->name)) ? $menu->categories->name : ''}}"
@@ -409,7 +409,7 @@
                 let btnEdit = $(e.relatedTarget);
                 menuID = btnEdit.data('id');
 				let name = btnEdit.data('name');
-				let description = btnEdit.data('description');
+				let ingredients = btnEdit.data('ingredients');
 				let price = btnEdit.data('price');
 				let category = btnEdit.data('category');
 				let type = btnEdit.data('type');
@@ -420,7 +420,7 @@
 
                 let modal = $(this);
 				$('#name').html(name);
-				$('#description').html(description);
+				$('#ingredients').html(ingredients);
 				$('#price').html(price);
 				$('#category').html(category);
 				$('#menu_type').html(type);

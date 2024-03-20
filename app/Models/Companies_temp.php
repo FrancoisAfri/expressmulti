@@ -15,14 +15,14 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Patient extends Model
+class Companies_temp extends Model
 {
     use HasFactory,
         Uuids,
         Notifiable,
         LogsActivity;
 
-    protected $table = 'companies';
+    protected $table = 'companies_temp';
 
     protected $fillable = [
         'name', 'email', 'cell_number', 'phone_number', 'res_address', 'post_address',
@@ -32,13 +32,13 @@ class Patient extends Model
     ];
 	
 
-    protected static $logName = 'Client Profile Temp';
+    protected static $logName = 'Client Profile';
 
     protected $appends = ['full_name'];
 
     protected function getDescriptionForEvent(string $eventName): string
     {
-        return "Client Profile Temp {$eventName} ";
+        return "Client Profile {$eventName} ";
     }
 
 	// package relationship
@@ -46,10 +46,20 @@ class Patient extends Model
     {
         return $this->belongsTo(Packages::class, 'package_id', 'id');
     }
+	
+    public function sendRegisterBookingNotification($url='' , $user='' , $name='', $date='')
+    {
+        $this->notify(new regitserPatientNotification($url , $user,$name, $date));
+    }
+
+    public function sendBookingNotification($user , $name, $date)
+    {
+        $this->notify(new BookingNotification($user,$name, $date));
+    }
 
 	public function contacts(): HasMany
     {
-        return $this->hasMany(ContactPerson::class, 'company_id', 'id');
+        return $this->hasMany(ContactPersonTemp::class, 'company_id', 'id');
     }
 
     /**
@@ -134,5 +144,4 @@ class Patient extends Model
 
         return $isPackagesExist;
     }
-
 }

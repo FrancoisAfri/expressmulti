@@ -114,12 +114,12 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="res_address">Residential Address <span class="text-danger">*</span></label>
+                                        <label for="res_address">Physical Address <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="res_address"
-                                               name="res_address" value="" placeholder="Enter Residential Address" required>
+                                               name="res_address" value="" placeholder="Enter Physical Address" required>
 
                                         <div class="invalid-feedback">
-                                            Please provide Residential Address.
+                                            Please provide Physical Address.
                                         </div>
                                     </div>
                                 </div>
@@ -136,25 +136,9 @@
                                     </div>
                                 </div> <!-- end col -->
                             </div>
-							<br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Packages </label>
-										<select class="form-control select2-multiple" name="package_id"
-											  id="package_id"  data-toggle="select2"
-												data-placeholder="Choose ...">
-											<option value="">Select a Package ...</option>
-											@foreach($packages as $package)
-												<option
-													value="{{ $package->id }}">{{ $package->package_name." | ". $package->no_table." "."Tables" }}
-												</option>
-											@endforeach
-										</select>
-                                    </div>
-                                </div>
-                            </div> <!-- end row -->
                         </div> <!-- end card-box -->
+                    </div> <!-- end col -->
+                    <div class="col-lg-6">
                         <div class="card-box">
                             <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Contact Person </h5>
                             <div class="row">
@@ -204,19 +188,27 @@
                                 </div>
                                 <!-- end col -->
                             </div>
-                        </div> <!-- end card-box -->
-                    </div> <!-- end col -->
-                    <div class="col-lg-6">
-                        <div class="card-box">
-                            <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Logo Imags</h5>
-                            <div class="form-group mb-3">
-                                <div class="mt-3">
-                                    <input type="file" name="client_logo"
-                                           id="client_logo" data-plugins="dropify"/>
-                                    <p class="text-muted text-center mt-2 mb-0">Client Logo</p>
+                        </div>
+						<div class="card-box">
+                            <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Subscription Type </h5>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Packages </label>
+										<select class="form-control select2-multiple" name="package_id"
+											  id="package_id"  data-toggle="select2"
+												data-placeholder="Choose ...">
+											<option value="">Select a Package ...</option>
+											@foreach($packages as $package)
+												<option
+													value="{{ $package->id }}">{{ $package->package_name." | ". $package->no_table." "."Tables"." | "."R".$package->price  }}
+												</option>
+											@endforeach
+										</select>
+                                    </div>
                                 </div>
                             </div>
-                        </div> <!-- end col-->
+                         </div>
                     </div> <!-- end col-->
                 </div>
                 <div class="text-center mb-3">

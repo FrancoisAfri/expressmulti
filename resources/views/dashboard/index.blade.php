@@ -162,7 +162,7 @@
 															</td>
 															<td>
 																<span>
-																	 {{ !empty(\App\Models\TableScans::getTableStatus($table->id)) ? 'Open' : 'Close'}}
+																	 {{ !empty(\App\Models\TableScans::getTableStatus($table->id)) ? 'Open' : 'Closed'}}
 																</span>
 															</td>
 															<td>

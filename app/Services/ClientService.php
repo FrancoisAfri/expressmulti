@@ -6,6 +6,7 @@ use Artisan;
 use App\Models\Accounts;
 use App\Models\Packages;
 use App\Models\ContactPerson;
+use App\Models\ContactPersonTemp;
 use App\Models\Dependencies;
 use App\Models\Doctor;
 use App\Models\EmergencyContact;
@@ -18,6 +19,7 @@ use App\Models\Guarantor;
 use App\Models\MainMember;
 use App\Models\Tenant;
 use App\Models\Patient;
+use App\Models\Companies_temp;
 //use App\Services\BillingService;
 use App\Traits\FileUpload;
 use Illuminate\Support\Facades\DB;
@@ -76,8 +78,8 @@ class ClientService
                 $fileName = time() . "client_logo." . $fileExt;
                 $request->file('client_logo')->storeAs('Images/client_logo/', $fileName);
                 //Update file name in the database
-                $category->client_logo = $fileName;
-                $category->update();
+                $patientRecord->client_logo = $fileName;
+                $patientRecord->update();
             }
         }
 		//$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
@@ -98,7 +100,97 @@ class ClientService
 		return $url;
     }
 
+	/**
+     * @param $request
+     * @return void
+     */
+    public function persistClientTempData($request)
+    {
+		
+		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
+		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
+		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
+		$request->merge(array('phone_number' => $mobile));
+		$request->merge(array('cell_number' => $cellNumber));
+		$request->merge(array('contact_number' => $contactNumber));
 
+		$patientRecord = Companies_temp::create($request->all());
+		
+		$request->request->add(['company_id' => $patientRecord['id']]);
+		
+		// save contact person
+		ContactPersonTemp::create([
+			'company_id' => $patientRecord->id,
+			'first_name' => $request['first_name'],
+			'surname' => $request['surname'],
+			'contact_number' => $request['contact_number'],
+			'email' => $request['contact_email'],
+			'status' => 1
+		]);
+
+		/*
+		 * create a new database
+		 */
+		// make db name
+		//$name = str_replace(' ', '', $patientRecord['name']);
+		//$name = strtolower($name);
+		
+		//$url = $this->createTenant($name, $request['first_name'], $request['surname'], $request['contact_email'], $contactNumber);
+
+		// update database name in the system
+		//$patientRecord['database_name'] = $url;
+		//$patientRecord->update();
+		
+		return $patientRecord->id;
+    }
+	
+	public function persistClient($companyID)
+    {
+		$company = Companies_temp::find($companyID);
+		$company = $company->load('contacts');
+		
+		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
+		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
+		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
+		$request->merge(array('phone_number' => $mobile));
+		$request->merge(array('cell_number' => $cellNumber));
+		$request->merge(array('contact_number' => $contactNumber));
+
+		$patientRecord = Patient::create([
+			'company_id' => $patientRecord->id,
+			'first_name' => $request['first_name'],
+			'surname' => $request['surname'],
+			'contact_number' => $request['contact_number'],
+			'email' => $request['contact_email'],
+			'status' => 1
+		]);
+		
+		// save contact person
+		ContactPerson::create([
+			'company_id' => $patientRecord->id,
+			'first_name' => $request['first_name'],
+			'surname' => $request['surname'],
+			'contact_number' => $request['contact_number'],
+			'email' => $request['contact_email'],
+			'status' => 1
+		]);
+		//$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
+		
+		/*
+		 * create a new database
+		 */
+		// make db name
+		$name = str_replace(' ', '', $patientRecord['name']);
+		$name = strtolower($name);
+		
+		$url = $this->createTenant($name, $request['first_name'], $request['surname'], $request['contact_email'], $contactNumber);
+
+		// update database name in the system
+		$patientRecord['database_name'] = $url;
+		$patientRecord->update();
+		
+		return $url;
+    }
     /**
      * @param $request
      * @param $id

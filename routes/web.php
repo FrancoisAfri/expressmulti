@@ -327,3 +327,18 @@ Route::get('/api/get-check-services', [RestaurantController::class, 'create'])
         ->name('service.check');
 Route::get('/api/get-latest-services', [DashboardController::class, 'getLatestServices'])
         ->name('services.load');
+/// payfast payment 
+
+Route::get('add-new-card', 'Payments@initCardPayment');
+Route::get('make-payment/{company}', 'Payments@realCardPayment');
+Route::get('card-cancelled', 'Payments@showFailedMessage');
+Route::post('process-trip-payment', 'Payments@processTripPayment');
+Route::get('get-payment-methods', 'Payments@getRiderPaymentsMethods');
+Route::get('delete-payment-method', 'Payments@deltePaymentMethod');
+Route::get('add-card-successful', 'Payments@itn');
+Route::get('add-card-cancelled', 'Payments@itn');
+Route::post('itn', 'Payments@itn');
+Route::get('check-out', 'Payments@checkout');
+Route::get('success', 'Payments@showSuccessfullMessage');
+Route::get('cancel', 'Payments@cancel');
+Route::get('notify', 'Payments@notify');
