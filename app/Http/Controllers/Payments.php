@@ -15,7 +15,9 @@ use App\Models\Payfast;
 use App\Services\ClientService;
 use App\Models\Companies_temp;
 use App\Models\Packages;
-use Storage;
+//use Storage;
+use Illuminate\Support\Facades\Redirect;
+use RealRashid\SweetAlert\Facades\Alert;
 //use App\Orders;
 //use App\ordersProduts;
 //use App\OrderCards;
@@ -84,13 +86,8 @@ class Payments extends Controller {
 	
     public function itn(Request $request, Payfast $payfast) {
         // Verify the payment status.
-		//get transaction total for verification
-		$current = Companies_temp::where('id',$request->get("m_payment_id"))->first();
-		//$totalAmount = !empty($current->total_amount) ? $current->total_amount : 0;
-        //$status = $payfast->verify($request, $totalAmount)->status();
-        //Storage::disk('local')->put('payfast_itn.txt', json_encode([$request->all()]));
-        $status = 'COMPLETE';
-        $this->addNewCardTokenOrUpdateTransation($request->get("m_payment_id"), $status, $request->get('item_name'));
+		$status = 'COMPLETE';
+        $this->createnewclient($request->get("m_payment_id"), $status, $request->get('item_name'));
     }
 
     private function addNewCardTokenOrUpdateTransation($m_payment_id, $status, $itemName) {
@@ -145,17 +142,15 @@ class Payments extends Controller {
     }
 	
     public function showSuccessfullMessage() {
-		return response()->json([
-				'success'=> true,
-				'message'=> 'Payment was Successful.',
-			]);
+		
+		alert()->success('SuccessAlert', 'Your subscription was successful. Email confirmatin have been sent to you!!');
+		return redirect("/new_client_registration"); 
     }
 
     public function showFailedMessage(Request $request) {
-        return response()->json([
-				'success'=> false,
-				'message'=> 'Payment was cancelled.',
-			]);
+        
+		alert()->success('SuccessAlert', 'The subscriptions was not successful, because the transaction was cancelled!!!');
+		return redirect("/new_client_registration"); 
     }
 
     function getCustomerPaymentMethod(Request $request) {

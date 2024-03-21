@@ -16,7 +16,6 @@ use Illuminate\Http\RedirectResponse;
 use App\Services\ClientService;
 use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
-use Stancl\Tenancy\Tenant;
 
 class ClientRegistrationGuestController extends Controller
 {
