@@ -394,8 +394,8 @@ class ClientService
 		$tenant = Tenant::create([
             'id' => $tenant_id
         ]);
-
-        $domain = $tenant['id'] . '.' . $centralDomains;
+		//$newClientUrl = "http://".$newClientUrl;
+        $domain = "http://".$tenant['id'] . '.' . $centralDomains;
         $tenant->createDomain([
             'domain' => $domain
         ]);
