@@ -128,19 +128,6 @@ class ClientService
 			'status' => 1
 		]);
 
-		/*
-		 * create a new database
-		 */
-		// make db name
-		//$name = str_replace(' ', '', $patientRecord['name']);
-		//$name = strtolower($name);
-		
-		//$url = $this->createTenant($name, $request['first_name'], $request['surname'], $request['contact_email'], $contactNumber);
-
-		// update database name in the system
-		//$patientRecord['database_name'] = $url;
-		//$patientRecord->update();
-		
 		return $patientRecord->id;
     }
 	
@@ -149,45 +136,58 @@ class ClientService
 		$company = Companies_temp::find($companyID);
 		$company = $company->load('contacts');
 		
-		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
-		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
-		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
-		$request->merge(array('phone_number' => $mobile));
-		$request->merge(array('cell_number' => $cellNumber));
-		$request->merge(array('contact_number' => $contactNumber));
+		$name = !empty($company->name) ? $company->name : '';
+		$email = !empty($company->email) ? $company->email : '';
+		$cell_number = !empty($company->cell_number) ? $company->cell_number : '';
+		$phone_number = !empty($company->phone_number) ? $company->phone_number : '';
+		$res_address = !empty($company->res_address) ? $company->res_address : '';
+		$post_address = !empty($company->post_address) ? $company->post_address : '';
+		$package_id = !empty($company->package_id) ? $company->package_id : 0;
+		$trading_as = !empty($company->trading_as) ? $company->trading_as : '';
+		$vat = !empty($company->vat) ? $company->vat : '';
+		$first_name = !empty($company->contacts->first_name) ? $company->contacts->first_name : '';
+		$surname = !empty($company->contacts->surname) ? $company->contacts->surname : '';
+		$contact_number = !empty($company->contacts->contact_number) ? $company->contacts->contact_number : '';
+		$contact_email = !empty($company->contacts->email) ? $company->contacts->email : '';
 
-		$patientRecord = Patient::create([
-			'company_id' => $patientRecord->id,
-			'first_name' => $request['first_name'],
-			'surname' => $request['surname'],
-			'contact_number' => $request['contact_number'],
-			'email' => $request['contact_email'],
-			'status' => 1
+		$clientRecord = Patient::create([
+			'name' => $name,
+			'email' => $email,
+			'phone_number' => $phone_number,
+			'contact_number' => $cell_number,
+			'res_address' => $res_address,
+			'post_address' => $post_address,
+			'date_joined' => time(),
+			'payment_status' => 1,
+			'package_id' => $package_id,
+			'trading_as' => $trading_as,
+			'vat' => $vat,
+			'is_active' => 1
 		]);
 		
 		// save contact person
 		ContactPerson::create([
-			'company_id' => $patientRecord->id,
-			'first_name' => $request['first_name'],
-			'surname' => $request['surname'],
-			'contact_number' => $request['contact_number'],
-			'email' => $request['contact_email'],
+			'company_id' => $clientRecord->id,
+			'first_name' => $first_name,
+			'surname' => $surname,
+			'contact_number' => $contact_number,
+			'email' => $contact_email,
 			'status' => 1
 		]);
-		//$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
-		
+
 		/*
 		 * create a new database
 		 */
 		// make db name
-		$name = str_replace(' ', '', $patientRecord['name']);
+		$name = str_replace(' ', '', $clientRecord['name']);
 		$name = strtolower($name);
 		
-		$url = $this->createTenant($name, $request['first_name'], $request['surname'], $request['contact_email'], $contactNumber);
+		$url = $this->createTenant($name, $first_name, $surname, $contact_email, $contact_number);
 
 		// update database name in the system
-		$patientRecord['database_name'] = $url;
-		$patientRecord->update();
+		$clientRecord['database_name'] = $name;
+		$clientRecord['tenant_url'] = $url;
+		$clientRecord->update();
 		
 		return $url;
     }
