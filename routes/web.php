@@ -328,17 +328,17 @@ Route::get('/api/get-check-services', [RestaurantController::class, 'create'])
 Route::get('/api/get-latest-services', [DashboardController::class, 'getLatestServices'])
         ->name('services.load');
 /// payfast payment 
-
+//Route::get('/users', 'UserController@index');
 Route::get('add-new-card', 'Payments@initCardPayment');
-Route::get('make-payment/{company}', 'Payments@realCardPayment');
-Route::get('card-cancelled', 'Payments@showFailedMessage');
-Route::post('process-trip-payment', 'Payments@processTripPayment');
-Route::get('get-payment-methods', 'Payments@getRiderPaymentsMethods');
-Route::get('delete-payment-method', 'Payments@deltePaymentMethod');
-Route::get('add-card-successful', 'Payments@itn');
-Route::get('add-card-cancelled', 'Payments@itn');
-Route::post('itn', 'Payments@itn');
-Route::get('check-out', 'Payments@checkout');
-Route::get('success', 'Payments@showSuccessfullMessage');
-Route::get('cancel', 'Payments@cancel');
-Route::get('notify', 'Payments@notify');
+Route::get('make-payment/{company}', 'App\Http\Controllers\Payments@realCardPayment');
+Route::get('card-cancelled', 'App\Http\Controllers\Payments@showFailedMessage');
+Route::post('process-trip-payment', 'App\Http\Controllers\Payments@processTripPayment');
+Route::get('get-payment-methods', 'App\Http\Controllers\Payments@getRiderPaymentsMethods');
+Route::get('delete-payment-method', 'App\Http\Controllers\Payments@deltePaymentMethod');
+Route::get('add-card-successful', 'App\Http\Controllers\Payments@itn');
+Route::get('add-card-cancelled', 'App\Http\Controllers\Payments@itn');
+Route::post('itn', 'App\Http\Controllers\Payments@itn');
+Route::get('check-out', 'App\Http\Controllers\Payments@checkout');
+Route::get('success', 'App\Http\Controllers\Payments@showSuccessfullMessage');
+Route::get('cancel', 'App\Http\Controllers\Payments@cancel');
+Route::get('notify', 'App\Http\Controllers\Payments@notify');

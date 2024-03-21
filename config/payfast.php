@@ -19,11 +19,11 @@ return
         [
             'testing' => false, // Set to false when in production.
             'merchant' => [
-                'merchant_id' => env('PF_MERCHANT_ID', '13717718'), // TEST Credentials. Replace with your merchant ID from Payfast.
-                'merchant_key' => env('PF_MERCHANT_KEY', 'hgj9o2xyyfqth'), // TEST Credentials. Replace with your merchant key from Payfast.
-                'return_url' => env('PF_RETURN_URL', 'https://api.standard-beauty.afrixcel.co.za/api/success'), // Redirect URL on Success.
-                'cancel_url' => env('PF_CANCEL_URL', 'https://api.standard-beauty.afrixcel.co.za/api/card-cancelled'), // Redirect URL on Cancellation.
-                'notify_url' => env('PF_ITN_URL', 'https://api.standard-beauty.afrixcel.co.za/api/itn'), // ITN URL.
+                'merchant_id' => env('PF_MERCHANT_ID', '11292830'), // TEST Credentials. Replace with your merchant ID from Payfast.
+                'merchant_key' => env('PF_MERCHANT_KEY', 'nxzeqol0ppi7s'), // TEST Credentials. Replace with your merchant key from Payfast.
+                'return_url' => env('PF_RETURN_URL', 'http://expresserve.afrixcel.co.za/success'), // Redirect URL on Success.
+                'cancel_url' => env('PF_CANCEL_URL', 'http://expresserve.afrixcel.co.za/card-cancelled'), // Redirect URL on Cancellation.
+                'notify_url' => env('PF_ITN_URL', 'http://expresserve.afrixcel.co.za/itn'), // ITN URL.
             ],
             'hosts' => [
                 'www.payfast.co.za',

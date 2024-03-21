@@ -11,12 +11,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\custom\CustomHelper;
 use Illuminate\Support\Facades\DB; 
-use App\Payfast;
-use App\CustomerPayment;
+use App\Models\Payfast;
+use App\Services\ClientService;
+use App\Models\Companies_temp;
+use App\Models\Packages;
 use Storage;
-use App\Orders;
-use App\ordersProduts;
-use App\OrderCards;
+//use App\Orders;
+//use App\ordersProduts;
+//use App\OrderCards;
 /**
  * Description of Payments
  *
@@ -24,6 +26,15 @@ use App\OrderCards;
  */
 class Payments extends Controller {
 
+	/**
+     * @var ClientService
+     */
+    private $clientService;
+	
+	public function __construct(ClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
     //put your code here
 	public function initCardPayment(Payfast $payfast, Request $request) {
 
@@ -42,65 +53,26 @@ class Payments extends Controller {
 		return $payfast->paymentForm();
 	}
 	// make payment, create form, save order in the databse and redirect to payfast
-	public function realCardPayment(Payfast $payfast, Request $request) {
+	public function realCardPayment(Payfast $payfast, Companies_temp $company) {
 		
-		$contact_id = !empty($request['contact_id']) ? $request->get("contact_id") : 0;
+		//$company_id = !empty($request['company_id']) ? $request->get("company_id") : 0;
 		$total_amount = 0;
+		
+		$company = $company->load('packages');
 		// make payment  /**/
-		if (!empty($contact_id)) {
-			// get last Order number
-			$last = Orders::orderBy('id','desc')->first();
-			if (!empty($last->order_no)) $orderNo = $last->order_no + 1;
-			else $orderNo = 1;
-			$item = "Order".$orderNo;
-			// save order details
-			$order = new Orders();
-			$order->order_no = $orderNo;
-			$order->status = 1;
-			$order->contact_id = $contact_id;
-			$order->save();
-			// get products from cart
-			$products = OrderCards::where('contact_id',$contact_id)->get();
-
-			// save products linked to the order
-			foreach ($products as $product) {
-				$total_amount = $total_amount + $product->total_price;
-				
-				if (!empty($product['is_kit']))
-				{
-					// get products details
-					$ordersProduts = new ordersProduts();
-					$ordersProduts->order_id = $order->id;
-					$ordersProduts->is_kit = 1;
-					$ordersProduts->kit_id = $product['kit_id'];
-					$ordersProduts->quantity = $product['quantity'];
-					$ordersProduts->status = 1;
-					$ordersProduts->price = $product['price'];
-					$ordersProduts->save();
-				}
-				else
-				{
-					// get products details
-					$ordersProduts = new ordersProduts();
-					$ordersProduts->order_id = $order->id;
-					$ordersProduts->product_id = $product['product_id'];
-					$ordersProduts->quantity = $product['quantity'];
-					$ordersProduts->status = 1;
-					$ordersProduts->price = $product['price'];
-					$ordersProduts->save();
-				}
-			}
-			// update order table with total amount  total_amount
-			$order->total_amount = $total_amount;
-			$order->update();
+		if (!empty($company->id)) {
+			
+			//$company = Companies_temp::where('id', $company_id)->first();
+			$total_amount = !empty($company->packages->price) ? $company->packages->price : 0;
+			$item = "Order".$company->id;
 			// make payment
 			$payfast->setAmount($total_amount);
 			$payfast->setItem('Order Details',$item);
-			$payfast->setMpaymentId($order->id);
+			$payfast->setMpaymentId($company->id);
 			$payfast->setPaymentMethod('cc');
 			$payfast->setSubscriptionType(2);
 			//$payfast->setCustomInt1($request->get("last_4"));
-		} 
+		}
 		else 
 		{
 			return response()->json(["status" => "failed", "err_msg" => "required paramters(total amount) missing or empty"]);
@@ -113,7 +85,7 @@ class Payments extends Controller {
     public function itn(Request $request, Payfast $payfast) {
         // Verify the payment status.
 		//get transaction total for verification
-		$current = Orders::where('id',$request->get("m_payment_id"))->first();
+		$current = Companies_temp::where('id',$request->get("m_payment_id"))->first();
 		//$totalAmount = !empty($current->total_amount) ? $current->total_amount : 0;
         //$status = $payfast->verify($request, $totalAmount)->status();
         //Storage::disk('local')->put('payfast_itn.txt', json_encode([$request->all()]));
@@ -154,7 +126,24 @@ class Payments extends Controller {
 				'ordersKits'=> $ordersKits,
 			]);
     }
-
+	
+	// create new account after payment
+	private function createnewclient($m_payment_id, $status, $itemName) {
+        
+		//  try {
+        switch ($status) {
+            case 'COMPLETE': // Things went as planned, update your order status and notify the customer/admins
+                
+				// create new account and domain
+				$url = $this->clientService->persistClient($m_payment_id);
+                break;
+            default: // We've got problems, notify admin to check logs.
+					
+                break;
+        }
+		return $url;
+    }
+	
     public function showSuccessfullMessage() {
 		return response()->json([
 				'success'=> true,
