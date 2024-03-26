@@ -283,5 +283,41 @@ class DashboardController extends Controller
 		
 		return DataTables::of($services)->make(true);
 	}
+	// get API services
+	public function getOpenServicesPerWaiter($waiter)
+	{
+		$services = EventsServices::getWaiterRequests($waiter); // Retrieve the latest services from the database
+		
+		return response()->json([
+            'services' => $services
+        ]);
+	}
 
+	// get API tables
+	public function getTablesWaiter($waiter)
+	{
+		$tables = Tables::getWaiterTables($waiter);
+		
+		return response()->json([
+            'tables' => $tables
+        ]);
+	}
+	// get API tables status 
+	public function getTableStatus($table)
+	{
+		$status = TableScans::getTableStatus($table);
+		
+		return response()->json([
+            'status' => $status
+        ]);
+	}
+	// get API tables nickname 
+	public function getTableNickname($table)
+	{
+		$nickname = TableScans::getTableName($table);
+		
+		return response()->json([
+            'nickname' => $nickname
+        ]);
+	}
 }

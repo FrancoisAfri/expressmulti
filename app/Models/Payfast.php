@@ -124,7 +124,7 @@ class Payfast {
             }
         }
         $this->output = substr($this->output, 0, -1);
-        $passPhrase = 'payfasT_2018';
+        $passPhrase = 'Mithradi1234';
         if (isset($passPhrase)) {
             $this->output .= '&passphrase=' . $passPhrase;
         }

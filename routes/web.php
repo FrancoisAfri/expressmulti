@@ -6,13 +6,6 @@ use App\Http\Controllers\Auth\TwoFactorAuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Bookings\BookingsController;
-use App\Http\Controllers\Bookings\ReminderController;
-use App\Http\Controllers\Bookings\ReportController;
-use App\Http\Controllers\Billing\BillingSetupController;
-use App\Http\Controllers\Billing\BillingController;
-use App\Http\Controllers\Billing\InvoiceController;
-use App\Http\Controllers\Billing\ReportsController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Modules\ModuleAccessController;
 use App\Http\Controllers\Modules\ModuleController;
@@ -25,6 +18,7 @@ use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\AuditController;
 use App\Http\Controllers\Patients\PatientControlle;
 use App\Http\Controllers\Restaurant\RestaurantController;
+use App\Http\Controllers\Restaurant\ReportsController;
 use App\Http\Controllers\RestaurantGuestController;
 use Illuminate\Support\Facades\Route;
 
@@ -318,6 +312,10 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('setup.res');
 	Route::post('settings_save', [RestaurantController::class, 'storeSetup'])
         ->name('restaurant_settings.store');
+	Route::get('reports', [ReportsController::class, 'index'])
+        ->name('reports.index');
+	 Route::post('report/waiter-response', [ReportsController::class, 'waiterResponse'])
+        ->name('waiter.response');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

@@ -19,7 +19,7 @@ class EventsServices extends Model
 
     protected $fillable = [
         'table_id', 'scan_id', 'service_type', 'requested_time',
-        'status', 'completed_time', 'service', 'comment', 'item_id'
+        'status', 'completed_time', 'service', 'comment', 'item_id', 'waiter'
 
     ];
 	/**
@@ -42,11 +42,23 @@ class EventsServices extends Model
     {
         return $this->belongsTo(Tables::class, 'table_id', 'id');
     }
+	public function waiters(): BelongsTo
+    {
+        return $this->belongsTo(HRPerson::class, 'waiter', 'id');
+    }
 	// get requests
 	public static function getRequests()
     {
         return EventsServices::with('tables')
             ->where('status', 1)
+            ->get();
+    }
+	// get waiter requests
+	public static function getWaiterRequests($waiter)
+    {
+        return EventsServices::with('tables')
+            ->where('status', 1)
+            ->where('waiter', $waiter)
             ->get();
     }
 	// get requests
@@ -55,5 +67,17 @@ class EventsServices extends Model
         return EventsServices::where('table_id', $tableID)
             ->where('scan_id', $can)
             ->get();
+    }
+	// get requests reports 
+	public static function getRequestsReports($startDate, $endDate,$employee_id)
+    {
+       
+		$query = EventsServices::with('tables', 'waiters')
+			->whereBetween('created_at', [$startDate, $endDate]);
+			if (!empty($employee_id)) {
+				$query->where('waiter', $employee_id);
+			}
+            
+		 return  $query->get();
     }
 }

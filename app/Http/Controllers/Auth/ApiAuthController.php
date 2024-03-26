@@ -65,7 +65,7 @@ class ApiAuthController extends Controller
         }
 
 
-//        $user = $request->user();
+//      $user = $request->user();
         $tokenResult = auth()->user()->createToken('Personal Access Token');
         $token = $tokenResult;
 

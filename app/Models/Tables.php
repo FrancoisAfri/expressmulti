@@ -66,4 +66,11 @@ class Tables extends Model
         return Tables::with('scans')
 				->get();
     }
+	// get all tables per waiter
+	public static function getTablesWaiter($waiter)
+    {
+        return Tables::with('scans')
+				->where('employee_id',$waiter)
+				->get();
+    }
 }

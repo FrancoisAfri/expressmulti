@@ -250,11 +250,12 @@ class RestaurantGuestController extends Controller
 				'requested_time' => time(),
 				'service' => "Close Request",
 				'item_id' => $closeRequests->id,
+				'waiter' => $table->employee_id,
 				'status' => 1,
 			]);
 		// call event
 		// Dispatch the event
-		event(new NewRecordAdded($EventsServices));
+		//event(new NewRecordAdded($EventsServices));
 		//alert
         alert()->success('SuccessAlert', "Your request to close table have been submitted. Your waiter will come to you shortly.");
         activity()->log("New close table Request Added");
@@ -285,6 +286,7 @@ class RestaurantGuestController extends Controller
 		$order = Orders::create([
 						'table_id' => $table->id,
 						'scan_id' => $scanned->id,
+						'waiter' => $table->employee_id,
 						'status' => 1,
 					]);
 		$orderNumber = 'ORD' . sprintf('%07d', $order->id);
@@ -319,6 +321,7 @@ class RestaurantGuestController extends Controller
 					'service_type' => 2,
 					'requested_time' => time(),
 					'service' => $menuOrder,
+					'waiter' => $table->employee_id,
 					'comment' => $comment,
 					'item_id' => $order->id,
 					'status' => 1,

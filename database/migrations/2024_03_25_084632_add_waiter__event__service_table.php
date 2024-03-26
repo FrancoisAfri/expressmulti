@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFieldsToCompaniesTable extends Migration
+class AddWaiterEventServiceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddFieldsToCompaniesTable extends Migration
      */
     public function up()
     {
-		Schema::table('companies', function ($table) {
-            $table->string('tenant_url')->unsigned()->nullable();
+        Schema::table('events_services', function ($table) {
+            $table->integer('waiter')->unsigned()->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddFieldsToCompaniesTable extends Migration
      */
     public function down()
     {
-		Schema::table('companies', function ($table) {
-            $table->dropColumn('tenant_url');
+        Schema::table('events_services', function ($table) {
+            $table->dropColumn('waiter');
         });
     }
 }

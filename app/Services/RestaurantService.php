@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Services;
-use Artisan; 
-//use App\Services\RestaurantServiceInterface;
+use Artisan;
 use App\Models\Categories;
 use App\Models\Menu;
 use App\Models\Tables;
@@ -94,51 +93,29 @@ class RestaurantService //implements RestaurantServiceInterface
 	public function persistMenuSave($request)
     {
 		// save category
-		DB::beginTransaction();
-
-			$menuRecord = Menu::create([
-                'name' => $request['name'],
-                'description' => $request['description'],
-                'ingredients' => $request['ingredients'],
-                'category_id' => $request['category_id'],
-                'menu_type' => $request['menu_type'],
-                'calories' => $request['calories'],
-                'price' => $request['price'],
-                'status' => 1,
-            ]);
-			
-			// save image
-			//$this->uploadImage($request, 'image', 'Image', $menuRecord);
-			// save video
-			//$this->uploadVideo($request, 'video', 'Video', $menuRecord);
-			
-		DB::commit();
+		$menuRecord = Menu::create([
+			'name' => $request['name'],
+			'description' => $request['description'],
+			'ingredients' => $request['ingredients'],
+			'category_id' => $request['category_id'],
+			'menu_type' => $request['menu_type'],
+			'calories' => $request['calories'],
+			'price' => $request['price'],
+			'status' => 1,
+		]);
     }
 	
 	public function persistMenuUpdate($request, $menu)
     {
 		// update menu
-		DB::beginTransaction();
-
-			//$menuRecord = Menu::find($id->id);
-			//$menu->update($request->all());
-
-			$menu->name= $request['name'];
-			$menu->description = $request['description'];
-			$menu->ingredients= $request['ingredients'];
-			$menu->category_id= $request['category_id'];
-			$menu->menu_type= $request['menu_type'];
-			$menu->calories= $request['calories'];
-			$menu->price= $request['price'];
-			$menu->update();
-			// save image
-			//if (!empty($request['image'])) 
-				//$this->uploadImage($request, 'image', 'Image', $menu);
-			// save video
-			//if (!empty($request['video']))
-			//	$this->uploadVideo($request, 'video', 'Video', $menu);
-			
-		DB::commit();
+		$menu->name= $request['name'];
+		$menu->description = $request['description'];
+		$menu->ingredients= $request['ingredients'];
+		$menu->category_id= $request['category_id'];
+		$menu->menu_type= $request['menu_type'];
+		$menu->calories= $request['calories'];
+		$menu->price= $request['price'];
+		$menu->update();
     }
 	
 	public function destroyMenu($menu)
@@ -333,7 +310,7 @@ class RestaurantService //implements RestaurantServiceInterface
 		if (!empty($scanned->status) &&  $scanned->status === 1)
 		{
 			// save request
-			DB::beginTransaction();
+			//DB::beginTransaction();
 				
 				$comment = "$service->name requested on table: $table->name";
 				$action = "$service->name Service Requesed" ;
@@ -354,13 +331,14 @@ class RestaurantService //implements RestaurantServiceInterface
 						'scan_id' => $scanned->id,
 						'table_id' => $table->id,
 						'service_type' => 1,
+						'waiter' => $table->employee_id,
 						'requested_time' => time(),
 						'service' => "$service->name",
 						'item_id' => $request->id,
 						'status' => 1,
 					]);
 							
-			DB::commit();
+			//DB::commit();
 			// call event
 			// Dispatch the event
 			//event(new NewRecordAdded($EventsServices));
