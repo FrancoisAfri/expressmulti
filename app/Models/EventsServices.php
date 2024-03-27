@@ -46,6 +46,10 @@ class EventsServices extends Model
     {
         return $this->belongsTo(HRPerson::class, 'waiter', 'id');
     }
+	public function scans(): BelongsTo
+    {
+        return $this->belongsTo(TableScans::class, 'scan_id', 'id');
+    }
 	// get requests
 	public static function getRequests()
     {

@@ -208,10 +208,47 @@
                                     <div class="tab-pane fade" id="custom-v-pills-age_analysis_patient" role="tabpanel"
                                          aria-labelledby="custom-v-pills-age_analysis_patient-tab">
                                         <div>
-                                            <h4 class="header-title">Patient Age Analysis </h4>
-                                            <!-- Pay with Paypal box-->
-                                            <!-- end Pay with Paypal box-->
+                                            <h4 class="header-title"> Sales/Value of orders placed </h4>
+											<form class="needs-validation" novalidate method="Post" action="report/sales-value-ordered"
+                                                  enctype="multipart/form-data" >
+                                                {{ csrf_field() }}
+                                                @if (count($errors) > 0)
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                                <div class="row">
+                                                    <div class="col-lg-8 float-sm-right">
+                                                        <div class="form-group">
+                                                            <label for="employee_id"> Employees </label>
+                                                            <select class="form-control select2 " style="width: 100%;"
+																 id="employee_id" name="employee_id"   data-select2-id="1" tabindex="-1" aria-hidden="true">
+																<option value="0">*** Select Employee ***</option>
+																@foreach ($employees as $employee)
+																	<option value="{{ $employee->id }}">{{ $employee->first_name." ".$employee->surname }}</option>
+																@endforeach
+															</select>
+                                                        </div>
+														<div class="form-group">
+                                                            <label for="heard"> Date Range </label>
+                                                            <input type="text" id="dates" name="date_range" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- end row -->
+                                                <div class="row mt-4">
 
+                                                    <div class="col-sm-6">
+                                                        <div class="text-sm-right mt-2 mt-sm-0">
+                                                            <button type="submit"  class="btn btn-success">
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Genarate Report</button>
+                                                        </div>
+                                                    </div> <!-- end col -->
+                                                </div> <!-- end row -->
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="custom-v-pills-medical_aid" role="tabpanel"
@@ -259,6 +296,13 @@
     <script src="{{ asset('js/pages/form-pickers.init.js') }}"></script>
  <script>
      $("#date").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#dates").flatpickr({
          altInput: !0,
          mode: "range",
          // altFormat: "F j, y",

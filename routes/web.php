@@ -314,8 +314,10 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('restaurant_settings.store');
 	Route::get('reports', [ReportsController::class, 'index'])
         ->name('reports.index');
-	 Route::post('report/waiter-response', [ReportsController::class, 'waiterResponse'])
+	Route::post('report/waiter-response', [ReportsController::class, 'waiterResponse'])
         ->name('waiter.response');
+	Route::post('report/sales-value-ordered', [ReportsController::class, 'waiterSales'])
+        ->name('waiter.sales');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

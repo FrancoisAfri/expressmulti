@@ -107,4 +107,16 @@ class OrdersProducts extends Model
         else return 0;
 
     }
+	
+	// get sum amount per orders
+	public static function totalAmountOrder($id)
+    {
+
+        $totalAmount =  OrdersProducts::where('order_id', $id)->get();
+
+        if (isset($totalAmount))
+            return $totalAmount->sum('amount');
+        else return 0;
+
+    }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Restaurant;
 use App\Http\Controllers\Controller;
 use App\Models\HRPerson;
 use App\Models\EventsServices;
+use App\Models\Orders;
+use App\Models\OrdersProducts;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use Illuminate\Http\Request;
@@ -101,11 +103,13 @@ class ReportsController extends Controller
         $data['date'] = $date;
         $data['creditAnalysis'] = InvoicePayments::getDailySummary(0);
 */
+		$date = Carbon::now();
         $data['employees'] = $employees;
+		$data['date'] = date("d/m/Y");
         return view('restaurant.reports.index')->with($data);
     }
 
-
+	// waiter response reports
     public function waiterResponse(Request $request){
 
         $this->validate($request, [
@@ -127,12 +131,46 @@ class ReportsController extends Controller
         }
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
+		$data['date'] = date("d/m/Y");
         $data['user'] = Auth::user()->load('person');
+		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
         //$data['totalPatients'] = EventsServices::getTotalPatients($startDate, $endDate)->count();
         $data['services'] = $services;
-		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
 		
         return view('restaurant.reports.waiter_response_time')->with($data);
+    }
+	
+	// waiter sales reports
+	public function waiterSales(Request $request){
+
+        $this->validate($request, [
+            //'employee_id' => 'required',
+            'date_range' => 'required',
+        ]);
+		
+		$employee_id = !empty($request['employee_id']) ? $request['employee_id'] : 0; 
+        $dates = explode("to", $request['date_range']);
+        $startDate = $dates[0];
+        $endDate = $dates[1];
+		$orders = Orders::getOrdersReports($startDate, $endDate, $employee_id);
+		// calculate response time
+		$totals = $amount = 0;
+		foreach ($orders as $order) 
+		{
+			$amount = OrdersProducts::totalAmountOrder($order->id);
+			$order->total_amount = $amount;
+			$totals = $totals + $amount;
+			$amount = 0;
+			$order->totals = $totals;
+        }
+		
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+		$data['date'] = date("d/m/Y");
+        $data['user'] = Auth::user()->load('person');
+        $data['orders'] = $orders;
+		
+        return view('restaurant.reports.waiter_sales')->with($data);
     }
 	
 	// calculate response time

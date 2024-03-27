@@ -39,6 +39,16 @@ class Orders extends Model
     {
         return $this->belongsTo(Tables::class, 'table_id', 'id');
     }
+	// relationship between order and waiter	
+	public function waiters(): BelongsTo
+    {
+        return $this->belongsTo(HRPerson::class, 'waiter', 'id');
+    }
+	// relationship between order and scan	
+	public function scans(): BelongsTo
+    {
+        return $this->belongsTo(TableScans::class, 'scan_id', 'id');
+    }
 	// get all oders
 	public static function getOrders()
     {
@@ -61,5 +71,16 @@ class Orders extends Model
 					->where(['table_id' => $table])
 					->where(['scan_id' => $scan])
 					->get();
+    }
+	public static function getOrdersReports($startDate, $endDate,$employee_id)
+    {
+       
+		$query = Orders::with('table', 'waiters', 'products', 'scans')
+			->whereBetween('created_at', [$startDate, $endDate]);
+			if (!empty($employee_id)) {
+				$query->where('waiter', $employee_id);
+			}
+            
+		 return  $query->get();
     }
 }
