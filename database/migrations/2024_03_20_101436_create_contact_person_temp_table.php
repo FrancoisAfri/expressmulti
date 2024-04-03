@@ -15,6 +15,12 @@ class CreateContactPersonTempTable extends Migration
     {
         Schema::create('contact_person_temp', function (Blueprint $table) {
             $table->id();
+			$table->uuid('uuid')->index();
+            $table->integer('company_id')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('surname')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }

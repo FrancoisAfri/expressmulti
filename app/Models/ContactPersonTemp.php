@@ -19,7 +19,7 @@ class ContactPersonTemp extends Model
 	protected $table = 'contacts_person';
 
     protected $fillable = [
-        'company_id', 'first_name', 'surname', 'date_of_birth', 'email',
+        'company_id', 'first_name', 'surname', 'email',
         'contact_number','status',
     ];
 	
