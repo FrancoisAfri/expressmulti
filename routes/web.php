@@ -318,6 +318,10 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('waiter.response');
 	Route::post('report/sales-value-ordered', [ReportsController::class, 'waiterSales'])
         ->name('waiter.sales');
+	Route::post('reviews-reports', [ReportsController::class, 'reviewsReports'])
+        ->name('reviews.reports');
+	Route::post('popular-dishes', [ReportsController::class, 'popularDishes'])
+        ->name('popular.dishes');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

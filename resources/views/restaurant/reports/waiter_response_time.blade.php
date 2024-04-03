@@ -109,7 +109,7 @@
 													</tr>
 												@endforeach
 											@else
-												<p class="dropdown-item">No records to display</p>
+												<tr><td colspan="9"><p class="dropdown-item">No records to display</p></td></tr>
 											@endif
                                     </tbody>
                                 </table>

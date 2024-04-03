@@ -18,7 +18,7 @@ class TableScans extends Model
 
     protected $fillable = [
         'ip_address', 'status', 'table_id', 'nickname', 'scan_time', 'closed_time'
-		, 'comment', 'q_four', 'q_three', 'q_two', 'q_one'
+		, 'comment', 'q_four', 'q_three', 'q_two', 'q_one', 'waiter'
 
     ];
 
@@ -35,7 +35,13 @@ class TableScans extends Model
     public function table(): BelongsTo
     {
         return $this->belongsTo(Tables::class, 'table_id', 'id');
-    } //getTableStatus
+    } 
+	public function waiters(): BelongsTo
+    {
+        return $this->belongsTo(HRPerson::class, 'waiter', 'id');
+    } 
+	
+	//getTableStatus
 	
 	public static function getTableStatus($id)
     {
@@ -59,5 +65,15 @@ class TableScans extends Model
 		if (!empty($scan->nickname))
 			return $scan->nickname;
 		else return '';
+    }
+	// get reports
+	public static function getReports($startDate, $endDate)
+    {
+		
+		$query = TableScans::with('table', 'waiters')
+			->whereBetween('created_at', [$startDate, $endDate])
+			->whereNotNull('q_one');
+            
+		 return  $query->get();
     }
 }

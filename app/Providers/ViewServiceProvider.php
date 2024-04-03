@@ -157,6 +157,8 @@ class ViewServiceProvider extends ServiceProvider
 			$urlData = explode('/',$url);
 			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
 			
+			// get table details;
+			$tableDetails = Tables::where('id', $tableID)->first();
 			// get table last scanned
 			$scanned = TableScans::where('table_id', $tableID)->where('status', 1)->orderBy('id', 'desc')->first();
 
@@ -165,13 +167,12 @@ class ViewServiceProvider extends ServiceProvider
 				$scanned = TableScans::create([
 					'ip_address' => '',
 					'table_id' => $tableID,
+					'waiter' => $tableDetails->employee_id,
 					'scan_time' => time(),
 					'status' => 1,
 				]); 
 			}
 			$scannedTime = !empty($scanned->scan_time) ? strtotime($scanned->scan_time) : 0;
-			// get table details;
-			$tableDetails = Tables::where('id', $tableID)->first();
 			
 			// get avatar
 			if (!empty($tableDetails->employee_id))

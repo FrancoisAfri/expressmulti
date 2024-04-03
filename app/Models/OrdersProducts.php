@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\DB;
 
 class OrdersProducts extends Model
 {
@@ -117,6 +118,18 @@ class OrdersProducts extends Model
         if (isset($totalAmount))
             return $totalAmount->sum('amount');
         else return 0;
+
+    }
+	// get most sold items
+	public static function popularDishes()
+    {
+
+        $query = OrdersProducts::with('item')->select('product_id', DB::raw('SUM(quantity) as total_sold'))
+                ->groupBy('product_id')
+                ->orderByDesc('total_sold')
+                ->take(30);
+       
+		 return  $query->get();
 
     }
 }

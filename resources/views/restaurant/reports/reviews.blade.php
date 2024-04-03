@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mt-3 align-content-left">
-                                <p><b>Sales/Value of orders placed</b></p>
+                                <p><b>Reviews</b></p>
                             </div>
                         </div>
                     </div>
@@ -80,32 +80,38 @@
                                 <table class="table mt-4 table-centered">
                                     <thead>
                                     <tr>
-										<th>Order No</th>
+										<th>Arrived At</th>
+										<th>Departed At</th>
 										<th>Table</th>
 										<th>Waiter</th>
 										<th>Patron</th>
-										<th>Status</th>
-                                        <th>Total Amount</th>
+										<th>Ambience</th>
+                                        <th>Food</th>
+                                        <th>Service</th>
+                                        <th>Rate Our App</th>
+                                        <th>Additional Comments</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-										@if (!empty($orders))
-												@foreach($orders as $order)
+										@if (!empty($scans))
+												@foreach($scans as $scan)
 													<tr>
-														<td>{{ !empty($order->order_no) ? $order->order_no : '' }}</td>
-														<td>{{ !empty($order->table->name) ? $order->table->name : '' }}</td>
-														<td>{{ !empty($order->waiters->first_name) && !empty($order->waiters->surname) ? $order->waiters->first_name." ".$order->waiters->surname : '' }}</td>
-														<td>{{ !empty($order->scans->nickname)  ? $order->scans->nickname : '' }}</td>
-														<td>{{ !empty($order->status)  && $order->status == 1 ? 'Open' : 'ACk' }}</td>
-														<td>{{ !empty($order->total_amount) ? 'R ' . number_format($order->total_amount, 2) : '' }}</td>
+														<td>{{ !empty($scan->scan_time) ? date('d/m/Y-H:s:i', $scan->scan_time) : '' }}</td>
+														<td>{{ !empty($scan->closed_time) ? date('d/m/Y-H:s:i', $scan->closed_time) : '' }}</td>
+														<td>{{ !empty($scan->table->name) ? $scan->table->name : '' }}</td>
+														<td>{{ !empty($scan->waiters->first_name) && !empty($scan->waiters->surname) ? $scan->waiters->first_name." ".$scan->waiters->surname : '' }}</td>
+														<td>{{ !empty($scan->nickname)  ? $scan->nickname : '' }}</td>
+														<td>{{ !empty($scan->q_one)  ? $scan->q_one : '' }}</td>
+														<td>{{ !empty($scan->q_two)  ? $scan->q_two : '' }}</td>
+														<td>{{ !empty($scan->q_three)  ? $scan->q_three : '' }}</td>
+														<td>{{ !empty($scan->q_four)  ? $scan->q_four : '' }}</td>
+														<td>{{ !empty($scan->comment)  ? $scan->comment : '' }}</td>
 													</tr>
 												@endforeach
-												<tr>
-													<td colspan="5" style="text-align: right"><b>Grand Total</b></td>
-													<td>{{ !empty($order->totals) ? 'R ' . number_format($order->totals, 2) : '' }}</td>
-												</tr>
 											@else
-												<tr><td colspan="6"><p class="dropdown-item">No records to display</p></td></tr>
+												<tr>
+													<td colspan="10"><p class="dropdown-item">No records to display</p></td>
+												</tr>
 											@endif
                                     </tbody>
                                 </table>

@@ -118,6 +118,7 @@ class RestaurantGuestController extends Controller
 			$scanned = TableScans::create([
 					'ip_address' => $ipAddress,
 					'table_id' => $table->id,
+					'waiter' => $table->employee_id,
 					'scan_time' => time(),
 					'status' => 1,
 				]);

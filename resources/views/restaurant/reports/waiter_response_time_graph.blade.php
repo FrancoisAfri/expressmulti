@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mt-3 align-content-left">
-                                <p><b>Sales/Value of orders placed</b></p>
+                                <p><b>Waiter Response Time</b></p>
                             </div>
                         </div>
                     </div>
@@ -79,33 +79,37 @@
                             <div class="table-responsive">
                                 <table class="table mt-4 table-centered">
                                     <thead>
-                                    <tr>
-										<th>Order No</th>
-										<th>Table</th>
-										<th>Waiter</th>
-										<th>Patron</th>
-										<th>Status</th>
-                                        <th>Total Amount</th>
-                                    </tr>
+										<tr>
+											<th>Request type</th>
+											<th>Table</th>
+											<th>Waiter</th>
+											<th>Patron</th>
+											<th>Request Details</th>
+											<th>Request time</th>
+											<th>Acknowledged time</th>
+											<th>Response time</th>
+											<th>Status</th>
+										</tr>
                                     </thead>
                                     <tbody>
-										@if (!empty($orders))
-												@foreach($orders as $order)
+										@if (!empty($services))
+												@foreach($services as $service)
 													<tr>
-														<td>{{ !empty($order->order_no) ? $order->order_no : '' }}</td>
-														<td>{{ !empty($order->table->name) ? $order->table->name : '' }}</td>
-														<td>{{ !empty($order->waiters->first_name) && !empty($order->waiters->surname) ? $order->waiters->first_name." ".$order->waiters->surname : '' }}</td>
-														<td>{{ !empty($order->scans->nickname)  ? $order->scans->nickname : '' }}</td>
-														<td>{{ !empty($order->status)  && $order->status == 1 ? 'Open' : 'ACk' }}</td>
-														<td>{{ !empty($order->total_amount) ? 'R ' . number_format($order->total_amount, 2) : '' }}</td>
+														<td>{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
+														<td>{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
+														<td>{{ !empty($service->waiters->first_name) && !empty($service->waiters->surname) ? $service->waiters->first_name." ".$service->waiters->surname : '' }}</td>
+														<td>{{ !empty($service->scans->nickname)  ? $service->scans->nickname : '' }}</td>
+														<td>{{ !empty($service->service) ? $service->service : '' }} </br>
+															{{ !empty($service->comment) ? $service->comment : '' }}
+														</td>
+														<td>{{ !empty($service->requested_time) ? date('d/m/Y-H:s:i', $service->requested_time) : '' }}</td>
+														<td>{{ !empty($service->completed_time) ? date('d/m/Y-H:s:i', $service->completed_time) : '' }}</td>
+														<td>{{ !empty($service->response_time) ? $service->response_time : '' }}</td>
+														<td>{{ !empty($service->status)  && $service->status == 1 ? 'Open' : 'ACk' }}</td>
 													</tr>
 												@endforeach
-												<tr>
-													<td colspan="5" style="text-align: right"><b>Grand Total</b></td>
-													<td>{{ !empty($order->totals) ? 'R ' . number_format($order->totals, 2) : '' }}</td>
-												</tr>
 											@else
-												<tr><td colspan="6"><p class="dropdown-item">No records to display</p></td></tr>
+												<tr><td colspan="9"><p class="dropdown-item">No records to display</p></td></tr>
 											@endif
                                     </tbody>
                                 </table>
@@ -123,17 +127,6 @@
 									Back
 								</button>
 							</div>
-
-							<button id="libBtnWrap" onclick="libPrint()" class="btn btn-primary waves-effect waves-light"><i
-									class="mdi mdi-printer mr-1"></i> Print
-							</button>
-
-							<a class="btn btn-blue waves-effect waves-light"
-							   href="" target="_blank">
-								<i class="mdi mdi-arrow-down-circle-outline mr-1"></i>
-								Download
-							</a>
-
 						</div>
 					</div>
                 </div> <!-- end card-box -->

@@ -7,6 +7,7 @@ use App\Models\HRPerson;
 use App\Models\EventsServices;
 use App\Models\Orders;
 use App\Models\OrdersProducts;
+use App\Models\TableScans;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use Illuminate\Http\Request;
@@ -101,8 +102,10 @@ class ReportsController extends Controller
         $data['medicalScheme'] = InvoicePayments::getDailySummaryForType(4)->sum('paid');
         $data['user'] = Auth::user()->load('person');
         $data['date'] = $date;
-        $data['creditAnalysis'] = InvoicePayments::getDailySummary(0);
 */
+		$dishes = OrdersProducts::popularDishes();
+		//return $dishes;
+        $data['dishes'] = $dishes;
 		$date = Carbon::now();
         $data['employees'] = $employees;
 		$data['date'] = date("d/m/Y");
@@ -137,7 +140,7 @@ class ReportsController extends Controller
         //$data['totalPatients'] = EventsServices::getTotalPatients($startDate, $endDate)->count();
         $data['services'] = $services;
 		
-        return view('restaurant.reports.waiter_response_time')->with($data);
+        return view('restaurant.reports.waiter_response_time_graph')->with($data);
     }
 	
 	// waiter sales reports
@@ -171,6 +174,45 @@ class ReportsController extends Controller
         $data['orders'] = $orders;
 		
         return view('restaurant.reports.waiter_sales')->with($data);
+    }
+	// waiter sales reports
+	public function reviewsReports(Request $request){
+
+        $this->validate($request, [
+            'date_range' => 'required',
+        ]);
+		
+		$dates = explode("to", $request['date_range']);
+        $startDate = $dates[0];
+        $endDate = $dates[1];
+		$scans = TableScans::getReports($startDate, $endDate);
+
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+		$data['date'] = date("d/m/Y");
+        $data['user'] = Auth::user()->load('person');
+        $data['scans'] = $scans;
+		
+        return view('restaurant.reports.reviews_graph')->with($data);
+    }
+	public function popularDishes(){
+
+        $this->validate($request, [
+            'date_range' => 'required',
+        ]);
+		
+		$dates = explode("to", $request['date_range']);
+        $startDate = $dates[0];
+        $endDate = $dates[1];
+		$scans = TableScans::getReports($startDate, $endDate);
+
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+		$data['date'] = date("d/m/Y");
+        $data['user'] = Auth::user()->load('person');
+        $data['scans'] = $scans;
+		
+        return view('restaurant.reports.popular_dishes_graph')->with($data);
     }
 	
 	// calculate response time

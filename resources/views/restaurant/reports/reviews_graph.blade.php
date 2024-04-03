@@ -68,49 +68,38 @@
                     </div>
                     <!-- end row -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="mt-3 align-content-left">
-                                <p><b>Sales/Value of orders placed</b></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table mt-4 table-centered">
-                                    <thead>
-                                    <tr>
-										<th>Order No</th>
-										<th>Table</th>
-										<th>Waiter</th>
-										<th>Patron</th>
-										<th>Status</th>
-                                        <th>Total Amount</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-										@if (!empty($orders))
-												@foreach($orders as $order)
-													<tr>
-														<td>{{ !empty($order->order_no) ? $order->order_no : '' }}</td>
-														<td>{{ !empty($order->table->name) ? $order->table->name : '' }}</td>
-														<td>{{ !empty($order->waiters->first_name) && !empty($order->waiters->surname) ? $order->waiters->first_name." ".$order->waiters->surname : '' }}</td>
-														<td>{{ !empty($order->scans->nickname)  ? $order->scans->nickname : '' }}</td>
-														<td>{{ !empty($order->status)  && $order->status == 1 ? 'Open' : 'ACk' }}</td>
-														<td>{{ !empty($order->total_amount) ? 'R ' . number_format($order->total_amount, 2) : '' }}</td>
-													</tr>
-												@endforeach
-												<tr>
-													<td colspan="5" style="text-align: right"><b>Grand Total</b></td>
-													<td>{{ !empty($order->totals) ? 'R ' . number_format($order->totals, 2) : '' }}</td>
-												</tr>
-											@else
-												<tr><td colspan="6"><p class="dropdown-item">No records to display</p></td></tr>
-											@endif
-                                    </tbody>
-                                </table>
-                            </div> <!-- end table-responsive -->
-                        </div> <!-- end col -->
+                        <div class="col-xl-4 col-md-6 order-1">
+							<div class="card">
+								<div class="card-body">
+									<div class="card-widgets">
+										<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+										<a data-toggle="collapse" href="#cardCollpase3" role="button" aria-expanded="false" aria-controls="cardCollpase3"><i class="mdi mdi-minus"></i></a>
+										<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+									</div>
+									<h4 class="header-title mb-0">Reviews</h4>
+
+									<div id="cardCollpase3" class="collapse pt-3 show">
+										<div class="text-center">
+											<div id="total-users" data-colors="#3283f6,#43bee1,#e3eaef,#fcc015"></div>
+											<div class="row mt-3">
+												<div class="col-4">
+													<p class="text-muted font-15 mb-1 text-truncate">Target</p>
+													<h4><i class="fe-arrow-down text-danger mr-1"></i>18k</h4>
+												</div>
+												<div class="col-4">
+													<p class="text-muted font-15 mb-1 text-truncate">Last week</p>
+													<h4><i class="fe-arrow-up text-success mr-1"></i>3.25k</h4>
+												</div>
+												<div class="col-4">
+													<p class="text-muted font-15 mb-1 text-truncate">Last Month</p>
+													<h4><i class="fe-arrow-up text-success mr-1"></i>28k</h4>
+												</div>
+											</div> <!-- end row -->
+										</div>
+									</div> <!-- collapsed end -->
+								</div> <!-- end card-body -->
+							</div> <!-- end card-->
+						</div> <!-- end col-->
                     </div>
                     <!-- end row -->
                     <div class="mt-4 mb-1">
