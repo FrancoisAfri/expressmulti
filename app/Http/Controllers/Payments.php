@@ -85,9 +85,10 @@ class Payments extends Controller {
 	}
 	
     public function itn(Request $request, Payfast $payfast) {
+		
         // Verify the payment status.
 		$status = 'COMPLETE';
-        $this->createnewclient($request->get("m_payment_id"), $status, $request->get('item_name'));
+        $this->createnewclient($request->get("m_payment_id"), $status);
     }
 
     private function addNewCardTokenOrUpdateTransation($m_payment_id, $status, $itemName) {
@@ -125,14 +126,15 @@ class Payments extends Controller {
     }
 	
 	// create new account after payment
-	private function createnewclient($m_payment_id, $status, $itemName) {
-        
+	private function createnewclient($m_payment_id, $status) {
+       
 		//  try {
         switch ($status) {
             case 'COMPLETE': // Things went as planned, update your order status and notify the customer/admins
-                
+                 
 				// create new account and domain
 				$url = $this->clientService->persistClient($m_payment_id);
+				echo $url;
                 break;
             default: // We've got problems, notify admin to check logs.
 					

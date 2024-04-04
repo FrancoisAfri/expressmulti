@@ -134,7 +134,7 @@ class ClientService
 	public function persistClient($companyID)
     {
 		$company = Companies_temp::find($companyID);
-		$company = $company->load('contacts');
+		$contactTemp = ContactPersonTemp::where('company_id',$company->id)->first();
 		
 		$name = !empty($company->name) ? $company->name : '';
 		$email = !empty($company->email) ? $company->email : '';
@@ -145,11 +145,11 @@ class ClientService
 		$package_id = !empty($company->package_id) ? $company->package_id : 0;
 		$trading_as = !empty($company->trading_as) ? $company->trading_as : '';
 		$vat = !empty($company->vat) ? $company->vat : '';
-		$first_name = !empty($company->contacts->first_name) ? $company->contacts->first_name : '';
-		$surname = !empty($company->contacts->surname) ? $company->contacts->surname : '';
-		$contact_number = !empty($company->contacts->contact_number) ? $company->contacts->contact_number : '';
-		$contact_email = !empty($company->contacts->email) ? $company->contacts->email : '';
-
+		$first_name = !empty($contactTemp->first_name) ? $contactTemp->first_name : '';
+		$surname = !empty($contactTemp->surname) ? $contactTemp->surname : '';
+		$contact_number = !empty($contactTemp->contact_number) ? $contactTemp->contact_number : '';
+		$contact_email = !empty($contactTemp->email) ? $contactTemp->email : '';
+		
 		$clientRecord = Patient::create([
 			'name' => $name,
 			'email' => $email,
@@ -188,6 +188,9 @@ class ClientService
 		$clientRecord['database_name'] = $name;
 		$clientRecord['tenant_url'] = $url;
 		$clientRecord->update();
+		//delete temp company and contact person
+		$company->delete();
+		$contactTemp->delete();
 		
 		return $url;
     }
