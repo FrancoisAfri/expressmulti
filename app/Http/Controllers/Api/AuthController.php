@@ -22,11 +22,12 @@ class AuthController extends \App\Http\Controllers\Controller {
     public function authenticateUser(Request $request) {
         if ($request->has("email") && $request->has("password")) {
             $user = User::where('email', $request->email)->first();
-			$user = $user->load('person');
+								 
             if ($user) {
                 if (Hash::check($request->get('password'), $user->password)) {
                     unset($user->password);
-                    return response()->json(['success' => true, 'user' => $user], Response::HTTP_OK);
+                    $person = $user->load('person');
+                    return response()->json(['success' => true, 'user' => $person], Response::HTTP_OK);
                 } else {
                     return response()->json(['success' => false, 'msg' => 'invalid email or password'], 401);
                 }
