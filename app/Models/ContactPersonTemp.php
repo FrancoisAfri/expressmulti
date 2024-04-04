@@ -16,7 +16,7 @@ class ContactPersonTemp extends Model
         Uuids,
         LogsActivity;
 		
-	protected $table = 'contacts_person';
+	protected $table = 'contact_person_temp';
 
     protected $fillable = [
         'company_id', 'first_name', 'surname', 'email',
