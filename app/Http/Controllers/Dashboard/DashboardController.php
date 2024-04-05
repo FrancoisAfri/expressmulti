@@ -296,7 +296,7 @@ class DashboardController extends Controller
 	// get API tables
 	public function getTablesWaiter($waiter)
 	{
-		$tables = Tables::getWaiterTables($waiter);
+		$tables = Tables::getTablesWaiter($waiter);
 		
 		return response()->json([
             'tables' => $tables
