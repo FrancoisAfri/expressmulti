@@ -28,6 +28,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return auth()->user();
     });
 	
+
+});
+
     Route::post('/auth/logout', [ApiAuthController::class, 'logout']);
 	Route::prefix('/restaurant')->group(function(){
 		Route::get('table/close/{table}', [DashboardController::class, 'closeTable']);
@@ -41,8 +44,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 		Route::get('get-table-status/{table}',[DashboardController::class, 'getTableStatus']);
 		Route::get('get-table-nickname/{table}',[DashboardController::class, 'getTableNickname']);
 	});
-});
-
-
 
 
