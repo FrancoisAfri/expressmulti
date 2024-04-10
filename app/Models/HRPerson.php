@@ -177,5 +177,11 @@ class HRPerson extends Model
             ->selectRaw("(CASE WHEN (gender = 1) THEN 'Female' ELSE 'Male' END) as gender_text")
             ->first();
     }
-
+	
+	public function getWaiterList()
+    {
+        return HRPerson::where('role_id', 4)
+            ->select('first_name', 'surname', 'id as hr_id', 'initial')
+            ->first();
+    }
 }

@@ -34,7 +34,7 @@
                             <div class="auth-logo">
                                 <div class="logo logo-dark">
 									<span class="logo-lg">
-										
+
 									</span>
                                     <h4></h4>
                                 </div>
@@ -75,45 +75,27 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table mt-4 table-centered">
-                                    <thead>
-										<tr>
-											<th>Request type</th>
-											<th>Table</th>
-											<th>Waiter</th>
-											<th>Patron</th>
-											<th>Request Details</th>
-											<th>Request time</th>
-											<th>Acknowledged time</th>
-											<th>Response time</th>
-											<th>Status</th>
-										</tr>
-                                    </thead>
-                                    <tbody>
-										@if (!empty($services))
-												@foreach($services as $service)
-													<tr>
-														<td>{{ !empty($service->service_type) ? $resquest_type[$service->service_type] : '' }}</td>
-														<td>{{ !empty($service->tables->name) ? $service->tables->name : '' }}</td>
-														<td>{{ !empty($service->waiters->first_name) && !empty($service->waiters->surname) ? $service->waiters->first_name." ".$service->waiters->surname : '' }}</td>
-														<td>{{ !empty($service->scans->nickname)  ? $service->scans->nickname : '' }}</td>
-														<td>{{ !empty($service->service) ? $service->service : '' }} </br>
-															{{ !empty($service->comment) ? $service->comment : '' }}
-														</td>
-														<td>{{ !empty($service->requested_time) ? date('d/m/Y-H:s:i', $service->requested_time) : '' }}</td>
-														<td>{{ !empty($service->completed_time) ? date('d/m/Y-H:s:i', $service->completed_time) : '' }}</td>
-														<td>{{ !empty($service->response_time) ? $service->response_time : '' }}</td>
-														<td>{{ !empty($service->status)  && $service->status == 1 ? 'Open' : 'ACk' }}</td>
-													</tr>
-												@endforeach
-											@else
-												<tr><td colspan="9"><p class="dropdown-item">No records to display</p></td></tr>
-											@endif
-                                    </tbody>
-                                </table>
-                            </div> <!-- end table-responsive -->
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="header-title">Projections Vs Actuals</h4>
+                                    <div class="row mt-4 text-center">
+                                        <div class="col-4">
+                                            <p class="text-muted font-15 mb-1 text-truncate">Target</p>
+                                            <h4><i class="fe-arrow-down text-danger mr-1"></i>
+                                               </h4>
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 chartjs-chart">
+                                        <canvas id="projections-actuals-chart" data-colors="#44cf9c,#e3eaef"
+                                                height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
                     <!-- end row -->
@@ -134,47 +116,52 @@
         </div> <!-- content -->
     </div>
 </div>
-<script src="{{ asset('js/vendor.min.js') }}"></script>
-
-<!-- App js -->
-<script src="{{ asset('js/app.min.js') }}"></script>
-<script src="{{ asset('libs/print-js/print.js') }}"></script>
-<script src="{{ asset('libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
-<script src="{{ asset('libs/datatables.net-select/js/dataTables.select.min.js')}}"></script>
-<script src="{{ asset('libs/pdfmake/build/pdfmake.min.js')}}"></script>
-<script src="{{ asset('libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/custom_components/js/modal_ajax_submit.js') }}"></script>
+<script src="{{ asset('js/custom_components/js/deleteAlert.js') }}"></script>
+<script src="{{ asset('js/custom_components/js/deleteModal.js') }}"></script>
+<script src="{{ asset('libs/jquery-mask-plugin/jquery.mask.min.js') }}"></script>
+<script src="{{ asset('libs/autonumeric/autoNumeric-min.js') }}"></script>
+<script src="{{ asset('js/pages/form-masks.init.js') }}"></script>
+<script src="{{ asset('libs/jquery-mask-plugin/jquery.mask.min.js') }}"></script>
 <!-- third party js ends -->
-
-<!-- Datatables init -->
-<script src="{{ asset('js/pages/datatables.init.js')}}"></script>
-
+<!-- Tickets js -->
+<script src="{{ asset('js/pages/tickets.js') }}"></script>
+<script src="{{ asset('libs/parsleyjs/parsley.min.js') }}"></script>
+<script src="{{ asset('libs/intl-tel-input/build/js/intlTelInput.js') }}"></script>
+<script src="{{ asset('js/custom_components/js/sweetalert.min.js') }}"></script>
+<!-- Plugins js-->
+<script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>
+<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
+<script src="{{ asset('libs/selectize/js/standalone/selectize.min.js')}}"></script>
+<script src="{{ asset('libs/chart.js/Chart.bundle.min.js') }} "></script>
+<script src="{{ asset('libs/moment/min/moment.min.js') }} "></script>
+<script src="{{ asset('libs/jquery.scrollto/jquery.scrollTo.min.js') }} "></script>
+<!-- Plugins js-->
+<script src="{{ asset('libs/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
+<script src="{{ asset('libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
+<script src="{{ asset('libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
+<script src="{{ asset('libs/moment/min/moment.min.js')}}"></script>
+<!--<script src="{{ mix('js/app.js') }}"></script>
+     Calendar init 13trElement
+    <script src="{{ asset('js/calendar.js')}}"></script>
+    <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>-->
+<!-- toastr init js-->
+<!-- <script src="{{ asset('js/pages/toastr.init.js')}}"></script>
+    <script src="{{ asset('js/pages/datatables.init.js') }}"></script>-->
+<!-- Dashboar 1 init js-->
+<script src="{{ asset('js/pages/dashboard-2.init.js')}}"></script>
+<script src="{{ asset('js/pages/dashboard-3.init.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
 
     document.getElementById("back_button").onclick = function () {
         location.href = "/restaurant/reports";
     };
 
-    const libInpEl = document.getElementById("libInp");
-    const libBtnWrapEl = document.getElementById("libBtnWrap");
 
-    function libPrint() {
-        libBtnWrapEl.style.display = '@page { size: Letter landscape; }'
-        printJS('libInp', 'html');
-    }
-
-    $('#printInvoice').click(function () {
-        window.print();
-        document.margin = 'none';
-        return true;
-    });
 </script>
 </body>

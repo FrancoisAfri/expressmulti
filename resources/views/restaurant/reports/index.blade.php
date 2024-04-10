@@ -95,7 +95,7 @@
                                                 @endif
                                                 <div class="row">
                                                     <div class="col-lg-8 float-sm-right">
-                                                        <div class="form-group">
+                                                        <!--<div class="form-group">
                                                             <label for="employee_id"> Employees </label>
                                                             <select class="form-control select2 " style="width: 100%;"
 																 id="employee_id" name="employee_id"   data-select2-id="1" tabindex="-1" aria-hidden="true">
@@ -104,7 +104,7 @@
 																	<option value="{{ $employee->id }}">{{ $employee->first_name." ".$employee->surname }}</option>
 																@endforeach
 															</select>
-                                                        </div>
+                                                        </div>-->
 														<div class="form-group">
                                                             <label for="heard"> Date Range </label>
                                                             <input type="text" id="date" name="date_range" class="form-control">

@@ -73,7 +73,7 @@ class EventsServices extends Model
             ->get();
     }
 	// get requests reports 
-	public static function getRequestsReports($startDate, $endDate,$employee_id)
+	public static function getRequestsReports($startDate, $endDate)
     {
        
 		$query = EventsServices::with('tables', 'waiters')
@@ -84,4 +84,24 @@ class EventsServices extends Model
             
 		 return  $query->get();
     }
+	// get requests graphs 
+	public static function getRequestsGraphs($startDate, $endDate, $employee_id)
+    {
+		
+		$totalTimeDifferenceInMinutes = EventsServices::selectRaw('ROUND((SUM(completed_time - requested_time)) / 60) as total_time_difference_in_minutes')
+		->whereBetween('created_at', [$startDate, $endDate])
+		->where('waiter',$employee_id)->first()->total_time_difference_in_minutes;
+		// get total numbers of transactions
+		$totalTransactions = EventsServices::whereBetween('created_at', [$startDate, $endDate])
+		->where('waiter',$employee_id)->count();
+
+		if (!empty($totalTransactions))
+			$avg = $totalTimeDifferenceInMinutes / $totalTransactions;
+		else $avg = 0;
+
+		return $avg;
+	}
 }
+ 
+
+     

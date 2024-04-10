@@ -7,6 +7,7 @@ use App\Models\HRPerson;
 use App\Models\EventsServices;
 use App\Models\Orders;
 use App\Models\OrdersProducts;
+use App\Models\User;
 use App\Models\TableScans;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
@@ -24,7 +25,7 @@ class ReportsController extends Controller
 
     public function __construct()
     {
-       
+
 
     }
 
@@ -36,7 +37,7 @@ class ReportsController extends Controller
      */
     public function index()
     {
-		
+
         $data = $this->breadcrumb(
             'Restaurant',
             'Reports Page',
@@ -46,7 +47,7 @@ class ReportsController extends Controller
         );
 		$employees = HRPerson::where('status',1)->get();
 		//return $employees;
-		
+
 /*
         // age analysis report
         $accountPayments = Accounts::getAccounts();
@@ -119,30 +120,97 @@ class ReportsController extends Controller
             //'employee_id' => 'required',
             'date_range' => 'required',
         ]);
-		
-		$employee_id = !empty($request['employee_id']) ? $request['employee_id'] : 0; 
+
+		//$employee_id = !empty($request['employee_id']) ? $request['employee_id'] : 0;
         $dates = explode("to", $request['date_range']);
         $startDate = $dates[0];
         $endDate = $dates[1];
-		$services = EventsServices::getRequestsReports($startDate, $endDate, $employee_id);
+		$users =  User::select('users.*', 'model_has_roles.*')
+				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+				->where('model_has_roles.role_id', 4)
+				->get();
+		$waiters = $users->load('person');
+
+		//return $waiters;
+		$resultData = array();
+
 		// calculate response time
-		foreach ($services as $service) 
+		foreach ($waiters as $waiter)
 		{
-			$startDates = !empty($service->requested_time) ? date("Y-m-d H:s:i", $service->requested_time) : '';
-			$endDates = !empty($service->completed_time) ? date("Y-m-d H:s:i", $service->completed_time) : '';
-			$service->response_time = $this->responseTime($startDates, $endDates);
+			$formattedData = [];
+			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
+			$formattedData[] = ['year' => $waiter->person->initial, 'value' => $avg];
+			$resultData[$waiter->person->id] = $formattedData;
         }
+		//print_r($resultData);
+		//die('lll');
+		/*$resultData = array();
+
+		// calculate response time
+		foreach ($waiters as $waiter) {
+			$services = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
+
+			// Construct an array with year and value for each entry in the response time data
+			$formattedData = [];
+			foreach ($services as $service) {
+				$formattedData[] = ['year' => $service->year, 'value' => $service->value];
+			}
+
+			// Append the formatted data to the $resultData array using the waiter's ID as the key
+			$resultData[$waiter->person->id] = $formattedData;
+		}
+		*/
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
-		$data['date'] = date("d/m/Y");
+		$data['date'] = $startDate."-".$endDate;
         $data['user'] = Auth::user()->load('person');
 		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
         //$data['totalPatients'] = EventsServices::getTotalPatients($startDate, $endDate)->count();
-        $data['services'] = $services;
-		
-        return view('restaurant.reports.waiter_response_time_graph')->with($data);
+        //$data['services'] = $services;
+        $data['resultData'] = $resultData;
+
+        return view('restaurant.graphs.waiter_response_time_graph')->with($data);
     }
-	
+	//
+	/*
+	public function calculateMonthlyProfit()
+    {
+        $target = $this->CompanyIdentityDetails();
+        $unique = array();
+        $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+        foreach ($months as $month) {
+            $coll = OrdersProducts::getSummaryByMonth($month);
+            if (!empty($target['monthly_revenue_target']))
+                $unique[] = $coll->sum('amount') / $target['monthly_revenue_target'] * 100;
+            else $unique[] = 0;
+        }
+
+        return response($unique, 200);
+    }*/
+	public function getWaiterResponseTime($startDate, $endDate)
+    {
+
+        $users =  User::select('users.*', 'model_has_roles.*')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->where('model_has_roles.role_id', 4)
+            ->get();
+        $waiters = $users->load('person');
+
+        //return $waiters;
+        $resultData = array();
+
+        // calculate response time
+        foreach ($waiters as $waiter)
+        {
+            $formattedData = [];
+            $avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
+            $formattedData[] = ['Waiter' => $waiter->person->initial, 'value' => $avg];
+            $resultData[$waiter->person->id] = $formattedData;
+        }
+
+        return response($resultData, 200);
+    }
 	// waiter sales reports
 	public function waiterSales(Request $request){
 
@@ -150,15 +218,15 @@ class ReportsController extends Controller
             //'employee_id' => 'required',
             'date_range' => 'required',
         ]);
-		
-		$employee_id = !empty($request['employee_id']) ? $request['employee_id'] : 0; 
+
+		$employee_id = !empty($request['employee_id']) ? $request['employee_id'] : 0;
         $dates = explode("to", $request['date_range']);
         $startDate = $dates[0];
         $endDate = $dates[1];
 		$orders = Orders::getOrdersReports($startDate, $endDate, $employee_id);
 		// calculate response time
 		$totals = $amount = 0;
-		foreach ($orders as $order) 
+		foreach ($orders as $order)
 		{
 			$amount = OrdersProducts::totalAmountOrder($order->id);
 			$order->total_amount = $amount;
@@ -166,13 +234,13 @@ class ReportsController extends Controller
 			$amount = 0;
 			$order->totals = $totals;
         }
-		
+
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = date("d/m/Y");
         $data['user'] = Auth::user()->load('person');
         $data['orders'] = $orders;
-		
+
         return view('restaurant.reports.waiter_sales')->with($data);
     }
 	// waiter sales reports
@@ -181,7 +249,7 @@ class ReportsController extends Controller
         $this->validate($request, [
             'date_range' => 'required',
         ]);
-		
+
 		$dates = explode("to", $request['date_range']);
         $startDate = $dates[0];
         $endDate = $dates[1];
@@ -192,15 +260,15 @@ class ReportsController extends Controller
 		$data['date'] = date("d/m/Y");
         $data['user'] = Auth::user()->load('person');
         $data['scans'] = $scans;
-		
-        return view('restaurant.reports.reviews_graph')->with($data);
+
+        return view('restaurant.graphs.reviews_graph')->with($data);
     }
 	public function popularDishes(){
 
         $this->validate($request, [
             'date_range' => 'required',
         ]);
-		
+
 		$dates = explode("to", $request['date_range']);
         $startDate = $dates[0];
         $endDate = $dates[1];
@@ -211,14 +279,14 @@ class ReportsController extends Controller
 		$data['date'] = date("d/m/Y");
         $data['user'] = Auth::user()->load('person');
         $data['scans'] = $scans;
-		
-        return view('restaurant.reports.popular_dishes_graph')->with($data);
+
+        return view('restaurant.graphs.popular_dishes_graph')->with($data);
     }
-	
+
 	// calculate response time
     public function responseTime($startDate, $endDate){
-		
-		
+
+
 		$start = Carbon::parse($startDate);
 		$end = Carbon::parse($endDate);
 
@@ -236,10 +304,10 @@ class ReportsController extends Controller
 		//echo "Difference in minutes: $diffInMinutes\n";
 		//echo "Difference in seconds: $diffInSeconds\n";
 		//echo "Human readable difference: $humanReadableDiff\n";
-		
+
 		return $humanReadableDiff;
-    } 
-	
+    }
+
 	public function medicalAnalysis(){
         $thirty_balance = BillingInvoice::medicAnalysis(1);
     }

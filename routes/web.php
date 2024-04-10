@@ -109,6 +109,7 @@ Route::post('reset_password_with_token', [AccountsController::class, 'resetPassw
 // calculate profit
 
 Route::get('calculateMonthlyProfit', [DashboardController::class, 'calculateMonthlyProfit']);
+Route::get('getWaiterResponseTime', [ReportsController::class, 'getWaiterResponseTime']);
 
 Route::get('getDailyProfit', [DashboardController::class, 'getDailyProfit']);
 
