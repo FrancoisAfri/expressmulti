@@ -489,7 +489,7 @@ class RestaurantGuestController extends Controller
 
         $response = json_decode($responseText);
 
-        $json = array("access_token" => $response->access, "time" => $now);
+        $json = array("access_token" => $response->access_token, "time" => $now);
         file_put_contents($fcmFile . "fcm_token.json", json_encode($json));
         return $response->access_token;
     }
