@@ -30,6 +30,7 @@ class AddNicknameTableScansTable extends Migration
     {
         Schema::table('table_scans', function ($table) {
             $table->dropColumn('nickname');
+            $table->dropColumn('comment');
             $table->dropColumn('scan_time');
             $table->dropColumn('closed_time');
         });

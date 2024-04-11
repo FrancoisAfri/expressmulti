@@ -40,7 +40,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'phone_number', 'google_id',
         'facebook_id', 'password', 'type', 'status',
-        'last_login_at', 'last_login_ip',
+        'last_login_at', 'last_login_ip', 'user_fcm_token',
     ];
 
     /**

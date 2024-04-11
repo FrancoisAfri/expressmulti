@@ -338,10 +338,7 @@ class RestaurantService //implements RestaurantServiceInterface
 						'status' => 1,
 					]);
 							
-			//DB::commit();
-			// call event
-			// Dispatch the event
-			//event(new NewRecordAdded($EventsServices));
+			return $EventsServices;
 		}
 		
     }

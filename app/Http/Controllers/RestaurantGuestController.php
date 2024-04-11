@@ -141,9 +141,16 @@ class RestaurantGuestController extends Controller
      */
     public function serviceRequest(Tables $table, ServiceType $service)
     {
-        //
-		$newRequest = $this->RestaurantService->requestService($table, $service);
+		//
+		$service = $this->RestaurantService->requestService($table, $service);
 		
+		// get waiter user token
+		$waiter = HRPerson::find($service->waiter);
+		$waiter = $waiter->load('user');
+		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
+		// send Push notification
+		$this->sendPush($userFcmToken, $service);
+
         alert()->success('SuccessAlert', "Your: $service->name request have been submitted, It been atttended to");
         activity()->log("New Service Request Added: $service->name ");
 
@@ -254,10 +261,12 @@ class RestaurantGuestController extends Controller
 				'waiter' => $table->employee_id,
 				'status' => 1,
 			]);
-		// call event
-		// Dispatch the event
-		//event(new NewRecordAdded($EventsServices));
-		//alert
+		// get waiter user token
+		$waiter = HRPerson::find($table->employee_id);
+		$waiter = $waiter->load('user');
+		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
+		// send Push notification
+		$this->sendPush($userFcmToken, $EventsServices);
         alert()->success('SuccessAlert', "Your request to close table have been submitted. Your waiter will come to you shortly.");
         activity()->log("New close table Request Added");
 
@@ -327,9 +336,13 @@ class RestaurantGuestController extends Controller
 					'item_id' => $order->id,
 					'status' => 1,
 				]);
-		// call event
-		// Dispatch the event
-		//event(new NewRecordAdded($EventsServices));	
+		// get waiter user token
+		$waiter = HRPerson::find($table->employee_id);
+		$waiter = $waiter->load('user');
+		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
+		// send Push notification
+		$this->sendPush($userFcmToken, $EventsServices);
+		
 		Alert::toast('Your Order have been submitted.', 'success');
 		activity()->log('New Order Added');
 		//return response()->json(['message' => 'success'], 200);
@@ -397,4 +410,142 @@ class RestaurantGuestController extends Controller
         }
 		return $ipAddress;
 	}
+	
+	//This function is needed, because php doesn't have support for base64UrlEncoded strings
+    function base64UrlEncode($text) {
+        return str_replace(
+                ['+', '/', '='],
+                ['-', '_', ''],
+                base64_encode($text)
+        );
+    }
+	
+	public function getGoogleAccessToken() {
+		
+		$fcmFile = base_path('app/Fcm_keys/');
+        $currentTokenString = file_get_contents($fcmFile . "fcm_token.json");
+        $currentToken = json_decode($currentTokenString);
+
+        if ($currentToken->access_token) {
+            if (time() - $currentToken->time < 3590) {
+                return $currentToken->access_token;
+            }
+        }
+        // Read service account details
+        $authConfigString = file_get_contents($fcmFile . "afrixcel-3098e-firebase-adminsdk-9fbd2-4789c8f582.json");
+
+		// Parse service account details
+        $authConfig = json_decode($authConfigString);
+
+		// Read private key from service account details
+        $secret = openssl_get_privatekey($authConfig->private_key);
+
+		// Create the token header
+        $header = json_encode([
+            'typ' => 'JWT',
+            'alg' => 'RS256'
+        ]);
+
+		// Get seconds since 1 January 1970
+        $time = time();
+
+		// Allow 1 minute time deviation between client en server
+        $start = $time - 60;
+        $end = $start + 3600;
+
+		// Create payload
+        $payload = json_encode([
+            "iss" => $authConfig->client_email,
+            "scope" => "https://www.googleapis.com/auth/firebase.messaging",
+            "aud" => "https://oauth2.googleapis.com/token",
+            "exp" => $end,
+            "iat" => $start
+        ]);
+
+		// Encode Header
+        $base64UrlHeader = $this->base64UrlEncode($header);
+
+		// Encode Payload
+        $base64UrlPayload = $this->base64UrlEncode($payload);
+
+		// Create Signature Hash
+        $result = openssl_sign($base64UrlHeader . "." . $base64UrlPayload, $signature, $secret, OPENSSL_ALGO_SHA256);
+
+		// Encode Signature to Base64Url String
+        $base64UrlSignature = $this->base64UrlEncode($signature);
+
+		// Create JWT
+        $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+
+		//-----Request token, with an http post request------
+        $options = array('http' => array(
+                'method' => 'POST',
+                'content' => 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' . $jwt,
+                'header' => "Content-Type: application/x-www-form-urlencoded"
+        ));
+        $context = stream_context_create($options);
+        $now = time();
+        $responseText = file_get_contents("https://oauth2.googleapis.com/token", false, $context);
+
+        $response = json_decode($responseText);
+
+        $json = array("access_token" => $response->access, "time" => $now);
+        file_put_contents($fcmFile . "fcm_token.json", json_encode($json));
+        return $response->access_token;
+    }
+	
+	public function sendPush($userFcmToken, $service) {
+
+        $apiurl = 'https://fcm.googleapis.com/v1/projects/afrixcel-3098e/messages:send';
+
+        $headers = [
+            'Authorization: Bearer ' . $this->getGoogleAccessToken(),
+            'Content-Type: application/json'
+        ];
+
+        $data = array(
+            'id' => $service->id,
+            "uuid" => $service->uuid, 
+            "item_id" => $service->item_id,
+            "table_id" => $service->table_id,
+            "scan_id" => $service->scan_id,
+            "service_type" => $service->service_type,
+            "requested_time" => $service->requested_time,
+            "completed_time" => null,
+            "service" => $service->service,
+            "status" => "1",
+            "comment" => $service->comment,
+            "created_at" => $service->created_at,
+            "updated_at" => $service->updated_at,
+            "waiter" => $service->waiter,
+            "table_name" => $service->tables->name,
+        );
+        //The $in_app_module array above can be empty - I use this to send variables in to my app when it is opened, so the user sees a popup module with the message additional to the generic task tray notification.
+
+        $message = [
+            'message' => array(
+                "token" => $userFcmToken,
+                "data" => $data,
+                "android" => array("priority" => "high"),
+                "apns" => array("headers" => array("apns-priority" => "5"))
+            )
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiurl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
+
+        $result = curl_exec($ch);
+
+        if ($result === FALSE) {
+            //Failed
+            die('Curl failed: ' . curl_error($ch));
+        }
+
+        curl_close($ch);
+    }
 }
