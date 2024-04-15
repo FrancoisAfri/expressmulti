@@ -25,7 +25,7 @@ class AuthController extends \App\Http\Controllers\Controller {
 								 
             if ($user) {
                 if (Hash::check($request->get('password'), $user->password)) {
-					$user->fcm_token = !empty($request->fcm_token) ? $request->fcm_token : '';
+					$user->user_fcm_token = !empty($request->user_fcm_token) ? $request->user_fcm_token : '';
                     $user->update();
                     unset($user->password);
                     $person = $user->load('person');
