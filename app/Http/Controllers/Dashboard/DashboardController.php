@@ -331,4 +331,62 @@ class DashboardController extends Controller
             'user' => $person
         ]);
 	}
+	public function closeTableAPI(Tables $table)
+    {
+        $this->RestaurantService->closeTable($table); 
+        return response()->json([
+            'success' => 'true'
+        ]);
+		
+    }
+	// close service
+	public function closeServiceAPI(EventsServices $service)
+    {
+		
+        $this->RestaurantService->closeService($service); 
+        return response()->json([
+            'success' => 'true'
+        ]);
+		
+    }
+	// close request
+	public function closeRequestAPI(EventsServices $close)
+    {
+		
+        $this->RestaurantService->closeRequest($close); 
+        return response()->json([
+            'success' => 'true'
+        ]);
+		
+    }
+	// close request
+	public function closeDeniedRequestAPI(EventsServices $close)
+    {
+        $this->RestaurantService->closeDeniedRequest($close); 
+        return response()->json([
+            'success' => 'true'
+        ]);
+		
+    }
+	// close order
+	public function closeOrderAPI(EventsServices $order)
+    {
+		//return $order;
+        $this->RestaurantService->closeOrders($order); 
+	    return response()->json([
+			'success' => 'true'
+		]);
+		
+    }
+    // delete order
+	// close order
+	public function deleteOrderAPI(EventsServices $order)
+    {
+		//return $order;
+        $this->RestaurantService->deleteOrders($order); 
+        return response()->json([
+            'success' => 'true'
+        ]);
+		
+    }
 }
