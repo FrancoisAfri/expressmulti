@@ -519,12 +519,14 @@ class RestaurantGuestController extends Controller
             "updated_at" => $service->updated_at,
             "waiter" => $service->waiter,
             "table_name" => $service->tables->name,
+
         );
         //The $in_app_module array above can be empty - I use this to send variables in to my app when it is opened, so the user sees a popup module with the message additional to the generic task tray notification.
 
         $message = [
             'message' => array(
                 "token" => $userFcmToken,
+				"notification" => array("title" => "New service request", "body" => $data["service"]),
                 "data" => $data,
                 "android" => array("priority" => "high"),
                 "apns" => array("headers" => array("apns-priority" => "5"))

@@ -184,4 +184,11 @@ class HRPerson extends Model
             ->select('first_name', 'surname', 'id as hr_id', 'initial')
             ->first();
     }
+	public function getWaiterStatus($waiter)
+    {
+        $user = HRPerson::with('user')->where('id',$waiter)->first();
+		if (!empty($user->user->online) && $user->user->online == 1)
+			return 1;
+		else return 0;
+    }
 }

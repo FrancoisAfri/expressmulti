@@ -320,4 +320,15 @@ class DashboardController extends Controller
             'nickname' => $nickname
         ]);
 	}
+	// get API tables nickname 
+	public function changeWaiterStatus(User $user)
+	{
+		$user->online == 1 ? $status = 0 : $status = 1;
+        $user->online = $status;
+        $user->update();
+		$person = $user->load('person');
+		return response()->json([
+            'user' => $person
+        ]);
+	}
 }

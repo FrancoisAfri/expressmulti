@@ -154,10 +154,15 @@
 																<span>
 																	 {{ !empty($table->employees->first_name) && !empty($table->employees->surname) ? $table->employees->first_name." ".$table->employees->surname : ''}}
 																</span>
+																@if (!empty(\App\Models\HRPerson::getWaiterStatus($table->employee_id)) && \App\Models\HRPerson::getWaiterStatus($table->employee_id) == 1)
+																	<span style="display: inline-block;width: 15px; height: 15px;  border-radius: 50%; background-color: green; margin-left: 5px;"></span>
+																@else
+																	<span style="display: inline-block;width: 15px; height: 15px;  border-radius: 50%; background-color: gray; margin-left: 5px;"></span>
+																@endif
 															</td>
 															<td>
 																<span>
-																	 {{ $table->number_customer ?? ''}}
+																	 {{ $table->number_customer ?? ''}} 
 																</span>
 															</td>
 															<td>

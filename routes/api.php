@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 		Route::get('get-tables/{waiter}',[DashboardController::class, 'getTablesWaiter']);
 		Route::get('get-table-status/{table}',[DashboardController::class, 'getTableStatus']);
 		Route::get('get-table-nickname/{table}',[DashboardController::class, 'getTableNickname']);
+		Route::post('change-waiter-status/{user}',[DashboardController::class, 'changeWaiterStatus']);
 	});
 
 
