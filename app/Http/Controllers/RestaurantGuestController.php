@@ -504,20 +504,20 @@ class RestaurantGuestController extends Controller
         ];
 
         $data = array(
-            'id' => $service->id,
+            'id' => "$service->id",
             "uuid" => $service->uuid, 
-            "item_id" => $service->item_id,
-            "table_id" => $service->table_id,
-            "scan_id" => $service->scan_id,
-            "service_type" => $service->service_type,
-            "requested_time" => $service->requested_time,
-            "completed_time" => null,
+            "item_id" => "$service->item_id",
+            "table_id" => "$service->table_id",
+            "scan_id" => "$service->scan_id",
+            "service_type" => "$service->service_type",
+            "requested_time" => "$service->requested_time",
+            "completed_time" => "",
             "service" => $service->service,
             "status" => "1",
             "comment" => $service->comment,
             "created_at" => $service->created_at,
             "updated_at" => $service->updated_at,
-            "waiter" => $service->waiter,
+            "waiter" => "$service->waiter",
             "table_name" => $service->tables->name,
 
         );
