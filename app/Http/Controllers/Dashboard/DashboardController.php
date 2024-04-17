@@ -297,8 +297,12 @@ class DashboardController extends Controller
 	public function getTablesWaiter($waiter)
 	{
 		$tables = Tables::getTablesWaiter($waiter);
-		
-		return response()->json([
+		foreach ($tables as $table) 
+		{
+			$table->table_status = TableScans::getTableStatus($table->id);
+		}
+		return $tables;
+		return return response()->json([
             'tables' => $tables
         ]);
 	}
