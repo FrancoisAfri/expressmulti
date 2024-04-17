@@ -34,7 +34,7 @@
 											<div class="trash">
 												<a href="/restaurant/cart-trash/{{$cart->id}}"><i class="fa-solid fa-trash text-danger"></i></a>
 											</div>
-											<textarea id="comment" name="comment" rows="3" cols="12" disabled>{{ $cart->comment ?? ''}}</textarea>
+											<textarea id="comment" name="comment" rows="5" cols="12" disabled>{{ $cart->comment ?? ''}}</textarea>
 										</div>
 									</div>
 								@endforeach
