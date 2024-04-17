@@ -18,8 +18,6 @@
                             @if (count($carts) > 0)
 								@foreach($carts as $cart)
 									<div class="mb-3 d-flex gap-2">
-										<img src="{{ asset('libs/eatsome/img/veg.jpeg') }}"
-											alt="" class="img-fluid">
 										<div>
 											<h6 class="fw-bold mb-1">{{ $cart->product->name ?? ''}} </h6>
 											<p class="mb-0">{{ (!empty($cart->price)) ? 'R ' .number_format($cart->price, 2) : ''}}</p>
