@@ -302,9 +302,9 @@ class DashboardController extends Controller
 			$table->table_status = TableScans::getTableStatus($table->id);
 		}
 		return $tables;
-		return return response()->json([
+		/*return response()->json([
             'tables' => $tables
-        ]);
+        ]);*/
 	}
 	// get API tables status 
 	public function getTableStatus($table)
