@@ -122,14 +122,16 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="description"> Video <span class="text-danger"></span></label>
-                                        <input type="file" id="video" name="video" data-plugins="dropify"
-                                   data-allowed-file-extensions='["mp4"]' data-show-upload="false">
-									<strong> Allowed filetypes are mp4. Max upload size allowed is 20M.</strong>
-                                    </div>
-                                </div>
+                                    <label for="video">Video <span class="text-danger"></span></label>
+                                    <input type="text" class="form-control"
+                                               id="video" name="video" placeholder="Enter Video ID">
+                                    <div class="invalid-feedback">
+                                            Please provide Video ID.
+                                        </div>
+										<strong>Video ID is what comes after "?v=" Example  https://www.youtube.com/watch?v=aqz-KE-bpKQ. Therefore, the ID of the video is aqz-KE-bpKQ..</strong>
+                                 </div>
                             </div>
+                            
 							<div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">

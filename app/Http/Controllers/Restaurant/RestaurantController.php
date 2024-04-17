@@ -286,6 +286,7 @@ class RestaurantController extends Controller
 		$calories = !empty($request['calories']) ? $request['calories'] : 0;
 		$price = !empty($request['price']) ? $request['price'] : 0;
 		$sequence = !empty($request['sequence']) ? $request['sequence'] : 0;
+		$video = !empty($request['video']) ? $request['video'] : '';
 		// save  menu
 		$menuRecord = new Menu();
         $menuRecord->name = $name;
@@ -297,9 +298,10 @@ class RestaurantController extends Controller
         $menuRecord->price = $price;
         $menuRecord->status = 1;
         $menuRecord->sequence = $sequence;
+        $menuRecord->video = $video;
         $menuRecord->save();
 		// save video
-		if ($request->hasFile('video')) {
+		/*if ($request->hasFile('video')) {
 			$video_name = $request->file('video');
 			$File_ex = $video_name->extension();
 			$filePath = 'com_vid' . ' ' . str_random(16) . '.' . $File_ex;
@@ -314,7 +316,7 @@ class RestaurantController extends Controller
 			// save vidoe details into the database
 			$menuRecord->video = $filePath;
 			$menuRecord->update();
-		}
+		}*/
 		//Upload Image picture
         if ($request->hasFile('image')) {
             $fileExt = $request->file('image')->extension();
@@ -346,6 +348,7 @@ class RestaurantController extends Controller
 		$calories = !empty($request['calories']) ? $request['calories'] : 0;
 		$price = !empty($request['price']) ? $request['price'] : 0;
 		$sequence = !empty($request['sequence']) ? $request['sequence'] : 0;
+		$video = !empty($request['video']) ? $request['video'] : '';
 		// update  menu
 		$menu->name= $name;
 		$menu->description = $description;
@@ -355,10 +358,11 @@ class RestaurantController extends Controller
 		$menu->calories= $calories;
 		$menu->price= $price;
 		$menu->sequence = $sequence;
+		$menu->video = $video;
 		$menu->update();
 		
 		// save video
-		if ($request->hasFile('video')) {
+		/*if ($request->hasFile('video')) {
 			$video_name = $request->file('video');
 			$File_ex = $video_name->extension();
 			$filePath = 'com_vid' . ' ' . str_random(16) . '.' . $File_ex;
@@ -373,7 +377,7 @@ class RestaurantController extends Controller
 			// save vidoe details into the database
 			$menu->video = $filePath;
 			$menu->update();
-		}
+		}*/
 		//Upload Image picture
         if ($request->hasFile('image')) {
 			

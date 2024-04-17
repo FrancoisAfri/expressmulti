@@ -99,10 +99,7 @@
                                 </td>
 								<td>
 									@if(!empty($menu->video))
-										<video  height="60" width="150" controls>
-											<source src="{{URL::asset("videos/menus/$menu->video")}}" type="video/mp4">
-											Your browser does not support the video tag.
-										</video>
+										<iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $menu->video}}" frameborder="0" allowfullscreen></iframe>
 									@else
 										<!-- Placeholder video or any alternative content -->
 										<span>No video Available</span>

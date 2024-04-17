@@ -145,13 +145,13 @@
                                     </div>
                                 </div>
 								<div class="form-group mb-3">
-                                    <label for="validationCustom04">Video</label>
-                                    <div class="mt-3">
-                                        <input type="file" id="video" name="video" data-plugins="dropify"
-											data-allowed-file-extensions='["mp4"]' data-show-upload="false">
-											
-                                        <p class="text-muted text-center mt-2 mb-0"><strong> Allowed filetypes are mp4. Max upload size allowed is 20M.</strong></p>
+                                    <label for="video">Video <span class="text-danger"></span></label>
+                                    <input type="text" class="form-control"
+                                               id="video" name="video" placeholder="Enter Video ID">
+                                    <div class="invalid-feedback">
+                                            Please provide Video ID.
                                     </div>
+									<strong>Video ID is what comes after "?v=" Example  https://www.youtube.com/watch?v=aqz-KE-bpKQ. Therefore, the ID of the video is aqz-KE-bpKQ..</strong>
                                 </div>
 								<div class="row">
                                 <div class="col-md-6">
