@@ -44,14 +44,14 @@
         console.log(test)
 
         const dataArray = [
-            {y: "FK", a: 87},
-            {y: "AT", a: 75},
-            {y: "John", a: 50},
-            {y: "Apple", a: 75},
-            {y: "lissa", a: 50},
-            {y: "Jay", a: 38},
-            {y: "Ali", a: 72},
-            {y: "soso", a: 600}
+            {y: "Jason", a: 87},
+            {y: "Ali", a: 75},
+            {y: "Musa", a: 50},
+            {y: "Mike", a: 75},
+            {y: "Lissa", a: 50},
+            {y: "John", a: 38},
+            {y: "Jacques", a: 37},
+            {y: "soso", a: 12}
         ];
 
         const chart = e("#statistics-chart");
