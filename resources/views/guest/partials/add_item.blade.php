@@ -16,7 +16,7 @@
 			  <div class="p-3">
 				 <p class="fw-bold mb-1" id="name"></p> </h6> <h6 class="small text-muted mb-6" id="ingredients"></h6> <h3 class="small text-muted mb-6" id="calories"></h3>
 				 
-				 <h6 class="small text-muted mb-6" id="price">
+				 <h6 class="fw-bold mb-1" id="price">
 			  </div>
 			</div>
 			<div class="modal-footer d-flex justify-content-between">
