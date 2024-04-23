@@ -436,8 +436,7 @@
 					var videoContainer = document.getElementById('videoContainer');
 					videoContainer.innerHTML = '<iframe width="100%" height="250" src="https://www.youtube.com/embed/' + video + '" frameborder="0" allowfullscreen></iframe>';
 				}
-				else $('#videoContainer').show();
-				//$('#calories').html(calories + ' kJ');
+				else $('#videoContainer').hide();
 				$('#comment').html(comment);
 				$('#item_image').attr('src', path);
 				modal.find('#quantity').val(quantity);

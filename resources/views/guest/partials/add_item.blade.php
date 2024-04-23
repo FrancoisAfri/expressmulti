@@ -11,7 +11,7 @@
             <div id="success-alert"></div>
 		   <div class="modal-body p-0">
 				<div>
-					<img id="item_image" src="" alt=""  width="250" height="250" class="img-fluid">
+					<img id="item_image" src="" alt=""  width="300">
 				</div>
 				<div class="p-3">
 				 <p class="fw-bold mb-1" id="name"></p> </h6> <h6 class="small text-muted mb-6" id="ingredients"></h6> <h3 class="small text-muted mb-6" id="calories"></h3>
