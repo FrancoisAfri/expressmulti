@@ -147,7 +147,7 @@
 								<div class="form-group mb-3">
                                     <label for="video">Video <span class="text-danger"></span></label>
                                     <input type="text" class="form-control"
-                                               id="video" name="video" placeholder="Enter Video ID">
+                                               id="video" name="video" value="{{ $menu->video ?? ''}}" placeholder="Enter Video ID">
                                     <div class="invalid-feedback">
                                             Please provide Video ID.
                                     </div>

@@ -11,13 +11,13 @@
             <div id="success-alert"></div>
 		   <div class="modal-body p-0">
 				<div>
-					<img id="item_image" src="" alt="" class="img-fluid">
+					<img id="item_image" src="" alt=""  width="250" height="250" class="img-fluid">
 				</div>
-			  <div class="p-3">
+				<div class="p-3">
 				 <p class="fw-bold mb-1" id="name"></p> </h6> <h6 class="small text-muted mb-6" id="ingredients"></h6> <h3 class="small text-muted mb-6" id="calories"></h3>
-				 
 				 <h6 class="fw-bold mb-1" id="price">
-			  </div>
+				</div>
+				<div id="videoContainer"></div>
 			</div>
 			<div class="modal-footer d-flex justify-content-between">
 				<div class="btn btn-white border border-danger col-3 px-1">

@@ -54,9 +54,8 @@ class RestaurantGuestController extends Controller
     public function index(Request $request, Tables $table)
     {
 		if (empty($table->status))
-		{
 			return redirect()->route("qr_code.activate");
-		}
+		
 		// get table last scanned
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
 		$type = !empty($request['type']) ? $request['type'] : 0;
@@ -95,7 +94,17 @@ class RestaurantGuestController extends Controller
 			if (!empty($user->id))
 				$data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
 			else $data['avatar'] = '';
-
+			// get avatar
+			if (!empty($table->employee_id))
+			{
+				$hrUser = HRPerson::where('id', $table->employee_id)->first();
+				$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
+				$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
+			}
+			else $profilePic = '';
+			
+			$data['scanned'] = $scanned;
+			$data['profilePic'] = $profilePic;
 			$data['menus'] = Menu::getMenus($type, $category);
 			$data['manager'] = $manager;
 			$data['menuTypes'] = $menuTypes;
@@ -113,19 +122,30 @@ class RestaurantGuestController extends Controller
 		}
 		else
 		{
-			$ipAddress = $this->getUserIpAddress($request);
-			
-			$scanned = TableScans::create([
-					'ip_address' => $ipAddress,
-					'table_id' => $table->id,
-					'waiter' => $table->employee_id,
-					'scan_time' => time(),
-					'status' => 1,
-				]);
-			$localName = '';
-			//Alert::toast('This table have been closed !!! Please scan a qr code', 'warning');
-			return back();
+			$data['table'] = $table;
+			return view('guest.index')->with($data);
 		}
+    }
+	// open a new table
+	public function openTable(Request $request, Tables $table)
+    {
+		
+		// open new table
+		$nickname = !empty($request['nickname']) ? $request['nickname'] : '';
+		$ipAddress = $this->getUserIpAddress($request);
+			
+		$scanned = TableScans::create([
+				'ip_address' => $ipAddress,
+				'table_id' => $table->id,
+				'waiter' => $table->employee_id,
+				'scan_time' => time(),
+				'nickname' => $nickname,
+				'status' => 1,
+			]);
+		
+		Alert::toast('Thank you!!! You may continue.', 'success');
+        activity()->log('Table Name Saved Successfully');
+		return back();
     }
 	// inactive qr code
 	public function inactiveQrcode()
@@ -273,16 +293,6 @@ class RestaurantGuestController extends Controller
 		return redirect()->back();
     }
 	
-	public function saveName(Request $request, TableScans $scan)
-    {
-		$nickname = !empty($request['nickname']) ? $request['nickname'] : '';
-		
-		$scan->nickname = $nickname;
-		$scan->update();
-		Alert::toast('Thank you!!! You may continue.', 'success');
-        activity()->log('Table Name Saved Successfully');
-		return back();
-    }
 	//save order
 	public function storeOrder(Tables $table)
     {

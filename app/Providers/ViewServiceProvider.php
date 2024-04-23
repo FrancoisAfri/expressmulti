@@ -52,7 +52,11 @@ class ViewServiceProvider extends ServiceProvider
 		view()->composer('layouts.main-guest', function ($view) use ( $companyDetails) {
 
 			$logo = (!empty($companyDetails['company_logo_url'])) ? asset('uploads/'.$companyDetails['company_logo_url'] ) : asset('images/logo_default.png');
+			$url = url()->current();
+			$urlData = explode('/',$url);
+			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
 
+			$data['tableID'] = $tableID;
             $data['logo'] = $logo;
 
             $view->with($data);
@@ -136,58 +140,5 @@ class ViewServiceProvider extends ServiceProvider
             $view->with($data);
         });
 		
-		view()->composer('layouts.main-guest', function ($view) use ( $companyDetails) {
-
-			//
-			$url = url()->current();
-			$urlData = explode('/',$url);
-			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
-			// get table last scanned
-			$scanned = TableScans::where('table_id', $tableID)->where('status', 1)->orderBy('id', 'desc')->first();
-
-			$data['localName'] = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
-			$data['tableID'] = $tableID;
-			$data['tableDetails'] = Tables::where('id', $tableID)->first();
-			$data['services'] = ServiceType::getServices();
-            $view->with($data);
-        });
-		view()->composer('guest.index', function ($view) use ( $companyDetails) {
-
-			$url = url()->current();
-			$urlData = explode('/',$url);
-			$tableID = !empty($urlData[5]) ? $urlData[5] : 0;
-			
-			// get table details;
-			$tableDetails = Tables::where('id', $tableID)->first();
-			// get table last scanned
-			$scanned = TableScans::where('table_id', $tableID)->where('status', 1)->orderBy('id', 'desc')->first();
-
-			if (empty($scanned->status))
-			{
-				$scanned = TableScans::create([
-					'ip_address' => '',
-					'table_id' => $tableID,
-					'waiter' => $tableDetails->employee_id,
-					'scan_time' => time(),
-					'status' => 1,
-				]); 
-			}
-			$scannedTime = !empty($scanned->scan_time) ? strtotime($scanned->scan_time) : 0;
-			
-			// get avatar
-			if (!empty($tableDetails->employee_id))
-			{
-				$hrUser = HRPerson::where('id', $tableDetails->employee_id)->first();
-				$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
-				$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
-			}
-			else $profilePic = '';
-			$data['scanned'] = $scanned;
-			$data['scannedTime'] = $scannedTime;
-			$data['profilePic'] = $profilePic;
-			$data['tableDetails'] = $tableDetails;
-			$data['services'] = ServiceType::getServices();
-            $view->with($data);
-        });
     }
 }

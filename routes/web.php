@@ -35,29 +35,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Auth::routes(['register' => false]);
 
 Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
 Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
 
-// table scanning /2
-Route::get('restaurant/scan/{table}', [RestaurantGuestController::class, 'index'])
+// table scanning
+Route::get('restaurant/scan/{table}', 'App\Http\Controllers\RestaurantGuestController@index')
     ->name('seating.plan');
-Route::get('restaurant/qr_code/', [RestaurantGuestController::class, 'inactiveQrcode'])
+Route::get('restaurant/qr_code/', 'App\Http\Controllers\RestaurantGuestController@inactiveQrcode')
     ->name('qr_code.activate');
-//Route::get('//{table}', 'App\Http\Controllers\RestaurantGuestController@');
 Route::get('/restaurant/close-table/request/{table}', 'App\Http\Controllers\RestaurantGuestController@closeTableRequest');
 Route::get('/restaurant/cart-trash/{cart}', 'App\Http\Controllers\RestaurantGuestController@deleteItems');
 Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
 Route::post('restaurant/rate/service/{scan}', 'App\Http\Controllers\RestaurantGuestController@rateService');
-Route::post('restaurant/add-table-name/{scan}', 'App\Http\Controllers\RestaurantGuestController@saveName');
-//Route::post('restaurant/make-order/{scan}', [RestaurantGuestController::class, 'storeOrder'])
- //       ->name('order.store');
+Route::post('restaurant/add-table-name/{table}', 'App\Http\Controllers\RestaurantGuestController@openTable');
 Route::post('restaurant/add-cart/{table}/{menu}', [RestaurantGuestController::class, 'saveCart'])
         ->name('cart.store');
 Route::get('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
         ->name('order.store');
 	
+Auth::routes(['register' => false]);
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
     ->name('2fa.index');
 

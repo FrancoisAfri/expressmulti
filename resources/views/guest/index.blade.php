@@ -49,7 +49,7 @@
 									<a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
-								<h3 class="header-title mb-0">Table:{{$tableDetails->name}} | Seat(s):{{$tableDetails->number_customer}}</h5>
+								<h3 class="header-title mb-0">Table:{{$table->name}} | Seat(s):{{$table->number_customer}}</h5>
 								<!--<h4 class="header-title mb-0">Quick Service Buttons</h4>-->
 								<div id="cardCollpase5" class="collapse pt-3 show">
 									<div class="table-responsive">
@@ -75,7 +75,7 @@
 											</div>
 										</div>
 										<div class="col">
-											<h5 class="mb-1 mt-2 font-16">Waiter:{{ !empty($tableDetails->employees->first_name) && !empty($tableDetails->employees->surname) ? $tableDetails->employees->first_name.' '.$tableDetails->employees->surname : ''}}</h5>
+											<h5 class="mb-1 mt-2 font-16">Waiter:{{ !empty($table->employees->first_name) && !empty($table->employees->surname) ? $table->employees->first_name.' '.$table->employees->surname : ''}}</h5>
 										</div>
 									</div> <!-- end row-->
 								</div> <!-- end widget-rounded-circle-->
@@ -169,6 +169,7 @@
 																		 data-id="{{ $menu->id }}"
 																			data-name="{{ (!empty($menu->name)) ? $menu->name : ''}}"
 																			data-path="{{ asset('images/menus/'.$menu->image) }}"
+																			data-video="{{ (!empty($menu->video)) ? $menu->video : ''}}"
 																			data-ingredients="{{ (!empty($menu->ingredients)) ? $menu->ingredients : ''}}"
 																			data-price="{{ (!empty($menu->price)) ? 'R ' .number_format($menu->price, 2) : ''}}"
 																			data-calories="{{ (!empty($menu->calories)) ? $menu->calories : ''}}"
@@ -334,7 +335,7 @@
 								<h4 class="header-title mb-0">Please enter your details</h4>
 								<div id="cardCollpase7" class="collapse pt-3 show">
 									<div class="table-responsive">
-										<form action="/restaurant/add-table-name/{{$scanned->id}}" method="POST">
+										<form action="/restaurant/add-table-name/{{$table->id}}" method="POST">
 										{{ csrf_field() }}
 											<div class="box-body">
 												<div class="form-group">
@@ -345,7 +346,7 @@
 												</div>
 											</div>
 											<div class="box-footer">
-												<input type="submit" id="submit-review" name="submit-review" class="btn btn-primary btn-flat pull-right" value="Save">
+												<input type="submit" id="submit" name="submit" class="btn btn-primary btn-flat pull-right" value="Submit">
 											</div>
 										</form>
 									</div> <!-- end table responsive-->
@@ -402,7 +403,7 @@
     <script>
 			
 		$(function () {
-			
+			$('#videoContainer').hide();
 			// get view more modal
 			let menuID;
             $('#view-more-modal').on('show.bs.modal', function (e) {
@@ -417,6 +418,7 @@
 				let comment = btnEdit.data('comment');
 				let calories = btnEdit.data('calories');
 				let path = btnEdit.data('path');
+				let video = btnEdit.data('video');
 
                 let modal = $(this);
 				$('#name').html(name);
@@ -427,6 +429,14 @@
 				if (calories !== '') {
 					$('#calories').html(calories + ' kJ');
 				}
+				if (video !== '') 
+				{
+					$('#videoContainer').show();
+					// Replace 'YOUR_YOUTUBE_VIDEO_ID' with your actual YouTube video ID
+					var videoContainer = document.getElementById('videoContainer');
+					videoContainer.innerHTML = '<iframe width="100%" height="250" src="https://www.youtube.com/embed/' + video + '" frameborder="0" allowfullscreen></iframe>';
+				}
+				else $('#videoContainer').show();
 				//$('#calories').html(calories + ' kJ');
 				$('#comment').html(comment);
 				$('#item_image').attr('src', path);

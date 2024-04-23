@@ -17,14 +17,11 @@
                     </button>
 					<img src="{{ $logo }}" style="width:90px;height:70px;">
                 </li>
-                
             </ul>
             <div class="clearfix"></div>
         </div>
     </div>
-
     <!-- end topnav-->
-
     @include('sweetalert::alert')
     <!-- ============================================================== -->
     <!-- Start Page Content here -->
