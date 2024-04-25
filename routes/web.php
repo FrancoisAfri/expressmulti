@@ -211,7 +211,10 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
 	Route::PATCH('update/package/{package}', [PatientControlle::class, 'packageUpdate'])
         ->name('package.update');
 });
+// call check page usage middleware
+Route::middleware('check.page.usage')->get('/restaurant/terminal', [RestaurantController::class, 'showTerminal']);
 
+// restaurant middleware
 Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
 	Route::get('download-qr-code/{table}', [RestaurantController::class, 'printQrCode'])
@@ -327,6 +330,8 @@ Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock
 // Api for services
 Route::get('/api/get-check-services', [RestaurantController::class, 'create'])
         ->name('service.check');
+Route::get('/api/get-terminal-services', [RestaurantController::class, 'checkTerminal'])
+        ->name('service_terminal.check');
 Route::get('/api/get-latest-services', [DashboardController::class, 'getLatestServices'])
         ->name('services.load');
 /// payfast payment 

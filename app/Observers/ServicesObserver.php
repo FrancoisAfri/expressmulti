@@ -16,8 +16,9 @@ class ServicesObserver
     public function created(EventsServices $eventsServices)
     {
 		//Session::put('event_session', true);
-		// insert into table
+		// insert into tables
 		DB::table('events_sessions_check')->insert(['session_check' => '1']);
+		DB::table('events_check_terminal')->insert(['session_check' => '1']);
     }
 
     /**

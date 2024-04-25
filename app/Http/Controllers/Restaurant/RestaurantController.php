@@ -14,6 +14,8 @@ use App\Http\Requests\RestaurantSettingsRequest;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use App\Models\Categories;
+use App\Models\modules;
+use App\Models\EventsServices;
 use App\Models\RestaurantSetup;
 use App\Models\Menu;
 use App\Models\MenuType;
@@ -60,6 +62,7 @@ class RestaurantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+	 // check new request for main dashboard
     public function create()
     {
         $value = ['table_updated' => 0];
@@ -69,6 +72,19 @@ class RestaurantController extends Controller
 		{
 			$value = ['table_updated' => true];
 			DB::table('events_sessions_check')->truncate();
+		}
+        return response()->json($value);
+    }  
+	// check new request for terminal
+	public function checkTerminal()
+    {
+        $value = ['table_updated' => 0];
+		$tableCreated = DB::table('events_check_terminal')
+            ->select('session_check')->where('session_check',1 )->first();
+		if (!empty($tableCreated->session_check) && $tableCreated->session_check == 1)
+		{
+			$value = ['table_updated' => true];
+			DB::table('events_check_terminal')->truncate();
 		}
         return response()->json($value);
     }
@@ -676,6 +692,28 @@ class RestaurantController extends Controller
 			return redirect()->back();
 		}
         
+    }
+	// showterminal
+	public function showTerminal()
+    {
+		
+		$services = EventsServices::getRequests();
+		$setup = RestaurantSetup::where('id',1)->first();
+		// get this year and month
+		$year = date('Y');
+		$month = date('m');
+		$data['activeModules'] = modules::where('active', 1)->get();
+        $data['normal'] = !empty($setup->colour_one) ? $setup->colour_one : '';
+        $data['moderate'] = !empty($setup->colour_two) ? $setup->colour_two : '';
+        $data['critical'] = !empty($setup->colour_three) ? $setup->colour_three : '';
+        $data['normal_mins'] = !empty($setup->mins_one) ? $setup->mins_one : '';
+        $data['moderate_mins'] = !empty($setup->mins_two) ? $setup->mins_two : '';
+        $data['critical_mins'] = !empty($setup->mins_three) ? $setup->mins_three : '';
+		$data['services'] = $services;
+		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
+		$data['users'] = HRPerson::getAllUsers();
+		$data['tables'] = Tables::getTablesScans();
+		return view('restaurant.terminal')->with($data);
     }
 
 	/*

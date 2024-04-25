@@ -95,6 +95,16 @@ class RestaurantSeeder extends Seeder
         $ribbon->font_awesome = 'fe-settings';
         $ribbon->access_level = 4;
         $module->addRibbon($ribbon);
+		
+		$ribbon = new module_ribbons();
+        $ribbon->active = 1;
+        $ribbon->sort_order = 8;
+        $ribbon->ribbon_name = 'Terminal';
+        $ribbon->description = 'Terminal';
+        $ribbon->ribbon_path = 'restaurant/terminal';
+        $ribbon->font_awesome = 'fas fa-tachometer-alt';
+        $ribbon->access_level = 2;
+        $module->addRibbon($ribbon);
 
 
         $Access = new module_access();
