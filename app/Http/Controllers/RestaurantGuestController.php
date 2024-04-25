@@ -18,6 +18,7 @@ use App\Models\Orders;
 use App\Models\EventsServices;
 use App\Models\OrdersProducts;
 use App\Models\OrdersServices;
+use App\Models\OrdersHistory;
 use App\Models\ServiceType;
 use App\Models\HRPerson;
 use App\Models\CloseRequests;
@@ -142,7 +143,28 @@ class RestaurantGuestController extends Controller
 				'nickname' => $nickname,
 				'status' => 1,
 			]);
-		
+		// send waiter notification
+		$action = "New Table Scanned" ;	
+		$history = OrdersHistory::create([
+			'action' => $action,
+			'table_id' => $table->id,
+		]);
+		$EventsServices = EventsServices::create([
+						'scan_id' => $scanned->id,
+						'table_id' => $table->id,
+						'service_type' => 1,
+						'waiter' => $table->employee_id,
+						'requested_time' => time(),
+						'service' => "New Table Scanned",
+						'item_id' => 0,
+						'status' => 1,
+					]);
+		// get waiter user token
+		$waiter = HRPerson::find($table->employee_id);
+		$waiter = $waiter->load('user');
+		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
+		// send Push notification
+		$this->sendPush($userFcmToken, $EventsServices);
 		Alert::toast('Thank you!!! You may continue.', 'success');
         activity()->log('Table Name Saved Successfully');
 		return back();
