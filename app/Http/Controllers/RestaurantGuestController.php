@@ -156,7 +156,7 @@ class RestaurantGuestController extends Controller
 						'waiter' => $table->employee_id,
 						'requested_time' => time(),
 						'service' => "New Table Scanned",
-						'item_id' => 0,
+						'item_id' => 0, 
 						'status' => 1,
 					]);
 		// get waiter user token
