@@ -326,7 +326,7 @@ class RestaurantService //implements RestaurantServiceInterface
 					'action' => $action,
 					'table_id' => $table->id,
 				]);
-				// save services requestService
+				// save services requestService 
 				$EventsServices = EventsServices::create([
 						'scan_id' => $scanned->id,
 						'table_id' => $table->id,
