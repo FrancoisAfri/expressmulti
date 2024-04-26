@@ -20,6 +20,7 @@ use App\Http\Controllers\Patients\PatientControlle;
 use App\Http\Controllers\Restaurant\RestaurantController;
 use App\Http\Controllers\Restaurant\ReportsController;
 use App\Http\Controllers\RestaurantGuestController;
+use App\Http\Controllers\PageUsageController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -213,6 +214,8 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
 });
 // call check page usage middleware
 Route::middleware('check.page.usage')->get('/restaurant/terminal', [RestaurantController::class, 'showTerminal']);
+//Route::post('/logout-other-user', 'PageUsageController@logoutOtherUser')->name('logout-other-user');
+Route::post('/logout-other-user', 'App\Http\Controllers\PageUsageController@logoutOtherUser')->name('logout-other-user');
 
 // restaurant middleware
 Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
