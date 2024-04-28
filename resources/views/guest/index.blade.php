@@ -197,7 +197,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<!--<div class="row">
 					<div class="col-md-6 col-xl-3">
 						<div class="widget-rounded-circle card-box">
 							<div class="row align-items-center">
@@ -210,11 +210,10 @@
 									<h5 class="mb-1 mt-2 font-16">{{!empty($manager->first_name) && !empty($manager->surname) ? $manager->first_name.' '.$manager->surname : ''}}</h5>
 									<p class="mb-2 text-muted">Manager</p>
 								</div>
-							</div> <!-- end row-->
-						</div> <!-- end widget-rounded-circle-->
+							</div> 
+						</div>
 					</div>
-					<!-- end col-->
-				</div>
+				</div> -->
 				<div class="row">
 					<div class="col-xl-12">
 						<div class="card">
