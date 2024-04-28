@@ -60,47 +60,6 @@
 															{{ !empty($service->comment) ? $service->comment : '' }}
 														</td>
 														<td class="{{ $service->id . 'trElement' }}"><input type="text" id="{{ $service->id . 'stopWatchDisplay' }}" style="font-weight:bold; font-family:cursive; width: 120px; height: 23px;" value="" class="input-sm" disabled></td>
-														@if ($service->service_type == 1)
-															
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$service->id}}, 'closeservice');"
-																		aria-label="Close">
-																	<span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
-																</button>
-															</td>
-															<td></td>
-														@elseif ($service->service_type == 2) 
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$service->id}}, 'closeorder');"
-																		aria-label="Close">
-																	<span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
-																</button>
-															</td>
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$service->id}}, 'deleteorder');"
-																		aria-label="Close">
-																	<span aria-hidden="true" class="mdi mdi-delete" style="color: #8B0000;"></span>
-																</button>
-															</td>
-														@elseif ($service->service_type == 3)
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$service->id}}, 'closerequest');"
-																		aria-label="Close">
-																	<span aria-hidden="true" class="mdi mdi-check" style="color: #013220;"></span>
-																</button> 
-															</td>
-															<td>
-																<button type="button" class="close mark-as-read"
-																		onclick="postData({{$service->id}}, 'closedenied');"
-																		aria-label="Close">
-																	<span aria-hidden="true" class="mdi mdi-delete" style="color: #8B0000;"></span>
-																</button>
-															</td>
-														@endif
 													</tr>
 												@endforeach
 											@else
