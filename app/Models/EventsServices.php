@@ -55,7 +55,7 @@ class EventsServices extends Model
     {
         return EventsServices::with('tables')
             ->where('status', 1)
-			->orderBy('id', 'DESC');
+			->orderBy('id', 'DESC')
             ->get();
     }
 	// get waiter requests
