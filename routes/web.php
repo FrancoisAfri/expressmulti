@@ -328,6 +328,14 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('popular.dishes');
 	Route::post('report/financials', [ReportsController::class, 'financials'])
         ->name('reports.financials');
+	Route::post('reports/popular-quick-services', [ReportsController::class, 'popularServices'])
+        ->name('popular.services');
+	Route::post('reports/popular-dish', [ReportsController::class, 'popularDishes'])
+        ->name('popular.services');
+	Route::post('reports/turnaround-table-size', [ReportsController::class, 'turnaroundTableSize'])
+        ->name('popular.services');
+	Route::post('reports/restaurant-turnaround-time', [ReportsController::class, 'restaurantTurnaroundTime'])
+        ->name('popular.services');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

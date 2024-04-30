@@ -159,7 +159,7 @@
                                          aria-labelledby="custom-v-pills-res_average_response-tab">
                                         <div>
                                             <h4 class="header-title">Restaurant Average response time </h4>
-                                            <form class="needs-validation" novalidate method="Post" action=""
+                                            <form class="needs-validation" novalidate method="Post" action="reports/restaurant-turnaround-time"
                                                   enctype="multipart/form-data" >
                                                 {{ csrf_field() }}
                                                 @if (count($errors) > 0)
@@ -175,7 +175,7 @@
                                                     <div class="col-lg-8 float-sm-right">
                                                         <div class="form-group">
                                                             <label for="heard"> Date Range </label>
-                                                            <input type="text" id="date" name="date_range" class="form-control">
+                                                            <input type="text" id="date_res_time" name="date_range" class="form-control">
                                                         </div>
                                                     </div>
                                                 </div> <!-- end row -->
@@ -197,7 +197,7 @@
                                             <h4 class="header-title">  Table turnaround time per table size</h4>
                                                 <br>
                                                 <br>
-                                            <form class="needs-validation" novalidate method="Post" action=""
+                                            <form class="needs-validation" novalidate method="Post" action="reports/turnaround-table-size"
                                                   enctype="multipart/form-data" >
                                                 {{ csrf_field() }}
                                                 @if (count($errors) > 0)
@@ -223,7 +223,7 @@
                                                     <div class="col-sm-6">
                                                         <div class="text-sm-right mt-2 mt-sm-0">
                                                             <button type="submit"  class="btn btn-success">
-                                                                <i class="mdi mdi-truck-fast mr-1"></i>Print</button>
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Generate</button>
                                                         </div>
                                                     </div> <!-- end col -->
                                                 </div> <!-- end row -->
@@ -233,19 +233,9 @@
                                     </div>
 									<div class="tab-pane fade" id="custom-v-pills-popular_dishes" role="tabpanel"
                                          aria-labelledby="custom-v-pills-popular_dishes-tab">
-                                        <div>
-                                            <h4 class="header-title"> Popular Items</h4>
-                                             @include('restaurant.reports.popular_dishes')
-                                            <!-- Pay with Paypal box-->
-                                        </div>
-                                    </div>
-									<div class="tab-pane fade" id="custom-v-pills-popular_services" role="tabpanel"
-                                         aria-labelledby="custom-v-pills-popular_services-tab">
-                                        <div>
-                                            <h4 class="header-title"> Most popular "quick" service requests</h4>
+										  <br>
                                                 <br>
-                                                <br>
-                                            <form class="needs-validation" novalidate method="Post" action=""
+                                            <form class="needs-validation" novalidate method="Post" action="reports/popular-dish"
                                                   enctype="multipart/form-data" >
                                                 {{ csrf_field() }}
                                                 @if (count($errors) > 0)
@@ -262,7 +252,7 @@
                                                     <div class="col-lg-8 float-sm-right">
                                                         <div class="form-group">
                                                             <label for="heard"> Date Range </label>
-                                                            <input type="text" id="range-datepicker" name="date_range" class="form-control">
+                                                            <input type="text" id="date_popular" name="date_range" class="form-control">
                                                         </div>
                                                     </div>
                                                 </div> <!-- end row -->
@@ -271,7 +261,45 @@
                                                     <div class="col-sm-6">
                                                         <div class="text-sm-right mt-2 mt-sm-0">
                                                             <button type="submit"  class="btn btn-success">
-                                                                <i class="mdi mdi-truck-fast mr-1"></i>Print</button>
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Generate</button>
+                                                        </div>
+                                                    </div> <!-- end col -->
+                                                </div> <!-- end row -->
+                                            </form>
+                                    </div>
+									<div class="tab-pane fade" id="custom-v-pills-popular_services" role="tabpanel"
+                                         aria-labelledby="custom-v-pills-popular_services-tab">
+                                        <div>
+                                            <h4 class="header-title"> Popular Quick Service requests</h4>
+                                                <br>
+                                                <br>
+                                            <form class="needs-validation" novalidate method="Post" action="reports/popular-quick-services"
+                                                  enctype="multipart/form-data" >
+                                                {{ csrf_field() }}
+                                                @if (count($errors) > 0)
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                                <div class="row">
+                                                    <input type="hidden" name="client_id" value="">
+                                                    <div class="col-lg-8 float-sm-right">
+                                                        <div class="form-group">
+                                                            <label for="heard"> Date Range </label>
+                                                            <input type="text" id="date_quick" name="date_range" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- end row -->
+                                                <div class="row mt-4">
+
+                                                    <div class="col-sm-6">
+                                                        <div class="text-sm-right mt-2 mt-sm-0">
+                                                            <button type="submit"  class="btn btn-success">
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Generate</button>
                                                         </div>
                                                     </div> <!-- end col -->
                                                 </div> <!-- end row -->
@@ -297,16 +325,6 @@
                                                 @endif
                                                 <div class="row">
                                                     <div class="col-lg-8 float-sm-right">
-                                                        <div class="form-group">
-                                                            <label for="employee_id"> Employees </label>
-                                                            <select class="form-control select2 " style="width: 100%;"
-																 id="employee_id" name="employee_id"   data-select2-id="1" tabindex="-1" aria-hidden="true">
-																<option value="0">*** Select Employee ***</option>
-																@foreach ($employees as $employee)
-																	<option value="{{ $employee->id }}">{{ $employee->first_name." ".$employee->surname }}</option>
-																@endforeach
-															</select>
-                                                        </div>
 														<div class="form-group">
                                                             <label for="heard"> Date Range </label>
                                                             <input type="text" id="dates" name="date_range" class="form-control">
@@ -400,6 +418,27 @@
          defaultDate: "today"
      });
 	 $("#date_reviews").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#date_quick").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#date_popular").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#date_res_time").flatpickr({
          altInput: !0,
          mode: "range",
          // altFormat: "F j, y",

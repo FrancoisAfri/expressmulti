@@ -54,5 +54,12 @@ class OrdersServices extends Model
 					->where(['scan_id' => $scan])
 					->get();
     }
+	// most popular services requests
+	public static function mostPopularServices($startDate, $endDate, $serviceID)
+    {
+		$totalTransactions = OrdersServices::whereBetween('created_at', [$startDate, $endDate])
+		->where('service_id',$serviceID)->where('status',2)->count();
 
+		return $totalTransactions;
+    }
 }

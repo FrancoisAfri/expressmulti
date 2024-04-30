@@ -121,10 +121,12 @@ class OrdersProducts extends Model
 
     }
 	// get most sold items
-	public static function popularDishes()
+	public static function popularDishes($startDate, $endDate)
     {
 
-        $query = OrdersProducts::with('item')->select('product_id', DB::raw('SUM(quantity) as total_sold'))
+        $query = OrdersProducts::with('item')
+				->whereBetween('created_at', [$startDate, $endDate])
+				->select('product_id', DB::raw('SUM(quantity) as total_sold'))
                 ->groupBy('product_id')
                 ->orderByDesc('total_sold')
                 ->take(30);
@@ -132,4 +134,6 @@ class OrdersProducts extends Model
 		 return  $query->get();
 
     }
+	
+
 }

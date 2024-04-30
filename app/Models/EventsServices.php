@@ -115,6 +115,36 @@ class EventsServices extends Model
 
 		return $avg;
 	}
+	// get request per table
+	// get requests graphs 
+	public static function getRequestsPerTableGraphs($startDate, $endDate, $tableID)
+    {
+		
+		$requests = EventsServices::select('completed_time', 'requested_time')
+		->whereBetween('created_at', [$startDate, $endDate])
+		->where('table_id',$tableID)->where('status',2)->get();
+		// get total numbers of transactions
+		$totalTransactions = EventsServices::whereBetween('created_at', [$startDate, $endDate])
+		->where('table_id',$tableID)->where('status',2)->count();
+		// get total minutes
+		$totalMinutes = 0;
+		foreach ($requests as $request) {
+			$startTime = !empty($request->requested_time) ? $request->requested_time : 0;
+			$endTime = !empty($request->completed_time) ? $request->completed_time : 0;
+
+			$start = Carbon::parse($startTime);
+			$end = Carbon::parse($endTime);
+
+			$minute = $end->diffInMinutes($start);
+			$totalMinutes = $totalMinutes + $minute;
+        }
+
+		if (!empty($totalTransactions) && !empty($totalMinutes))
+			$avg = $totalMinutes / $totalTransactions;
+		else $avg = 0;
+
+		return $avg;
+	}
 }
  
 

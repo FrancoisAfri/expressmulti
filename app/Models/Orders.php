@@ -83,4 +83,23 @@ class Orders extends Model
             
 		 return  $query->get();
     }
+	
+		// get sum amount per orders
+	public static function totalSalesPerWaiter($startDate, $endDate, $employee_id)
+    {
+
+        $orders =  Orders::whereBetween('created_at', [$startDate, $endDate])
+		->where('waiter',$employee_id)->where('status',2)
+		->get();
+
+		// get total orders
+        $totalAmount = 0;
+		foreach ($orders as $order) 
+		{
+			$amount =  OrdersProducts::where('order_id', $order->id)->sum('amount');
+			$totalAmount = $totalAmount + $amount;
+        }
+
+		return $totalAmount;
+    }
 }

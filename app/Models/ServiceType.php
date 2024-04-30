@@ -31,5 +31,5 @@ class ServiceType extends Model
 	public static function getServices()
     {
         return ServiceType::get();
-    }
+    }	
 }
