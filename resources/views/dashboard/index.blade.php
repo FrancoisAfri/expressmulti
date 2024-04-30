@@ -16,7 +16,6 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="card-widgets">
-                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
                                 <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false"
                                    aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
                                 <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
@@ -81,7 +80,6 @@
 							<div class="card">
 								<div class="card-body">
 									<div class="card-widgets">
-										<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
 										<a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false"
 										   aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
 										<a href="javascript: void(0);" data-toggle="remove"><i
@@ -165,104 +163,7 @@
 					</div>
 				@endif
             @endrole
-            @role('Admin|Owner')
-				@if($activeModules->where('code_name', 'restaurant')->first())
-					<div class="row">
-						<div class="col-12">
-							<div class="card-box widget-inline">
-								<div class="row">
-									<div class="col-sm-6 col-xl-3">
-										<div class="p-2 text-center">
-											<i class="mdi mdi-cash text-primary mdi-24px"></i>
-											<h3>R {{ number_format($totalOrders  , 2, ',', '.')  ?? 0}}</h3>
-											<p class="text-muted font-15 mb-0">Total Orders</p>
-										</div>
-									</div>
-
-									<div class="col-sm-6 col-xl-3">
-										<div class="p-2 text-center">
-											<i class="mdi mdi-eye-outline text-success mdi-24px"></i>
-											<h3>R {{ number_format($monthlyOrders  , 2, ',', '.')  ?? 0}}</h3>
-											<p class="text-muted font-15 mb-0">Monthly Total Orders </p>
-										</div>
-									</div>
-
-									<div class="col-sm-6 col-xl-3">
-										<div class="p-2 text-center">
-											<i class="mdi mdi-cart-arrow-down text-danger mdi-24px"></i>
-											<h3>R {{ number_format($monthlyIncompleteOrders  , 2, ',', '.')  ?? 0}}</h3>
-											<p class="text-muted font-15 mb-0">Monthly Incomplete Orders</p>
-										</div>
-									</div>
-
-									<div class="col-sm-6 col-xl-3">
-										<div class="p-2 text-center">
-											<i class="mdi mdi-basket text-blue mdi-24px"></i>
-											<h3>R {{ number_format($totalIncompleteOrders  , 2, ',', '.')  ?? 0}}</h3>
-											<p class="text-muted font-15 mb-0">Total Incomplete</p>
-										</div>
-									</div>
-
-								</div> <!-- end row -->
-							</div> <!-- end card-box-->
-						</div> <!-- end col-->
-					</div>
-				@endif
-            @endrole
-			@role('Admin|Owner')
-				@if($activeModules->where('code_name', 'restaurant')->first())
-					<div class="row">
-						<div class="col-lg-4">
-							<div class="card-box">
-								<div class="dropdown float-right">
-									<a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown"
-									   aria-expanded="false">
-										<i class="mdi mdi-dots-vertical"></i>
-									</a>
-									<div class="dropdown-menu dropdown-menu-right">
-										<!-- item-->
-										<a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-										<!-- item-->
-										<a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-										<!-- item-->
-										<a href="javascript:void(0);" class="dropdown-item">Profit</a>
-										<!-- item-->
-										<a href="javascript:void(0);" class="dropdown-item">Action</a>
-									</div>
-								</div>
-								<h4 class="header-title mb-0">Total Daily Revenue</h4>
-								<div class="widget-chart text-center" dir="ltr">
-									<div id="total-revenue" class="mt-0" data-colors="#f86262"></div>
-									<h5>Total Revenue Made Today</h5>
-									<h2> R {{ number_format($totalPayment  , 2, ',', '.')  ?? 0}}</h2>
-								</div>
-							</div> <!-- end card-box -->
-						</div> <!-- end col-->
-						<div class="col-xl-8">
-							<div class="card">
-								<div class="card-body">
-									<h4 class="header-title">Projections Vs Actuals</h4>
-									<div class="row mt-4 text-center">
-										<div class="col-4">
-											<p class="text-muted font-15 mb-1 text-truncate">Target</p>
-											<h4><i class="fe-arrow-down text-danger mr-1"></i>
-											R {{ number_format($targetRevenue , 2, ',', '.')  }} </h4>
-										</div>
-										<div class="col-4">
-										</div>
-										<div class="col-4">
-										</div>
-									</div>
-									<div class="mt-3 chartjs-chart">
-										<canvas id="projections-actuals-chart" data-colors="#44cf9c,#e3eaef"
-												height="300"></canvas>
-									</div>
-								</div>
-							</div> <!-- end card-->
-						</div> <!-- end col -->
-					</div>
-				@endif
-            @endrole
+            
 			@include('dashboard.partials.assign_employee')
         </div>
     @endsection
@@ -287,30 +188,8 @@
     <script src="{{ asset('libs/intl-tel-input/build/js/intlTelInput.js') }}"></script>
     <script src="{{ asset('js/custom_components/js/sweetalert.min.js') }}"></script>
     <!-- Plugins js-->
-    <script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('libs/selectize/js/standalone/selectize.min.js')}}"></script>
-    <script src="{{ asset('libs/chart.js/Chart.bundle.min.js') }} "></script>
-    <script src="{{ asset('libs/moment/min/moment.min.js') }} "></script>
-    <script src="{{ asset('libs/jquery.scrollto/jquery.scrollTo.min.js') }} "></script>
-    <!-- Plugins js-->
-    <script src="{{ asset('libs/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
-    <script src="{{ asset('libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-    <script src="{{ asset('libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
-    <script src="{{ asset('libs/moment/min/moment.min.js')}}"></script>
-	<!--<script src="{{ mix('js/app.js') }}"></script>
-     Calendar init 13trElement
-    <script src="{{ asset('js/calendar.js')}}"></script>
-    <script src="{{ asset('libs/jquery-toast-plugin/jquery.toast.min.js')}}"></script>-->
-    <!-- toastr init js-->
-   <!-- <script src="{{ asset('js/pages/toastr.init.js')}}"></script>
-    <script src="{{ asset('js/pages/datatables.init.js') }}"></script>-->
-    <!-- Dashboar 1 init js-->
-    <script src="{{ asset('js/pages/dashboard-2.init.js')}}"></script>
-    <script src="{{ asset('js/pages/dashboard-3.init.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-	<!--<script src="{{ ('resources/js/js/app.js') }}"></script>-->
+    
+	
 	<script src="{{ asset('js/ion.sound.js') }}"></script>
     <script>
 		function postData(id, data) {
@@ -430,17 +309,6 @@
             }, 10000); // Check every 30 second
         })();
 
-
-        (dataColors = $("#total-revenue").data("colors")) && (colors = dataColors.split(","));
-        let options = {
-            series: [{{$dailyData}}],
-            chart: {height: 220, type: "radialBar"},
-            plotOptions: {radialBar: {hollow: {size: "65%"}}},
-            colors: ["#04499a"],
-            labels: ["Revenue"]
-        };
-        (chart = new ApexCharts(document.querySelector("#total-revenue"), options)).render();
-		
 		function increment(taskID) {
 			if (running[taskID] == 1) {
 				setTimeout(function () {

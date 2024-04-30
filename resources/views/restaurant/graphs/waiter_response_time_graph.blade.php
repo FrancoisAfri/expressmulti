@@ -30,22 +30,12 @@
         <div class="content">
             <div class="col-12" id="invoice">
                 <div class="card-box">
-                    <div class="row">
-                        <div class="col-md-6">
-                        </div><!-- end col -->
-                        <div class="col-md-4 offset-md-2">
-                            <div class="mt-3 float-right">
-                                <p class="m-b-10"><strong> Date : {{$date}}</strong> <span
-                                            class="float-right"> &nbsp;&nbsp; </span>
-                                </p>
-                            </div>
-                        </div><!-- end col -->
-                    </div>
+
                             <!-- end row -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="mt-3 align-content-left">
-                                <p><b>Waiter Response Time</b></p>
+                        <div class="col-md-12">
+                            <div class="mt-3">
+                                <p style="text-align:center;"><b>Average Response time per waiter:<strong> {{$date}}</strong></b></p>
                             </div>
                         </div>
                     </div>
@@ -60,6 +50,9 @@
                                             <div id="statistics-chart" data-colors="#44cf9c" style="height: 270px;"
                                                  class="morris-chart mt-3"></div>
                                         </div>
+										<div class="mt-3">
+											<p style="text-align:center;"><b>Waiters</b></p>
+										</div>
                                     </div> <!-- end collapse-->
                                 </div> <!-- end card-body-->
                             </div> <!-- end card-->
@@ -87,7 +80,6 @@
 <!-- Plugins js -->
 <script src="{{ asset('libs/morris.js06/morris.min.js') }}"></script>
 <script src="{{ asset('libs/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('js/custom_components/js/waiter_response.js') }}"></script>
 <!-- App js -->
 <script src="{{ asset('js/app.min.js') }}"></script>
 
@@ -95,6 +87,62 @@
 document.getElementById("back_button").onclick = function () {
         location.href = "/restaurant/reports";
     };
+	
+	
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // Your JavaScript code to initialize the chart with chartData
+		!function (e) {
+    "use strict";
+
+    function a() {
+    }
+    async function testedDoc() {
+        let url = 'tester';
+
+        try {
+            let response = await fetch(url);
+            if (response.ok) { // if HTTP-status is 200-299
+                return await response.json();
+            } else {
+                // alert("HTTP-Error: " + response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    a.prototype.createBarChart = function (a, t, e, o, r, i) {
+        Morris.Bar({
+            element: a,
+            data: t,
+            xkey: e,
+            ykeys: o,
+            labels: r,
+            dataLabels: !1,
+            hideHover: "auto",
+            resize: !0,
+            gridLineColor: "rgba(65, 80, 95, 0.07)",
+            barSizeRatio: .2,
+            barColors: i
+        })
+    }, 
+	a.prototype.init = async function () {
+    let chartColors = ["#182ea4"];
+	const chartData = {!! json_encode($dataArray) !!};
+    const dataArray = chartData; // Use the data passed from the controller
+
+    const chart = e("#statistics-chart");
+    const customColors = chart.data("colors");
+    if (customColors) {
+        chartColors = customColors.split(",");
+    }
+
+    this.createBarChart("statistics-chart", dataArray, "y", ["a"], ["Statistics"], chartColors);
+}, e.Dashboard4 = new a, e.Dashboard4.Constructor = a
+}(window.jQuery), function () {
+    "use strict";
+    window.jQuery.Dashboard4.init()
+}();
+    });
 </script>
 
 </body>

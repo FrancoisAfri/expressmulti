@@ -8,6 +8,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Carbon;
 
 class EventsServices extends Model
 {
@@ -89,15 +90,27 @@ class EventsServices extends Model
 	public static function getRequestsGraphs($startDate, $endDate, $employee_id)
     {
 		
-		$totalTimeDifferenceInMinutes = EventsServices::selectRaw('ROUND((SUM(completed_time - requested_time)) / 60) as total_time_difference_in_minutes')
+		$requests = EventsServices::select('completed_time', 'requested_time')
 		->whereBetween('created_at', [$startDate, $endDate])
-		->where('waiter',$employee_id)->first()->total_time_difference_in_minutes;
+		->where('waiter',$employee_id)->where('status',2)->get();
 		// get total numbers of transactions
 		$totalTransactions = EventsServices::whereBetween('created_at', [$startDate, $endDate])
-		->where('waiter',$employee_id)->count();
+		->where('waiter',$employee_id)->where('status',2)->count();
+		// get total minutes
+		$totalMinutes = 0;
+		foreach ($requests as $request) {
+			$startTime = !empty($request->requested_time) ? $request->requested_time : 0;
+			$endTime = !empty($request->completed_time) ? $request->completed_time : 0;
 
-		if (!empty($totalTransactions))
-			$avg = $totalTimeDifferenceInMinutes / $totalTransactions;
+			$start = Carbon::parse($startTime);
+			$end = Carbon::parse($endTime);
+
+			$minute = $end->diffInMinutes($start);
+			$totalMinutes = $totalMinutes + $minute;
+        }
+
+		if (!empty($totalTransactions) && !empty($totalMinutes))
+			$avg = $totalMinutes / $totalTransactions;
 		else $avg = 0;
 
 		return $avg;

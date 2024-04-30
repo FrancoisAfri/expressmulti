@@ -46,70 +46,24 @@ class ReportsController extends Controller
             'Reports'
         );
 		$employees = HRPerson::where('status',1)->get();
-		//return $employees;
+		$CompanyIdentity = $this->CompanyIdentityDetails(); 
 
-/*
-        // age analysis report
-        $accountPayments = Accounts::getAccounts();
-        foreach ($accountPayments as $acount) {
-            //calculations
-            $acount->total_balance = $this->ageAnalysisTotalAccount($acount->id);
-            $acount->total_medical_aids_balance = $this->ageAnalysisTotalMedical($acount->id);
-            $acount->total_patient_balance = $this->ageAnalysisTotalPatient($acount->id);
-            $acount->current_balance = $this->ageAnalysisdate($acount->id, 1);
-            $acount->thirty_balance = $this->ageAnalysisdate($acount->id, 2);
-            $acount->sixthy_balance = $this->ageAnalysisdate($acount->id, 3);
-            $acount->ninthy_balance = $this->ageAnalysisdate($acount->id, 4);
-            $acount->one_twenty_balance = $this->ageAnalysisdate($acount->id, 5);
-            $acount->one_fithy_balance = $this->ageAnalysisdate($acount->id, 6);
-            $acount->last_payment_date = $this->accountLastPaymentDate($acount->id);
-        }
-
-        // patient age analysis report
-        $accountPayments = Accounts::getAccounts();
-        foreach ($accountPayments as $acount) {
-            //calculations
-            $acount->total_balance = $this->ageAnalysisTotalAccount($acount->id);
-            $acount->total_medical_aids_balance = $this->ageAnalysisTotalMedical($acount->id);
-            $acount->total_patient_balance = $this->ageAnalysisTotalPatient($acount->id);
-            $acount->current_balance = $this->ageAnalysisdate($acount->id, 1);
-            $acount->thirty_balance = $this->ageAnalysisdate($acount->id, 2);
-            $acount->sixthy_balance = $this->ageAnalysisdate($acount->id, 3);
-            $acount->ninthy_balance = $this->ageAnalysisdate($acount->id, 4);
-            $acount->one_twenty_balance = $this->ageAnalysisdate($acount->id, 5);
-            $acount->one_fithy_balance = $this->ageAnalysisdate($acount->id, 6);
-            $acount->last_payment_date = $this->accountLastPaymentDate($acount->id);
-
-        }
-
-        $date = Carbon::now()->subDays(30);
-        $paymentCodes = array(1 => 'cash', 2 => 'EFT', 3 => 'Debit Card', 4 => 'Medical Scheme');
-        $data = $this->creditData();
-
-		$medic =  BillingInvoice::dataMedic();
-
-
-        $data['thirty_balance'] = $thirty_balance = BillingInvoice::medicAnalysis(1);
-        $data['patientPayments'] = $this->accountPayments();
-        $data['medic'] = $medic;
-        $data['invoiceDetails'] = InvoiceCompanyProfile::invoiceSettings();
-        $data['name'] = $this->CompanyIdentityDetails();
-        $data['accountPayments'] = $this->accountPayments();
-        $data['detailedTransactions'] = BillingProcedures::getDetailedInfo();
-        $data['dailySummary'] = InvoicePayments::getDailySummary(0)->sum('paid');
-        $data['cash'] = InvoicePayments::getDailySummaryForType(1)->sum('paid');
-        $data['eft'] = InvoicePayments::getDailySummaryForType(2)->sum('paid');
-        $data['debitCard'] = InvoicePayments::getDailySummaryForType(3)->sum('paid');
-        $data['medicalScheme'] = InvoicePayments::getDailySummaryForType(4)->sum('paid');
-        $data['user'] = Auth::user()->load('person');
-        $data['date'] = $date;
-*/
+		// get this year and month
+		$year = date('Y');
+		$month = date('m');
 		$dishes = OrdersProducts::popularDishes();
-		//return $dishes;
+
         $data['dishes'] = $dishes;
 		$date = Carbon::now();
         $data['employees'] = $employees;
 		$data['date'] = date("d/m/Y");
+		$data['totalOrders'] = OrdersProducts::totalPaidThisYear($year);
+        $data['monthlyOrders'] = OrdersProducts::totalPaidThisMonth($year,$month);
+        $data['totalIncompleteOrders'] = OrdersProducts::totalUnpaidThisYear($year);
+        $data['monthlyIncompleteOrders'] = OrdersProducts::totalUnpaidThisMonth($year,$month);
+		$data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
+        $data['totalPayment'] = OrdersProducts::getDailySummary()->sum('amount');
+		$data['dailyData'] = $this->getDailyProfit();
         return view('restaurant.reports.index')->with($data);
     }
 
@@ -117,58 +71,39 @@ class ReportsController extends Controller
     public function waiterResponse(Request $request){
 
         $this->validate($request, [
-            //'employee_id' => 'required',
             'date_range' => 'required',
         ]);
 
-		//$employee_id = !empty($request['employee_id']) ? $request['employee_id'] : 0;
-        $dates = explode("to", $request['date_range']);
-        $startDate = $dates[0];
-        $endDate = $dates[1];
+		$dates = explode("to", $request['date_range']);
+        $startDate = !empty($dates[0]) ? $dates[0] : '';
+        $endDate = !empty($dates[1]) ? $dates[1] : '';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-				->where('model_has_roles.role_id', 4)
+				//->where('model_has_roles.role_id', 4)
 				->get();
 		$waiters = $users->load('person');
+		$resultData = [];
 
-		//return $waiters;
-		$resultData = array();
-
-		// calculate response time
-		foreach ($waiters as $waiter)
-		{
-			$formattedData = [];
-			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
-			$formattedData[] = ['year' => $waiter->person->initial, 'value' => $avg];
-			$resultData[$waiter->person->id] = $formattedData;
-        }
-		//print_r($resultData);
-		//die('lll');
-		/*$resultData = array();
-
-		// calculate response time
+		// Calculate response time
 		foreach ($waiters as $waiter) {
-			$services = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
-
-			// Construct an array with year and value for each entry in the response time data
-			$formattedData = [];
-			foreach ($services as $service) {
-				$formattedData[] = ['year' => $service->year, 'value' => $service->value];
-			}
-
-			// Append the formatted data to the $resultData array using the waiter's ID as the key
-			$resultData[$waiter->person->id] = $formattedData;
+			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
+			
+			// Create an associative array representing a data point
+			if (!empty($waiter->person->initial))
+				$formattedData = [
+					'y' => $waiter->person->initial, // Assuming 'initial' holds the label
+					'a' => $avg // Assuming $avg holds the average response time
+				];
+			// Assign the formatted data to the $resultData array
+			$resultData[] = $formattedData;
 		}
-		*/
+
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = $startDate."-".$endDate;
         $data['user'] = Auth::user()->load('person');
-		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
-        //$data['totalPatients'] = EventsServices::getTotalPatients($startDate, $endDate)->count();
-        //$data['services'] = $services;
-        $data['resultData'] = $resultData;
-
+        $data['dataArray'] = $resultData;
+		
         return view('restaurant.graphs.waiter_response_time_graph')->with($data);
     }
 	//
@@ -656,5 +591,40 @@ class ReportsController extends Controller
         PDF::setOptions(['isRemoteEnabled' => TRUE, 'enable_javascript' => TRUE]);
         $pdf = PDF::loadView('billing.Invoices.InvoicePrint.cust_invoice', $data)->setPaper(array(0, 0, 609.4488, 935.433), 'landscape');
         return $pdf->download('Billing_invoice_' . $id . '.pdf');
+    }
+	//
+	public function getDailyProfit()
+    {
+        $target = $this->CompanyIdentityDetails();
+        if (!empty($target['daily_revenue_target']))
+            return OrdersProducts::getDailySummary()->sum('amount') / $target['daily_revenue_target'] * 100;
+        else return 0;
+    }
+	//financials
+	public function financials()
+    {
+        $data = $this->breadcrumb(
+            'Restaurant',
+            'Reports Page',
+            '/restaurant/reports',
+            'Restaurant Management',
+            'Reports'
+        );
+		$CompanyIdentity = $this->CompanyIdentityDetails(); 
+
+		// get this year and month
+		$year = date('Y');
+		$month = date('m');
+
+		$date = Carbon::now();
+		$data['date'] = date("d/m/Y");
+		$data['totalOrders'] = OrdersProducts::totalPaidThisYear($year);
+        $data['monthlyOrders'] = OrdersProducts::totalPaidThisMonth($year,$month);
+        $data['totalIncompleteOrders'] = OrdersProducts::totalUnpaidThisYear($year);
+        $data['monthlyIncompleteOrders'] = OrdersProducts::totalUnpaidThisMonth($year,$month);
+		$data['targetRevenue'] = $CompanyIdentity['monthly_revenue_target'];
+        $data['totalPayment'] = OrdersProducts::getDailySummary()->sum('amount');
+		$data['dailyData'] = $this->getDailyProfit();
+        return view('restaurant.graphs.financials')->with($data);
     }
 }

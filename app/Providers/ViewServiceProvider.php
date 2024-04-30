@@ -64,9 +64,8 @@ class ViewServiceProvider extends ServiceProvider
 		
         view()->composer('layouts.partials.top-bar', function ($view) use ( $companyDetails) {
 
-          $id = Auth::user()->id;
-            $user = User::with('person')
-                ->findOrFail($id);
+			$id = Auth::user()->id;
+			$user = User::with('person')->findOrFail($id);
 
             $defaultAvatar = ($user->person->gender === 0) ?  asset('images/m-silhouette.jpg')  :  asset('images/f-silhouette.jpg') ;
 
@@ -78,7 +77,7 @@ class ViewServiceProvider extends ServiceProvider
             $headerNameRegular = $companyDetails['header_name_regular'];
             $headerAcronymBold = $companyDetails['header_acronym_bold'];
             $headerAcronymRegular = $companyDetails['header_acronym_regular'];
-
+			
             $data['notifications'] = BookingNotification::getAllUnreadNotifications();
             $data['notificationsCount'] = BookingNotification::countNotifications();
             $data['user'] = $user;

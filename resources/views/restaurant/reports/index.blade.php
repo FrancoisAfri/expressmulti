@@ -73,6 +73,12 @@
                                        aria-selected="false">
                                         <i class="mdi mdi-cash-multiple d-block font-10"></i>
                                         Xpresserv usage by patrons</a>
+										<a class="nav-link mt-2 py-2" id="custom-v-pills-xpress_usage-tab"
+                                       data-toggle="pill" href="#custom-v-pills-financials" role="tab"
+                                       aria-controls="custom-v-pills-financials"
+                                       aria-selected="false">
+                                        <i class="mdi mdi-cash-multiple d-block font-10"></i>
+                                        Financials</a>
                                 </div>
                             </div> <!-- end col-->
                             <div class="col-sm-10">
@@ -95,16 +101,6 @@
                                                 @endif
                                                 <div class="row">
                                                     <div class="col-lg-8 float-sm-right">
-                                                        <!--<div class="form-group">
-                                                            <label for="employee_id"> Employees </label>
-                                                            <select class="form-control select2 " style="width: 100%;"
-																 id="employee_id" name="employee_id"   data-select2-id="1" tabindex="-1" aria-hidden="true">
-																<option value="0">*** Select Employee ***</option>
-																@foreach ($employees as $employee)
-																	<option value="{{ $employee->id }}">{{ $employee->first_name." ".$employee->surname }}</option>
-																@endforeach
-															</select>
-                                                        </div>-->
 														<div class="form-group">
                                                             <label for="heard"> Date Range </label>
                                                             <input type="text" id="date" name="date_range" class="form-control">
@@ -335,7 +331,6 @@
                                             <h4 class="header-title">Restaurant Sales/Value of orders </h4>
                                             <!-- Pay with Paypal box-->
                                             <!-- end Pay with Paypal box-->
-
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="custom-v-pills-xpress_usage" role="tabpanel"
@@ -344,6 +339,23 @@
                                             <h4 class="header-title">Xpresserv usage by patrons</h4>
 
                                             <!-- end Pay with Paypal box-->
+                                        </div>
+                                    </div>
+									<div class="tab-pane fade" id="custom-v-pills-financials" role="tabpanel"
+                                         aria-labelledby="custom-v-pills-financials">
+                                        <div>
+                                            <h4 class="header-title">Financials</h4>
+                                            <form class="needs-validation" novalidate method="Post" action="report/financials">
+                                                {{ csrf_field() }}
+                                                <div class="row mt-4">
+                                                    <div class="col-sm-6">
+                                                        <div class="text-sm-right mt-2 mt-sm-0">
+                                                            <button type="submit"  class="btn btn-success">
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Genarate Report</button>
+                                                        </div>
+                                                    </div> <!-- end col -->
+                                                </div> <!-- end row -->
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

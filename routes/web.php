@@ -106,7 +106,7 @@ Route::post('reset_password_with_token', [AccountsController::class, 'resetPassw
     ->name('reset.token');
 // calculate profit
 
-Route::get('calculateMonthlyProfit', [DashboardController::class, 'calculateMonthlyProfit']);
+Route::get('restaurant/report/calculateMonthlyProfit', [DashboardController::class, 'calculateMonthlyProfit']);
 Route::get('getWaiterResponseTime', [ReportsController::class, 'getWaiterResponseTime']);
 
 Route::get('getDailyProfit', [DashboardController::class, 'getDailyProfit']);
@@ -326,6 +326,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('reviews.reports');
 	Route::post('popular-dishes', [ReportsController::class, 'popularDishes'])
         ->name('popular.dishes');
+	Route::post('report/financials', [ReportsController::class, 'financials'])
+        ->name('reports.financials');
 });
 Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 

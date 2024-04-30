@@ -21,12 +21,11 @@ class CheckPageUsage
     public function handle(Request $request, Closure $next)
     {
         $pageKey = 'page_' . $request->getPathInfo();
-
+		$currentUser = !empty(Auth::user()->id) ? Auth::user()->id : 0;
         // Check if the page is currently being used
         if (Cache::has($pageKey)) {
             // If the page is being used, check if the current session is the one that started it
             $oldUser = Cache::get($pageKey);
-            $currentUser = Auth::user()->id;
 
             if ($oldUser !== $currentUser) {
                 //return response('This page is currently being used. Only one user can access it at a time.', 403);
@@ -39,7 +38,7 @@ class CheckPageUsage
         }
 
         // Mark the page as being used by the current session
-        Cache::put($pageKey, Auth::user()->id, now()->addMinutes(5));
+        Cache::put($pageKey, $currentUser, now()->addMinutes(5));
 
         // Proceed to the next middleware or controller
         return $next($request);

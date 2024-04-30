@@ -93,11 +93,9 @@
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
 								<h4 class="header-title mb-0">Menu</h4>
-								
 								<div id="cardCollpase4" class="collapse pt-3 show">
 									<div class="bg-light">
 										<form class="form-horizontal" method="get" action="{{ route('seating.plan', $table->id) }}">
-											
 											<div class="col-md-12">
 												<div class="form-group">
 													<div class="col-sm-4">
@@ -126,7 +124,7 @@
 													<div class="float-right">
 														<button type="button" class="btn btn-outline-danger fw-bold text-uppercase btn-sm rounded" data-toggle="modal" data-target="#view-cart-modal">
 															<i class="mdi mdi-sort-numeric-ascending mr-2 text-muted font-18 vertical-middle"></i>
-															<i class="mdi mdi-cart"></i>
+															<i class="mdi mdi-cart">Cart</i>
 														</button>
 													</div>
 												</div>
@@ -327,7 +325,6 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="card-widgets">
-									<a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
 									<a data-toggle="collapse" href="#cardCollpase7" role="button" aria-expanded="false" aria-controls="cardCollpase7"><i class="mdi mdi-minus"></i></a>
 									<a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
 								</div>
