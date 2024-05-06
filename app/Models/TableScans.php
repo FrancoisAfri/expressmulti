@@ -76,4 +76,49 @@ class TableScans extends Model
             
 		 return  $query->get();
     }
+	// get usage reports
+	public static function getUsageReports($todayDate)
+    {
+		
+		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
+		->where('status',2)->count();
+            
+		 return  $totalTransactions;
+    }
+	// get usage reports
+	public static function getRatingsQoneReports($i)
+    {
+		
+		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
+		->where('status',2)->count();
+            
+		 return  $totalTransactions;
+    }
+	// get usage reports
+	public static function getRatingsQtwoReports($i)
+    {
+		
+		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
+		->where('status',2)->count();
+            
+		 return  $totalTransactions;
+    }
+	// get usage reports
+	public static function getRatingsQthreeReports($i)
+    {
+		
+		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
+		->where('status',2)->count();
+            
+		 return  $totalTransactions;
+    }
+	// get usage reports
+	public static function getRatingsQfourReports($i)
+    {
+		
+		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
+		->where('status',2)->count();
+            
+		 return  $totalTransactions;
+    }
 }

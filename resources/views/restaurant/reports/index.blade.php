@@ -123,7 +123,7 @@
                                          aria-labelledby="custom-v-pills-reviews-tab">
                                         <div>
                                             <h4 class="header-title">Reviews </h4>
-											<form class="needs-validation" novalidate method="Post" action="reviews-reports"
+											<form class="needs-validation" novalidate method="Post" action="reports/reviews-app"
                                                   enctype="multipart/form-data" >
                                                 {{ csrf_field() }}
                                                 @if (count($errors) > 0)
@@ -347,16 +347,72 @@
                                          aria-labelledby="custom-v-pills-res_sales_orders-tab">
                                         <div>
                                             <h4 class="header-title">Restaurant Sales/Value of orders </h4>
-                                            <!-- Pay with Paypal box-->
-                                            <!-- end Pay with Paypal box-->
+                                            <form class="needs-validation" novalidate method="Post" action="reports/restaurant-sales-volume"
+                                                  enctype="multipart/form-data" >
+                                                {{ csrf_field() }}
+                                                @if (count($errors) > 0)
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                                <div class="row">
+                                                    <div class="col-lg-8 float-sm-right">
+                                                        <div class="form-group">
+                                                            <label for="heard"> Date Range </label>
+                                                            <input type="text" id="date_res_sale_time" name="date_range" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- end row -->
+                                                <div class="row mt-4">
+
+                                                    <div class="col-sm-6">
+                                                        <div class="text-sm-right mt-2 mt-sm-0">
+                                                            <button type="submit"  class="btn btn-success">
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Genarate Report</button>
+                                                        </div>
+                                                    </div> <!-- end col -->
+                                                </div> <!-- end row -->
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="custom-v-pills-xpress_usage" role="tabpanel"
                                          aria-labelledby="custom-v-pills-xpress_usage-tab">
                                         <div>
                                             <h4 class="header-title">Xpresserv usage by patrons</h4>
+											<form class="needs-validation" novalidate method="Post" action="reports/app-usage"
+                                                  enctype="multipart/form-data" >
+                                                {{ csrf_field() }}
+                                                @if (count($errors) > 0)
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                                <div class="row">
+                                                    <div class="col-lg-8 float-sm-right">
+                                                        <div class="form-group">
+                                                            <label for="heard"> Date Range </label>
+                                                            <input type="text" id="date_usage" name="date_range" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- end row -->
+                                                <div class="row mt-4">
 
-                                            <!-- end Pay with Paypal box-->
+                                                    <div class="col-sm-6">
+                                                        <div class="text-sm-right mt-2 mt-sm-0">
+                                                            <button type="submit"  class="btn btn-success">
+                                                                <i class="mdi mdi-truck-fast mr-1"></i>Genarate Report</button>
+                                                        </div>
+                                                    </div> <!-- end col -->
+                                                </div> <!-- end row -->
+                                            </form>
                                         </div>
                                     </div>
 									<div class="tab-pane fade" id="custom-v-pills-financials" role="tabpanel"
@@ -439,6 +495,20 @@
          defaultDate: "today"
      });
 	 $("#date_res_time").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#date_res_sale_time").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#date_usage").flatpickr({
          altInput: !0,
          mode: "range",
          // altFormat: "F j, y",

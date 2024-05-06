@@ -284,44 +284,180 @@ class ReportsController extends Controller
     }
 	
 	// waiter response reports
-    public function restaurantTurnaroundTime(Request $request){
+    public function restaurantTurnaroundTime(Request $request)
+	{
 
         $this->validate($request, [
             'date_range' => 'required',
         ]);
-die('bhdhd');
+
+		$dates = explode("to", $request['date_range']);
+        $startDateS = !empty($dates[0]) ? $dates[0] : '';
+        $endDateS = !empty($dates[1]) ? $dates[1] : '';
+
+		//
+		// Convert the start and end dates to Carbon objects
+		$startDate = new Carbon($startDateS);
+		$endDate = new Carbon($endDateS);
+		$resultData = [];
+		// Loop through the dates from $startDate to $endDate, incrementing one day at a time
+		$currentDate = clone $startDate; // Clone the start date to avoid modifying it directly
+		while ($currentDate->lte($endDate)) {
+			// Process the current date (e.g., output it, perform some action)
+			///echo $currentDate->toDateString() . "<br>";
+			$todayDate = $currentDate->toDateString();
+			$avg = EventsServices::getRestaurantGraphs($todayDate);
+			
+			// Create an associative array representing a data point
+			$formattedData = [
+				'y' => $todayDate, // Assuming 'initial' holds the label
+				'a' => $avg // Assuming $avg holds the average response time
+			];
+			// Assign the formatted data to the $resultData array
+			$resultData[] = $formattedData;
+			// Move to the next day
+			$currentDate->addDay();
+		}
+		
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+		$data['date'] = $startDateS."-".$endDateS;
+        $data['user'] = Auth::user()->load('person');
+        $data['dataArray'] = $resultData;
+		
+        return view('restaurant.graphs.restaurant_avg_response_time_graph')->with($data);
+    }	
+	// restaurant sales reports
+	public function restaurantSalesVolume(Request $request){
+
+        $this->validate($request, [
+            'date_range' => 'required',
+        ]);
+
+		$dates = explode("to", $request['date_range']);
+        $startDateS = !empty($dates[0]) ? $dates[0] : '';
+        $endDateS = !empty($dates[1]) ? $dates[1] : '';
+
+		//
+		// Convert the start and end dates to Carbon objects
+		$startDate = new Carbon($startDateS);
+		$endDate = new Carbon($endDateS);
+		$resultData = [];
+		// Loop through the dates from $startDate to $endDate, incrementing one day at a time
+		$currentDate = clone $startDate; // Clone the start date to avoid modifying it directly
+		while ($currentDate->lte($endDate)) {
+			// Process the current date (e.g., output it, perform some action)
+			//echo $currentDate->toDateString() . "<br>";
+			$todayDate = $currentDate->toDateString();
+			
+			$amount = Orders::totalSalesRestaurant($todayDate);
+			// Create an associative array representing a data point
+			$formattedData = [
+				'y' => $todayDate, // Assuming 'initial' holds the label
+				'a' => $amount // Assuming $avg holds the average response time
+			];
+			// Assign the formatted data to the $resultData array
+			$resultData[] = $formattedData;
+			// Move to the next day
+			$currentDate->addDay();
+		}
+
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+		$data['date'] = $startDateS."-".$endDateS;
+        $data['user'] = Auth::user()->load('person');
+        $data['dataArray'] = $resultData;
+
+        return view('restaurant.graphs.restaurant_sales_volune_time_graph')->with($data);
+    }
+	// 
+	// app usage reports
+	public function appUsage(Request $request){
+
+        $this->validate($request, [
+            'date_range' => 'required',
+        ]);
+
+		$dates = explode("to", $request['date_range']);
+        $startDateS = !empty($dates[0]) ? $dates[0] : '';
+        $endDateS = !empty($dates[1]) ? $dates[1] : '';
+
+		//
+		// Convert the start and end dates to Carbon objects
+		$startDate = new Carbon($startDateS);
+		$endDate = new Carbon($endDateS);
+		$resultData = [];
+		// Loop through the dates from $startDate to $endDate, incrementing one day at a time
+		$currentDate = clone $startDate; // Clone the start date to avoid modifying it directly
+		while ($currentDate->lte($endDate)) {
+			// Process the current date (e.g., output it, perform some action)
+			//echo $currentDate->toDateString() . "<br>";
+			$todayDate = $currentDate->toDateString();
+			
+			$number = TableScans::getUsageReports($todayDate);
+			// Create an associative array representing a data point
+			$formattedData = [
+				'y' => $todayDate, // Assuming 'initial' holds the label
+				'a' => $number // Assuming $avg holds the average response time
+			];
+			// Assign the formatted data to the $resultData array
+			$resultData[] = $formattedData;
+			// Move to the next day
+			$currentDate->addDay();
+		}
+
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+		$data['date'] = $startDateS."-".$endDateS;
+        $data['user'] = Auth::user()->load('person');
+        $data['dataArray'] = $resultData;
+
+        return view('restaurant.graphs.restaurant_app_usage_graph')->with($data);
+    }
+	// reviews star reports
+	public function appStarRating(Request $request){
+
+        $this->validate($request, [
+            'date_range' => 'required',
+        ]);
+
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
         $endDate = !empty($dates[1]) ? $dates[1] : '';
-		$users =  User::select('users.*', 'model_has_roles.*')
-				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-				//->where('model_has_roles.role_id', 4)
-				->get();
-		$waiters = $users->load('person');
-		$resultData = [];
 
-		// Calculate response time
-		foreach ($waiters as $waiter) {
-			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
+		// Convert the start and end dates to Carbon objects
+		$i = 1;
+
+		while ($i <= 5) 
+		{
+			echo $i."</br>";
+			// Process the current date (e.g., output it, perform some action)
+			//echo $currentDate->toDateString() . "<br>";
 			
+			$ambience = TableScans::getRatingsQoneReports($i);
+			$food = TableScans::getRatingsQtwoReports($i);
+			$service = TableScans::getRatingsQthreeReports($i);
+			$app = TableScans::getRatingsQfourReports($i);
 			// Create an associative array representing a data point
-			if (!empty($waiter->person->initial))
-				$formattedData = [
-					'y' => $waiter->person->initial, // Assuming 'initial' holds the label
-					'a' => $avg // Assuming $avg holds the average response time
-				];
+			$formattedData = [
+				'y' => $i, // Assuming 'initial' holds the label
+				'a' => $ambience,
+				'b' => $food, // Assuming $avg holds the average response time
+				'c' => $service, // Assuming $avg holds the average response time
+				'd' => $app				// Assuming $avg holds the average response time
+			];
 			// Assign the formatted data to the $resultData array
 			$resultData[] = $formattedData;
 		}
-
+		return $resultData;
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = $startDate."-".$endDate;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
-		
-        return view('restaurant.graphs.restaurant_avg_response_time_graph')->with($data);
-    }
+
+        return view('restaurant.graphs.restaurant_app_usage_graph')->with($data);
+	}
 	// calculate response time
     public function responseTime($startDate, $endDate){
 

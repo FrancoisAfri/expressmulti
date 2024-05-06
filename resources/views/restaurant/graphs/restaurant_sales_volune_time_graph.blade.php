@@ -33,7 +33,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mt-3">
-                                <p style="text-align:center;"><b>Average response time of all waiters:<strong> {{$date}}</strong></b></p>
+                                <p style="text-align:center;"><b>Sales volume:<strong> {{$date}}</strong></b></p>
                             </div>
                         </div>
                     </div>

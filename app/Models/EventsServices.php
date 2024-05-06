@@ -145,6 +145,34 @@ class EventsServices extends Model
 
 		return $avg;
 	}
+	// get requests graphs 
+	public static function getRestaurantGraphs($todayDate)
+    {
+		
+		$requests = EventsServices::select('completed_time', 'requested_time')
+		->whereDate('created_at', $todayDate)->where('status',2)->get();
+		// get total numbers of transactions
+		$totalTransactions = EventsServices::whereDate('created_at', $todayDate)
+		->where('status',2)->count();
+		// get total minutes
+		$totalMinutes = 0;
+		foreach ($requests as $request) {
+			$startTime = !empty($request->requested_time) ? $request->requested_time : 0;
+			$endTime = !empty($request->completed_time) ? $request->completed_time : 0;
+
+			$start = Carbon::parse($startTime);
+			$end = Carbon::parse($endTime);
+
+			$minute = $end->diffInMinutes($start);
+			$totalMinutes = $totalMinutes + $minute;
+        }
+
+		if (!empty($totalTransactions) && !empty($totalMinutes))
+			$avg = $totalMinutes / $totalTransactions;
+		else $avg = 0;
+
+		return $avg;
+	}
 }
  
 

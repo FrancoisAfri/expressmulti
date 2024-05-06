@@ -84,7 +84,7 @@ class Orders extends Model
 		 return  $query->get();
     }
 	
-		// get sum amount per orders
+	// get sum amount per orders
 	public static function totalSalesPerWaiter($startDate, $endDate, $employee_id)
     {
 
@@ -96,6 +96,23 @@ class Orders extends Model
         $totalAmount = 0;
 		foreach ($orders as $order) 
 		{
+			$amount =  OrdersProducts::where('order_id', $order->id)->sum('amount');
+			$totalAmount = $totalAmount + $amount;
+        }
+
+		return $totalAmount;
+    }
+	// get sum amount per orders
+	public static function totalSalesRestaurant($todayDate)
+    {
+
+        $orders =  Orders::whereDate('created_at', $todayDate)->where('status',2)->get();
+
+		// get total orders
+        $totalAmount = 0;
+		foreach ($orders as $order) 
+		{
+			//echo $order->id."</br>";
 			$amount =  OrdersProducts::where('order_id', $order->id)->sum('amount');
 			$totalAmount = $totalAmount + $amount;
         }
