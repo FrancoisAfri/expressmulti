@@ -33,7 +33,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mt-3">
-                                <p style="text-align:center;"><b>Popular Quick Service requests:<strong> {{$date}}</strong></b></p>
+                                <p style="text-align:center;"><b>Table turnaround time per table size:<strong> {{$date}}</strong></b></p>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                                                  class="morris-chart mt-3"></div>
                                         </div>
 										<div class="mt-3">
-											<p style="text-align:center;"><b>Service Requests</b></p>
+											<p style="text-align:center;"><b>Tables</b></p>
 										</div>
                                     </div> <!-- end collapse-->
                                 </div> <!-- end card-body-->
