@@ -180,7 +180,7 @@ class RestaurantController extends Controller
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
-                $request->file('image')->storeAs('Images/categories/', $fileName);
+                $request->file('image')->storeAs('images/categories/', $fileName);
                 //Update file name in the database
                 $category->image = $fileName;
                 $category->update();
@@ -207,6 +207,24 @@ class RestaurantController extends Controller
 		 
         return view('restaurant.category_edit')->with($data);
     }
+	// delete menu image
+	public function categoryImageDelete(Categories $category)
+    {
+		// get image path
+		$imagePath = public_path("images/categories/$category->image");
+		
+		// delete image from directory
+		$file = Storage::delete($imagePath);
+
+		// update database
+		$category->image = '';
+		$category->update();
+		// show success message
+		alert()->success('SuccessAlert', 'Image Deleted Successfully');
+		activity()->log('Categories Updated');
+		
+        return redirect()->back();
+    }
 	// Categories update
 	public function categoryUpdate(AddMenuCategoryRequest $request, Categories $category)
     {
@@ -223,7 +241,7 @@ class RestaurantController extends Controller
             $fileExt = $request->file('image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('image')->isValid()) {
                 $fileName = time() . "image." . $fileExt;
-                $request->file('image')->storeAs('Images/categories', $fileName);
+                $request->file('image')->storeAs('images/categories', $fileName);
                 //Update file name in the database
                 $category->image = $fileName;
                 $category->update();
@@ -288,6 +306,24 @@ class RestaurantController extends Controller
 		$data['menusTypes'] = $menusTypes;
 		 
         return view('restaurant.menu_edit')->with($data);
+    }
+	// delete menu image
+	public function deleteImage(Menu $menu)
+    {
+		// get image path
+		$imagePath = public_path("images/menus/$menu->image");
+		
+		// delete image from directory
+		$file = Storage::delete($imagePath);
+
+		// update database
+		$menu->image = '';
+		$menu->update();
+		// show success message
+		alert()->success('SuccessAlert', 'Image Deleted Successfully');
+		activity()->log('Menu Updated');
+		
+        return redirect()->back();
     }
 	// store Menu
 	public function storeMenu(AddMenuRequest $request)

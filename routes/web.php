@@ -250,6 +250,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('category.store');
 	Route::get('category-edit/{category}', [RestaurantController::class, 'categoryEdit'])
         ->name('category.edit');
+	Route::get('category-delete-image/{category}', [RestaurantController::class, 'categoryImageDelete'])
+        ->name('category.delete-image');
 	Route::get('category/act/{category}', [RestaurantController::class, 'activateCategory'])
         ->name('category.activate');
 	Route::post('update/category/{category}', [RestaurantController::class, 'categoryUpdate'])
@@ -258,6 +260,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('menus.view');
 	Route::get('menu-edit/{menu}', [RestaurantController::class, 'menuEdit'])
         ->name('menu.edit');
+	Route::get('menu-image-delete/{menu}', [RestaurantController::class, 'deleteImage'])
+        ->name('menu.delete-image');
 	Route::get('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
         ->name('menu.destroy');
 	Route::post('add_menu', [RestaurantController::class, 'storeMenu'])

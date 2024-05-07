@@ -66,6 +66,11 @@
 												   @if(!empty($category->image))
 													   data-default-file="{{ asset('Images/categories/'.$category->image) }}"/>
 													@endif
+													@if(!empty($category->image))
+														<button type="button" onclick="postData({{$category->id}}, 'delete');"class="btn btn-danger waves-effect waves-light mt-2"><i
+															class="mdi mdi-content-save"></i> Delete Image
+														</button>
+													@endif
 											<p class="text-muted text-center mt-2 mb-0"><strong> Allowed filetypes are jpg, jpeg, png.</strong></p>
 										</div>
 									</div>
@@ -121,7 +126,11 @@
     <script src="{{ asset('libs/intl-tel-input/build/js/intlTelInput.js') }}"></script>
 
     <script>
+		function postData(id, data) {
 
+            if (data == 'delete')
+                location.href = "{{route('category.delete-image', '')}}" + "/" + id;
+        }
         document.querySelectorAll('#phone ,#cell_number').forEach(item => {
             window.intlTelInput(item, {
                 initialCountry: "auto",
