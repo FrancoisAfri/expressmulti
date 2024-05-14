@@ -86,38 +86,46 @@ class TableScans extends Model
 		 return  $totalTransactions;
     }
 	// get usage reports
-	public static function getRatingsQoneReports($i)
+	public static function getRatingsQoneReports($i,$startDate, $endDate)
     {
 		
-		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
-		->where('status',2)->count();
+		$totalTransactions = TableScans::whereBetween('created_at', [$startDate, $endDate])
+		->where('q_one', $i)
+		->where('status',2)
+		->count();
             
 		 return  $totalTransactions;
     }
 	// get usage reports
-	public static function getRatingsQtwoReports($i)
+	public static function getRatingsQtwoReports($i,$startDate, $endDate)
     {
 		
-		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
-		->where('status',2)->count();
+		$totalTransactions = TableScans::whereBetween('created_at', [$startDate, $endDate])
+		->where('q_two', $i)
+		->where('status',2)
+		->count();
             
 		 return  $totalTransactions;
     }
 	// get usage reports
-	public static function getRatingsQthreeReports($i)
+	public static function getRatingsQthreeReports($i,$startDate, $endDate)
     {
 		
-		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
-		->where('status',2)->count();
+		$totalTransactions = TableScans::whereBetween('created_at', [$startDate, $endDate])
+		->where('q_three', $i)
+		->where('status',2)
+		->count();
             
 		 return  $totalTransactions;
     }
 	// get usage reports
-	public static function getRatingsQfourReports($i)
+	public static function getRatingsQfourReports($i,$startDate, $endDate)
     {
 		
-		$totalTransactions = TableScans::whereDate('created_at', $todayDate)
-		->where('status',2)->count();
+		$totalTransactions = TableScans::whereBetween('created_at', [$startDate, $endDate])
+		->where('q_four', $i)
+		->where('status',2)
+		->count();
             
 		 return  $totalTransactions;
     }

@@ -434,10 +434,10 @@ class ReportsController extends Controller
 			// Process the current date (e.g., output it, perform some action)
 			//echo $currentDate->toDateString() . "<br>";
 			
-			$ambience = TableScans::getRatingsQoneReports($i);
-			$food = TableScans::getRatingsQtwoReports($i);
-			$service = TableScans::getRatingsQthreeReports($i);
-			$app = TableScans::getRatingsQfourReports($i);
+			$ambience = TableScans::getRatingsQoneReports($i,$startDate, $endDate);
+			$food = TableScans::getRatingsQtwoReports($i,$startDate, $endDate);
+			$service = TableScans::getRatingsQthreeReports($i,$startDate, $endDate);
+			$app = TableScans::getRatingsQfourReports($i,$startDate, $endDate);
 			// Create an associative array representing a data point
 			$formattedData = [
 				'y' => $i, // Assuming 'initial' holds the label
