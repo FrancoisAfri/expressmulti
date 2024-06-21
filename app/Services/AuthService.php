@@ -76,14 +76,13 @@ class AuthService
 
         $loginBackground = $Background;
 
-        if (!session('lock-expires-at')) {
-            return redirect('/');
-        }
-
-        if (session('lock-expires-at') > now()) {
-            return redirect('/');
-        }
-
+//        if (!session('lock-expires-at')) {
+//            return redirect('/');
+//        }
+//
+//        if (session('lock-expires-at') > now()) {
+//            return redirect('/');
+//        }
 
         return (!empty($avatar)) ? asset('uploads/' . $user->person->profile_pic) : $defaultAvatar;
     }
@@ -94,27 +93,23 @@ class AuthService
      */
     public function unlock(Request $request)
     {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
 
-        $check = Hash::check($request->input('password'), Auth::user()->password);
-
-        if (!$check) {
+        if (!Hash::check($request->input('password'), Auth::user()->password)) {
             return redirect()->route('login.locked')->withErrors([
-                'Your password does not match your profile.'
+                'password' => 'Your password does not match your profile.'
             ]);
         }
 
-        session(['lock-expires-at' => now()->addMinutes(Auth::user()->getLockoutTime())]);
+        $lockoutTime = Auth::user()->getLockoutTime();
+        session(['lock-expires-at' => now()->addMinutes($lockoutTime)]);
 
-        if(!session()->has('url.intended'))
-        {
-            session(['url.intended' => url()->previous()]);
-        }
+        $storedUrl = session();
 
-     //   dd(session()->get('url.intended'));
-
-        return redirect('/');
+        return redirect()->intended($this->previousUrl());
     }
-
 
     /**
      * @param $request
@@ -187,6 +182,14 @@ class AuthService
             'status'=>$status,
         ));
     }
+
+    private function previousUrl()
+    {
+        return session('previous_url');
+    }
+
+
+
 
 
 }

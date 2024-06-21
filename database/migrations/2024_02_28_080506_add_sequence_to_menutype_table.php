@@ -14,7 +14,7 @@ class AddSequenceToMenutypeTable extends Migration
     public function up()
     {
         Schema::table('menu_types', function ($table) {
-            $table->integer('sequence')->unsigned()->nullable();
+            $table->integer('sequence')->nullable();
         });
     }
 

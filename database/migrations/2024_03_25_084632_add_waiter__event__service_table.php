@@ -14,7 +14,7 @@ class AddWaiterEventServiceTable extends Migration
     public function up()
     {
         Schema::table('events_services', function ($table) {
-            $table->integer('waiter')->unsigned()->nullable();
+            $table->integer('waiter')->nullable();
         });
     }
 

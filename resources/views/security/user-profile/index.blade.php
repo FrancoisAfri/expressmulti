@@ -132,6 +132,7 @@
 											<select id="roles" name="roles"
 													class="form-control" required="">
 												<option value="0">Select Role</option>
+
 												@foreach($roles as $role)
 													<option value="{{ $role->id }}" {{ ($role->id == $user_role) ? ' selected' : '' }}>{{ $role->name }}</option>
 												@endforeach

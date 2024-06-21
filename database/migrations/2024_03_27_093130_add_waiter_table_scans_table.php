@@ -14,7 +14,7 @@ class AddWaiterTableScansTable extends Migration
     public function up()
     {
         Schema::table('table_scans', function ($table) {
-            $table->integer('waiter')->unsigned()->nullable();
+            $table->integer('waiter')->nullable();
         });
     }
 

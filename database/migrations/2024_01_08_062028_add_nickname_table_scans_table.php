@@ -14,10 +14,10 @@ class AddNicknameTableScansTable extends Migration
     public function up()
     {
         Schema::table('table_scans', function ($table) {
-            $table->string('nickname')->unsigned()->nullable();
-            $table->string('comment')->unsigned()->nullable();
-			$table->bigInteger('scan_time')->unsigned()->nullable();
-			$table->bigInteger('closed_time')->unsigned()->nullable();
+            $table->string('nickname')->nullable();
+            $table->string('comment')->nullable();
+			$table->bigInteger('scan_time')->nullable();
+			$table->bigInteger('closed_time')->nullable();
         });
     }
 

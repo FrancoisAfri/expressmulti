@@ -14,7 +14,7 @@ class AddOnlineToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->integer('online')->unsigned()->nullable();
+            $table->integer('online')->nullable();
         });
     }
 

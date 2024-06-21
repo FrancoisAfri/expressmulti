@@ -14,7 +14,7 @@ class AddImageToCategoriesTable extends Migration
     public function up()
     {
 		Schema::table('categories', function ($table) {
-            $table->string('image')->unsigned()->nullable();
+            $table->string('image')->nullable();
         });
     }
 

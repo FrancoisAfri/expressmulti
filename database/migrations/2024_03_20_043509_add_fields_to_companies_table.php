@@ -14,7 +14,7 @@ class AddFieldsToCompaniesTable extends Migration
     public function up()
     {
 		Schema::table('companies', function ($table) {
-            $table->string('tenant_url')->unsigned()->nullable();
+            $table->string('tenant_url')->nullable();
         });
     }
 

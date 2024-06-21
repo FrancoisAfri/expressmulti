@@ -47,14 +47,19 @@ class LoginController extends Controller
      * @var CommunicationService
      */
     private $communicationService;
+    private AuthService $authService;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(CommunicationService $communicationService)
+    public function __construct(
+        CommunicationService $communicationService,
+        AuthService $authService
+    )
     {
+        $this->authService = $authService;
         $this->communicationService = $communicationService;
 
         $this->middleware('guest')->except(
@@ -134,10 +139,7 @@ class LoginController extends Controller
 
     public function unlock(Request $request)
     {
-        $Drop = new AuthService();
-
-        return $Drop->unlock($request);
-
+       return $this->authService->unlock($request);
     }
 
     public function showLoginForm()

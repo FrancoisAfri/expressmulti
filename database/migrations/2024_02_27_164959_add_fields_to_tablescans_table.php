@@ -15,10 +15,10 @@ class AddFieldsToTablescansTable extends Migration
     public function up()
     {
         Schema::table('table_scans', function ($table) {
-            $table->string('q_one')->unsigned()->nullable();
-            $table->string('q_two')->unsigned()->nullable();
-            $table->string('q_three')->unsigned()->nullable();
-            $table->string('q_four')->unsigned()->nullable();
+            $table->string('q_one')->nullable();
+            $table->string('q_two')->nullable();
+            $table->string('q_three')->nullable();
+            $table->string('q_four')->nullable();
         });
     }
 

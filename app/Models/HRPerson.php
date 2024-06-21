@@ -170,14 +170,14 @@ class HRPerson extends Model
      * @param $email
      * @return mixed
      */
-    public function getUserDetailsByEmail($email)
+    public static function getUserDetailsByEmail($email)
     {
         return HRPerson::where('email', $email)
             ->select('first_name', 'surname')
             ->selectRaw("(CASE WHEN (gender = 1) THEN 'Female' ELSE 'Male' END) as gender_text")
             ->first();
     }
-	
+
 	public function getWaiterList()
     {
         return HRPerson::where('role_id', 4)

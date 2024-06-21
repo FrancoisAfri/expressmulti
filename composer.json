@@ -26,7 +26,6 @@
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "mad-web/laravel-seoable": "^3.1",
         "owen-it/laravel-auditing": "^13.0",
         "plummer/calendarful": "^0.2.1",
         "ramsey/uuid-doctrine": "^1.8",

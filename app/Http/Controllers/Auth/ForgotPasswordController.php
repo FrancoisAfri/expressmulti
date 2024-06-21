@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetedEmail;
 use App\Models\CompanyIdentity;
+use App\Models\HRPerson;
 use App\Models\OldPasswords;
 use App\Models\PasswordHistory;
 use App\Models\User;
@@ -18,6 +20,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -109,8 +112,8 @@ class ForgotPasswordController extends Controller
 
         //Here send the link with CURL with an external email API return true;
         $userSchema->sendNewUserPasswordResetNotification($token, $temp_password, $user);
-    } 
-	
+    }
+
 	public function sendResetEmail($email, $password, $user, $domain)
     {
         $token = str::random(60);
@@ -136,7 +139,7 @@ class ForgotPasswordController extends Controller
 
     public function showResetPasswordForm($token)
     {
-		
+
         $email = db::table('password_resets')
             ->where('token', $token)
             ->first();
@@ -153,50 +156,39 @@ class ForgotPasswordController extends Controller
 
 
 
-    /**
-     * @param Request $request
-     * @return Application|Factory|View|RedirectResponse|Redirector
-     */
     public function submitResetPasswordForm(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-                'email' => 'required|email|exists:users',
-                'password' => 'required',
-                'password_confirmation' => 'required|string|min:6|confirm'
-            ]
-        );
-
-
-//        if (!(Hash::check($request->get('password'), Auth::user()->password))) {
-//            // The passwords matches
-//            return redirect()->back()->with("error", "Your current password does not matches with the password you provided. Please try again.");
-//        }
-
-        if (strcmp($request->get('password'), $request->get('password_confirmation')) == 0) {
-            //Current password and new password are same
-            return redirect()->back()->with("error", "Please Enter a correct Temporary Password.");
-        }
-
-        //Validate input
-
-
-        //CHECK IF password has been used before
+        $validator =  $request->validate([
+            'email' => 'required|email|exists:users',
+            'password' => 'required|string|min:6',
+            'password_confirmation' => ['same:password'],
+        ]);
 
 
         $passwordHistories = PasswordHistory::select('password')->get();
+
         foreach ($passwordHistories as $passwordHistory) {
 
             if (Hash::check($request->get('password_confirmation'), $passwordHistory->password)) {
                 // The passwords matches
-                return redirect()->back()->with("error", "Your new password can not be same as any of your recent passwords. Please choose a new password.");
+                return redirect()->back()->with(
+                    "error",
+                    "Your new password can not be same as any of your recent passwords.
+                    Please choose a new password."
+                );
             }
         }
 
 
+        $userDetails = HRPerson::getUserDetailsByEmail($request->input('email'));
+
+
         // Validate the token
         $tokenData = DB::table('password_resets')
-            ->where('token', $request->token)->first();//
+            ->where('token', $request->token)
+            ->orderBy('created_at', 'desc')
+            ->first();//
+
         // Redirect the user back to the password reset request form if the token is invalid
         if (!$tokenData) return redirect()->back()->with("error", "Expired Session, please Contact the Admin for a new Reset Link.");
 
@@ -223,6 +215,10 @@ class ForgotPasswordController extends Controller
             'last_login_at' => Carbon::now()->toDateTimeString(),
             'last_login_ip' => $request->getClientIp()
         ]);
+
+        $name = $userDetails->first_name . ' ' . $userDetails->surname;
+
+        Mail::to($request->input('email'))->send(new PasswordResetedEmail($name));
 
         //Delete the token
         DB::table('password_resets')->where('email', $user->email)

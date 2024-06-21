@@ -12,9 +12,9 @@ class AddUserFcmTokenToUsersTable extends Migration
      * @return void
      */
     public function up()
-    {		
+    {
 		Schema::table('users', function ($table) {
-            $table->string('user_fcm_token')->unsigned()->nullable();
+            $table->string('user_fcm_token')->nullable();
         });
     }
 
@@ -24,7 +24,7 @@ class AddUserFcmTokenToUsersTable extends Migration
      * @return void
      */
     public function down()
-    {		
+    {
 		Schema::table('users', function ($table) {
             $table->dropColumn('user_fcm_token');
         });

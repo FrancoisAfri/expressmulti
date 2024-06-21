@@ -49,11 +49,12 @@ class UserProfileController extends Controller
         );
 
         $user = Auth::user()->load('person');
-		
-		$data['roles'] = Role::select('id', 'name')->get();
+
+		$data['roles'] = Role::orderBy('id', 'DESC')->paginate(5);
         $data['avatar'] = $this->companyIdentityService->getAvatar(Auth::id());
         $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
         $data['user'] =  Auth::user()->load('person');
+        $data['user_role'] =$user->roles->pluck('id')->implode(',');
         return view('security.user-profile.index')->with($data);
     }
 	// edit profile by admin users
