@@ -430,7 +430,7 @@ class ReportsController extends Controller
 
 		while ($i <= 5) 
 		{
-			echo $i."</br>";
+			//echo $i."</br>";
 			// Process the current date (e.g., output it, perform some action)
 			//echo $currentDate->toDateString() . "<br>";
 			
@@ -448,8 +448,9 @@ class ReportsController extends Controller
 			];
 			// Assign the formatted data to the $resultData array
 			$resultData[] = $formattedData;
+			$i ++;
 		}
-		return $resultData;
+		$resultData = "[{"y":1,"a":12,"b":23,"c":55,"d":43},{"y":2,"a":55,"b":44,"c":33,"d":65},{"y":3,"a":34,"b":54,"c":66,"d":66},{"y":4,"a":67,"b":76,"c":54,"d":56},{"y":5,"a":66,"b":55,"c":76,"d":66}]";
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = $startDate."-".$endDate;
