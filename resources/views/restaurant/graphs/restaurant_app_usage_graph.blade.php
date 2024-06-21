@@ -33,7 +33,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mt-3">
-                                <p style="text-align:center;"><b>Sales volume:<strong> {{$date}}</strong></b></p>
+                                <p style="text-align:center;"><b>Customer Reviews:<strong> {{$date}}</strong></b></p>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                                                  class="morris-chart mt-3"></div>
                                         </div>
 										<div class="mt-3">
-											<p style="text-align:center;"><b>Date</b></p>
+											<p style="text-align:center;"><b>Star Rating</b></p>
 										</div>
                                     </div> <!-- end collapse-->
                                 </div> <!-- end card-body-->
@@ -82,10 +82,9 @@
 <script src="{{ asset('js/app.min.js') }}"></script>
 
 <script>
-document.getElementById("back_button").onclick = function () {
+    document.getElementById("back_button").onclick = function () {
         location.href = "/restaurant/reports";
     };
-	
 	
     window.addEventListener('DOMContentLoaded', (event) => {
         // Your JavaScript code to initialize the chart with chartData
