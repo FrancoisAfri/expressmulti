@@ -19,9 +19,6 @@ class AuthLockMiddleware
      */
     public function handle($request, Closure $next)
     {
-
-
-
         //dd(Auth::user()->hasLockedTime());
         // If the user does not have this feature enabled, then just return next.
         if (!Auth::user()->hasLockedTime()) {
@@ -35,9 +32,9 @@ class AuthLockMiddleware
 
         if ($lockExpiresAt = session('lock-expires-at')) {
 
-            if ($lockExpiresAt < now()) {
-
-                //get current url
+            if ($lockExpiresAt < now())
+			{
+				//get current url
                 $this->getCurrentUrl();
                 return redirect()->route('login.locked');
             }
@@ -48,8 +45,7 @@ class AuthLockMiddleware
 
         return $next($request);
     }
-
-    private function getCurrentUrl()
+	private function getCurrentUrl()
     {
         $currentUrl =  \url()->current();
         return session()->put('previous_url', $currentUrl);
