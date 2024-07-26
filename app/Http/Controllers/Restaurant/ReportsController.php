@@ -85,6 +85,7 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -122,8 +123,8 @@ class ReportsController extends Controller
 		//die;
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDate."-".$endDate;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 		
@@ -177,6 +178,7 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -201,8 +203,8 @@ class ReportsController extends Controller
 		}
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDate."-".$endDate;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 
@@ -231,6 +233,7 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		
 		$services = ServiceType::where('status',1)->get();
@@ -253,8 +256,8 @@ class ReportsController extends Controller
 		}
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDate."-".$endDate;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 
@@ -283,6 +286,7 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		
 		$tables = Tables::where('status',1)->orderBy('number_customer')->get();
@@ -305,8 +309,8 @@ class ReportsController extends Controller
 		}
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDate."-".$endDate;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 
@@ -335,11 +339,12 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ?$dates[0]  : '' ;
-		$endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		$scans = TableScans::getReports($startDate, $endDate);
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
+        $data['endDate'] = $endDateDisplay;
 		$data['date'] = date("d/m/Y");
         $data['user'] = Auth::user()->load('person');
         $data['scans'] = $scans;
@@ -368,14 +373,15 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		
 		$dishes = OrdersProducts::popularDishes($startDate, $endDate);
 
         $data['dishes'] = $dishes;
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDate."-".$endDate;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
 
         return view('restaurant.reports.popular_dishes')->with($data);
@@ -405,8 +411,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
-        $endDateS = !empty($dates[1]) ? $dates[1] : '';
-
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
+        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		//
 		// Convert the start and end dates to Carbon objects
 		$startDate = new Carbon($startDateS);
@@ -432,8 +438,8 @@ class ReportsController extends Controller
 		}
 		
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDateS."-".$endDateS;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDateS."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 		
@@ -462,7 +468,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
-        $endDateS = !empty($dates[1]) ? $dates[1] : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
+        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 
 		//
 		// Convert the start and end dates to Carbon objects
@@ -489,8 +496,8 @@ class ReportsController extends Controller
 		}
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDateS."-".$endDateS;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDateS."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 
@@ -520,7 +527,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
-        $endDateS = !empty($dates[1]) ? $dates[1] : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
+        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 
 		//
 		// Convert the start and end dates to Carbon objects
@@ -547,8 +555,8 @@ class ReportsController extends Controller
 		}
 
         $data['startDate'] = $startDate;
-        $data['endDate'] = $endDate;
-		$data['date'] = $startDateS."-".$endDateS;
+        $data['endDate'] = $endDateDisplay;
+		$data['date'] = $startDateS."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
 
