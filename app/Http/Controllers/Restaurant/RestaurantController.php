@@ -18,6 +18,7 @@ use App\Models\modules;
 use App\Models\EventsServices;
 use App\Models\RestaurantSetup;
 use App\Models\Menu;
+use App\Models\User;
 use App\Models\MenuType;
 use App\Models\Tables;
 use App\Models\ServiceType;
