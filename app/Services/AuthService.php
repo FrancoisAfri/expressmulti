@@ -100,7 +100,8 @@ class AuthService
 
         $storedUrl = session();
 
-        return redirect()->intended($this->previousUrl());
+        return redirect('/');
+        //return redirect()->intended($this->previousUrl());
     }
 
     /**
