@@ -74,8 +74,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -85,8 +85,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : $startDate. ' 23:59:00';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
 				->where('model_has_roles.role_id', 4)
@@ -167,8 +167,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -178,8 +178,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDate. ' 23:59:00';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
 				->where('model_has_roles.role_id', 4)
@@ -222,8 +222,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -233,8 +233,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDate. ' 23:59:00';
 		
 		$services = ServiceType::where('status',1)->get();
 
@@ -275,8 +275,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -286,8 +286,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDate. ' 23:59:00';
 		
 		$tables = Tables::where('status',1)->orderBy('number_customer')->get();
 
@@ -328,8 +328,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -339,8 +339,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ?$dates[0]  : '' ;
-		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDate. ' 23:59:00';
 		$scans = TableScans::getReports($startDate, $endDate);
 
         $data['startDate'] = $startDate;
@@ -362,8 +362,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -373,8 +373,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+        $endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDate. ' 23:59:00';
 		
 		$dishes = OrdersProducts::popularDishes($startDate, $endDate);
 
@@ -400,8 +400,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -411,8 +411,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
-		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDateS;
+        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDateS. ' 23:59:00';
 		//
 		// Convert the start and end dates to Carbon objects
 		$startDate = new Carbon($startDateS);
@@ -457,8 +457,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -468,8 +468,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
-		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDateS;
+        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : $startDateS. ' 23:59:00';
 
 		//
 		// Convert the start and end dates to Carbon objects
@@ -516,8 +516,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -527,8 +527,8 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
-		$endDateDisplay = !empty($dates[1]) ? $dates[1] : '';
-        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDateS;
+        $endDateS = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : $startDateS. ' 23:59:00';
 
 		//
 		// Convert the start and end dates to Carbon objects
