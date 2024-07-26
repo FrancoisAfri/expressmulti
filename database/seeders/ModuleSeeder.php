@@ -46,6 +46,16 @@ class ModuleSeeder extends Seeder
 
         $ribbon = new module_ribbons();
         $ribbon->active = 1;
+        $ribbon->sort_order = 2;
+        $ribbon->ribbon_name = 'Edit company Details';
+        $ribbon->description = 'edit_company_details';
+        $ribbon->ribbon_path = 'users/company_details';
+        $ribbon->font_awesome = 'fe-settings';
+        $ribbon->access_level = 5;
+        $module->addRibbon($ribbon);
+
+        $ribbon = new module_ribbons();
+        $ribbon->active = 1;
         $ribbon->sort_order = 3;
         $ribbon->ribbon_name = 'Users Access';
         $ribbon->description = 'Users Access';

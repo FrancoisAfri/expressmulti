@@ -26,10 +26,10 @@ class CompanyIdentityService
      */
     public function createOrUpdateCompanyIdentity(Request $request): CompanyIdentity
     {
-		// check if table is not empty
-		$CompanyIdentity = CompanyIdentity::first();
-		// update/ save
-		//$compDetails = (Schema::hasTable('company_identities')) ? CompanyIdentity::first() : null;
+        // check if table is not empty
+        $CompanyIdentity = CompanyIdentity::first();
+        // update/ save
+        //$compDetails = (Schema::hasTable('company_identities')) ? CompanyIdentity::first() : null;
         if (!empty($CompanyIdentity)) { //update
             $CompanyIdentity->update($request->all());
 
@@ -37,11 +37,11 @@ class CompanyIdentityService
             $CompanyIdentity = new CompanyIdentity($request->all());
             $CompanyIdentity->save();
         }
-       
+
         /*
          * company_logo
          */
-		//Upload Image picture
+        //Upload Image picture
         if ($request->hasFile('company_logo')) {
             $fileExt = $request->file('company_logo')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('company_logo')->isValid()) {
@@ -57,7 +57,7 @@ class CompanyIdentityService
         /**
          * save login image
          */
-		//Upload Image picture
+        //Upload Image picture
         if ($request->hasFile('login_background_image')) {
             $fileExt = $request->file('login_background_image')->extension();
             if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('login_background_image')->isValid()) {
@@ -103,60 +103,48 @@ class CompanyIdentityService
             $person['date_of_birth'] = strtotime($person['date_of_birth']);
         }
 
-        $userDetails = HRPerson::updateOrCreate(
-            [
-                'user_id' => $request->get('user_id'),
-            ],
-            [
-                'first_name' => $request->get('first_name'),
-                'surname' => $request->get('surname'),
-                'initial' => $request->get('initial'),
-                'cell_number' => $mobile,
-            ],
-        );
+        $userDetails = $this->getUserDetails($request, $mobile);
 
+        //update updateLockoutTime
+        $this->updateLockoutTime($request);
         /*
         * avatar
         */
-		
-		if ($request->hasFile('profile_pic')) {
-            $fileExt = $request->file('profile_pic')->extension();
-            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('profile_pic')->isValid()) {
-                $fileName = time() . "image." . $fileExt;
-                $request->file('profile_pic')->storeAs('uploads', $fileName);
-                //Update file name in the database
-                $userDetails->profile_pic = $fileName;
-                $userDetails->update();
-            }
-        }
+        $this->extracted($request, $userDetails);
         //$this->uploadImage($request, 'uploads', '', $userDetails);
-		// assign role
-		
-		$user = User::where('id',$request->get('user_id'))->first();
-		$role =  DB::table('model_has_roles')->select('model_has_roles.role_id')
-				->where('model_has_roles.model_id', $user->id)
-				->first();
-		if (!empty($role->role_id))
-			$user->removeRole($role->role_id);
-		$user->assignRole($request->get('roles'));
+        // assign role
+
+        list($user, $role) = $this->assignRole($request);
+
+        if (!empty($role->role_id))
+            $user->removeRole($role->role_id);
+        $user->assignRole($request->get('roles'));
         return $userDetails;
+    }
+
+    private static function updateLockoutTime(Request $request)
+    {
+        $user = auth()->user();
+        $lockoutTime = $request->input('lockout_time');
+        $user->lockout_time = $lockoutTime;
+        return $user->save();
     }
 
     public function getAvatar($id)
     {
 
-        $user =  User::where('id', $id)->with('person')->first();
+        $user = User::where('id', $id)->with('person')->first();
 
         $defaultAvatar = ($user->person->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
         $avatar = $user->person->profile_pic;
         return (!empty($avatar)) ? asset('uploads/' . $user->person->profile_pic) : $defaultAvatar;
 
     }
-	
-	public function getAvatarID($id)
+
+    public function getAvatarID($id)
     {
 
-		$hrUser = HRPerson::where('id', $id)->first();
+        $hrUser = HRPerson::where('id', $id)->first();
         $defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
         $avatar = $hrUser->profile_pic;
         return (!empty($avatar)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
@@ -209,6 +197,59 @@ class CompanyIdentityService
         return Crypt::decryptString($string);
     }
 
+    /**
+     * @param Request $request
+     * @param $userDetails
+     * @return void
+     */
+    public function extracted(Request $request, $userDetails): void
+    {
+        if ($request->hasFile('profile_pic')) {
+            $fileExt = $request->file('profile_pic')->extension();
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png']) && $request->file('profile_pic')->isValid()) {
+                $fileName = time() . "image." . $fileExt;
+                $request->file('profile_pic')->storeAs('uploads', $fileName);
+                //Update file name in the database
+                $userDetails->profile_pic = $fileName;
+                $userDetails->update();
+            }
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function assignRole(Request $request): array
+    {
+        $user = User::where('id', $request->get('user_id'))->first();
+        $role = DB::table('model_has_roles')->select('model_has_roles.role_id')
+            ->where('model_has_roles.model_id', $user->id)
+            ->first();
+        return array($user, $role);
+    }
+
+    /**
+     * @param Request $request
+     * @param $mobile
+     * @return mixed
+     */
+    public function getUserDetails(Request $request, $mobile)
+    {
+        $userDetails = HRPerson::updateOrCreate(
+            [
+                'user_id' => $request->get('user_id'),
+            ],
+            [
+                'first_name' => $request->get('first_name'),
+                'surname' => $request->get('surname'),
+                'initial' => $request->get('initial'),
+                'cell_number' => $mobile,
+            ],
+        );
+        return $userDetails;
+    }
+
     private function saveLoginImage($request)
     {
         $request->validate([
@@ -229,8 +270,8 @@ class CompanyIdentityService
                 100
             );
         $imageName = 'bg-auth' . '.' . 'jpg';
-        $originalPath = public_path().'/images/';
-        $interventionImage->save($originalPath.$imageName);
+        $originalPath = public_path() . '/images/';
+        $interventionImage->save($originalPath . $imageName);
 
     }
 }

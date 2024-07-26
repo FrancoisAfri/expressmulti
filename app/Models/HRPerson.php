@@ -92,15 +92,15 @@ class HRPerson extends Model
         return $this->first_name . ' ' . $this->surname;
     }
 
-    public function initials(){
-        $words = explode(" ", $this->first_name );
+    public function initials()
+    {
+        $words = explode(" ", $this->first_name);
         $initials = null;
         foreach ($words as $w) {
             $initials .= $w[0];
         }
         return strtoupper($initials);
     }
-
 
 
     public function setEncyptedIdNumber(): string
@@ -178,17 +178,18 @@ class HRPerson extends Model
             ->first();
     }
 
-	public function getWaiterList()
+    public function getWaiterList()
     {
         return HRPerson::where('role_id', 4)
             ->select('first_name', 'surname', 'id as hr_id', 'initial')
             ->first();
     }
-	public function getWaiterStatus($waiter)
+
+    public function getWaiterStatus($waiter)
     {
-        $user = HRPerson::with('user')->where('id',$waiter)->first();
-		if (!empty($user->user->online) && $user->user->online == 1)
-			return 1;
-		else return 0;
+        $user = HRPerson::with('user')->where('id', $waiter)->first();
+        if (!empty($user->user->online) && $user->user->online == 1)
+            return 1;
+        else return 0;
     }
 }

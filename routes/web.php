@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Security\ClientController;
 use App\Http\Controllers\Auth\AccountsController;
 use App\Http\Controllers\Auth\TwoFactorAuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\AuditController;
 use App\Http\Controllers\Patients\PatientControlle;
 use App\Http\Controllers\Restaurant\RestaurantController;
+use App\Http\Controllers\ClientRegistrationGuestController;
 use App\Http\Controllers\Restaurant\ReportsController;
 use App\Http\Controllers\RestaurantGuestController;
 use App\Http\Controllers\PageUsageController;
@@ -37,7 +39,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
+Route::get('/new_client_registration', [ClientRegistrationGuestController::class , 'index']);
+Route::get('/client', [ClientController::class , 'index']);
 Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
 
 // table scanning
@@ -54,7 +57,7 @@ Route::post('restaurant/add-cart/{table}/{menu}', [RestaurantGuestController::cl
         ->name('cart.store');
 Route::get('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
         ->name('order.store');
-	
+
 Auth::routes(['register' => false]);
 Route::get('2fa', [TwoFactorAuthController::class, 'index'])
     ->name('2fa.index');
@@ -133,7 +136,7 @@ Route::group(['prefix' => 'users', 'middleware' => [
     'web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
     Route::resource('module', ModuleController::class);
-	
+
     Route::get('module/act/{mod}', [ModuleController::class, 'activateModule'])
         ->name('module.activate');
 	Route::get('profile_edit/{user}', [UserProfileController::class, 'profile'])
@@ -186,7 +189,7 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
     Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
         ->name('patientManagement.guest.update');
     Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
-        ->name('clientManagement.activate'); 
+        ->name('clientManagement.activate');
 	Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
         ->name('client_details.show');
     Route::get('send-message', [ContactControllere::class, 'sendMessages'])
@@ -221,13 +224,13 @@ Route::post('/logout-other-user', 'App\Http\Controllers\PageUsageController@logo
 Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
 	Route::get('download-qr-code/{table}', [RestaurantController::class, 'printQrCode'])
-        ->name('qr-code.download'); 
+        ->name('qr-code.download');
 	Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
         ->name('client_details.update');
     Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
         ->name('patientManagement.guest.update');
     Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
-        ->name('clientManagement.activate'); 
+        ->name('clientManagement.activate');
 	Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
         ->name('client_details.show');
     Route::get('send-message', [ContactControllere::class, 'sendMessages'])
@@ -357,7 +360,7 @@ Route::get('/api/get-terminal-services', [RestaurantController::class, 'checkTer
         ->name('service_terminal.check');
 Route::get('/api/get-latest-services', [DashboardController::class, 'getLatestServices'])
         ->name('services.load');
-/// payfast payment 
+/// payfast payment
 //Route::get('/users', 'UserController@index');
 Route::get('add-new-card', 'Payments@initCardPayment');
 Route::get('make-payment/{company}', 'App\Http\Controllers\Payments@realCardPayment');
@@ -372,3 +375,10 @@ Route::get('check-out', 'App\Http\Controllers\Payments@checkout');
 Route::get('success', 'App\Http\Controllers\Payments@showSuccessfullMessage');
 Route::get('cancel', 'App\Http\Controllers\Payments@cancel');
 Route::get('notify', 'App\Http\Controllers\Payments@notify');
+
+
+Route::get('myInvoice', [\App\Http\Controllers\Billing\InvoiceController::class, 'index']);
+
+//edit compony details
+Route::get('users/company_details', [ClientController::class, 'edit']);
+

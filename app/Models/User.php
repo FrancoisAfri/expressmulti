@@ -39,7 +39,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'phone_number', 'google_id',
-        'facebook_id', 'password', 'type', 'status',
+        'facebook_id', 'password', 'type', 'status','lockout_time',
         'last_login_at', 'last_login_ip', 'user_fcm_token', 'online',
     ];
 
@@ -107,7 +107,7 @@ class User extends Authenticatable
     {
         $this->notify(new NewUserNotification($token, $temp_password ,$user));
     }
-	
+
 	public function sendOwnerPasswordResetNotification($token, $temp_password ,$user, $domain)
     {
         $this->notify(new NewRestaurantOwner($token, $temp_password ,$user, $domain));
