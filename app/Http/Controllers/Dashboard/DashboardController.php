@@ -92,7 +92,14 @@ class DashboardController extends Controller
         $CompanyIdentity = $this->CompanyIdentityDetails(); 
 		$services = EventsServices::getRequests();
 		$setup = RestaurantSetup::where('id',1)->first();
-				
+		
+		$users =  User::select('users.*', 'model_has_roles.*')
+				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+				->where('model_has_roles.role_id', 4)
+				->get();
+		$users = $users->load('person');
+		//return $users;
+		$data['users'] = $users;
         $data['normal'] = !empty($setup->colour_one) ? $setup->colour_one : '';
         $data['moderate'] = !empty($setup->colour_two) ? $setup->colour_two : '';
         $data['critical'] = !empty($setup->colour_three) ? $setup->colour_three : '';
@@ -105,7 +112,6 @@ class DashboardController extends Controller
 		//$data['orders'] = Orders::getOrders();
 		$data['services'] = $services;
 		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
-		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTablesScans();
 		
         return view('dashboard.index')->with($data);

@@ -97,7 +97,7 @@
                     <tr>
                         <td style="text-align:center;padding: 0 30px 20px">
                             <p style="margin-bottom: 10px;">Hi {{ $mailData['name'] }},</p>
-                            <p>You Successfully Reseted Your Password. Thanks For being with Us.</p>
+                            <p>Your Password has been Reseted Successfully </p>
                         </td>
                     </tr>
                     <tr>

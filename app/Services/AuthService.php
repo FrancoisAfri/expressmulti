@@ -76,14 +76,6 @@ class AuthService
 
         $loginBackground = $Background;
 
-//        if (!session('lock-expires-at')) {
-//            return redirect('/');
-//        }
-//
-//        if (session('lock-expires-at') > now()) {
-//            return redirect('/');
-//        }
-
         return (!empty($avatar)) ? asset('uploads/' . $user->person->profile_pic) : $defaultAvatar;
     }
 
@@ -107,7 +99,8 @@ class AuthService
 
         session(['lock-expires-at' => now()->addMinutes($lockoutTime)]);
 
-        return redirect()->intended($this->previousUrl());
+        return redirect('/');
+        //return redirect()->intended($this->previousUrl());
     }
 
     /**
