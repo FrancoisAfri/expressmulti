@@ -393,10 +393,10 @@ class ClientService
         $tenant->run(function() use ($firstname, $surname, $email, $contactNumber, $password, $random_pass, $domain)
         {
 
-            $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
+//            $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
 
             // save contact person
-            $this->saveContactPerson($clientRecord, $first_name, $surname, $contact_number, $contact_email);
+            $this->saveContactPerson($clientRecord, $surname);
 
             $user = $this->getUser($firstname, $email, $password, $contactNumber);
 
