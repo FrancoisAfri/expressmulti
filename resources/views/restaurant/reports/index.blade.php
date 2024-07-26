@@ -102,7 +102,7 @@
                                                 <div class="row">
                                                     <div class="col-lg-8 float-sm-right">
 														<div class="form-group">
-                                                            <label for="heard"> Date Rangedmnjbfb </label>
+                                                            <label for="heard"> Date Range </label>
                                                             <input type="text" id="dates" name="date_range" class="form-control">
                                                         </div>
                                                     </div>

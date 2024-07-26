@@ -285,33 +285,37 @@ class RestaurantGuestController extends Controller
     {
 		
 		$scanned = TableScans::where('table_id', $table->id)->where('status', 1)->orderBy('id', 'desc')->first();
-		// save close request
-		$closeRequests = CloseRequests::create([
-                'table_id' => $table->id,
-                'scan_id' => $scanned->id,
-                'status' => 1,
-            ]);
-			
-		// save services requestService
-		$EventsServices = EventsServices::create([
-				'scan_id' => $scanned->id,
-				'table_id' => $table->id,
-				'service_type' => 3,
-				'requested_time' => time(),
-				'service' => "Close Request",
-				'item_id' => $closeRequests->id,
-				'waiter' => $table->employee_id,
-				'status' => 1,
-			]);
-		// get waiter user token
-		$waiter = HRPerson::find($table->employee_id);
-		$waiter = $waiter->load('user');
-		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
-		// send Push notification
-		//$this->sendPush($userFcmToken, $EventsServices);
-        alert()->success('SuccessAlert', "Your request to close table have been submitted. Your waiter will come to you shortly.");
-        activity()->log("New close table Request Added");
-
+		if (!empty($scanned->id))
+		{
+			// save close request
+			$closeRequests = CloseRequests::create([
+					'table_id' => $table->id,
+					'scan_id' => $scanned->id,
+					'status' => 1,
+				]);
+				
+			// save services requestService
+			$EventsServices = EventsServices::create([
+					'scan_id' => $scanned->id,
+					'table_id' => $table->id,
+					'service_type' => 3,
+					'requested_time' => time(),
+					'service' => "Close Request",
+					'item_id' => $closeRequests->id,
+					'waiter' => $table->employee_id,
+					'status' => 1,
+				]);
+			// get waiter user token
+			$waiter = HRPerson::find($table->employee_id);
+			$waiter = $waiter->load('user');
+			$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
+			// send Push notification
+			//$this->sendPush($userFcmToken, $EventsServices);
+			alert()->success('SuccessAlert', "Your request to close table have been submitted. Your waiter will come to you shortly.");
+			activity()->log("New close table Request Added");
+		}
+		else alert()->success('SuccessAlert', "Your request to close table can not be processed. This is already closed.");
+		
 		return redirect()->back();
     }
 	
