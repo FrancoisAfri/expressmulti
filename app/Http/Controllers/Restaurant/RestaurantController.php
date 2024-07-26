@@ -738,6 +738,13 @@ class RestaurantController extends Controller
 		// get this year and month
 		$year = date('Y');
 		$month = date('m');
+		// get list of waiters
+		$users =  User::select('users.*', 'model_has_roles.*')
+				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+				->where('model_has_roles.role_id', 4)
+				->get();
+		$users = $users->load('person');
+		$data['users'] = $users;
 		$data['activeModules'] = modules::where('active', 1)->get();
         $data['normal'] = !empty($setup->colour_one) ? $setup->colour_one : '';
         $data['moderate'] = !empty($setup->colour_two) ? $setup->colour_two : '';
@@ -747,7 +754,7 @@ class RestaurantController extends Controller
         $data['critical_mins'] = !empty($setup->mins_three) ? $setup->mins_three : '';
 		$data['services'] = $services;
 		$data['resquest_type'] = EventsServices::SERVICES_SELECT;
-		$data['users'] = HRPerson::getAllUsers();
+		
 		$data['tables'] = Tables::getTablesScans();
 		return view('restaurant.terminal')->with($data);
     }
