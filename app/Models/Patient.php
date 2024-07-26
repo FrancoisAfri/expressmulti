@@ -27,10 +27,10 @@ class Patient extends Model
     protected $fillable = [
         'name', 'email', 'cell_number', 'phone_number', 'res_address', 'post_address',
         'date_joined', 'client_logo', 'is_active', 'payment_method', 'payment_status'
-		, 'package_id', 'database_name', 'database_user', 'database_password',
+		, 'package_id', 'database_name', 'database_user', 'database_password', 'package_type',
 	 'trading_as','vat','tenant_url',
     ];
-	
+
 
     protected static $logName = 'Client Profile Temp';
 
@@ -119,7 +119,7 @@ class Patient extends Model
     public static function getDetailsById($id){
         return Patient::where('id',  $id)->first();
     }
-	
+
 	 public static function isPackageExist($id){
 
         $packages =  Patient::where('package_id', $id)->first();

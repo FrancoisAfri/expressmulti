@@ -104,9 +104,8 @@ class AuthService
         }
 
         $lockoutTime = Auth::user()->getLockoutTime();
-        session(['lock-expires-at' => now()->addMinutes($lockoutTime)]);
 
-        $storedUrl = session();
+        session(['lock-expires-at' => now()->addMinutes($lockoutTime)]);
 
         return redirect()->intended($this->previousUrl());
     }

@@ -10,35 +10,62 @@ use App\Models\CompanyIdentity;
 use App\Models\CreditNote;
 use App\Models\InvoiceCompanyProfile;
 use App\Models\InvoicePayments;
+use App\Models\Packages;
 use App\Models\Patient;
 use App\Models\PaymentArrangement;
 use App\Services\CommunicationService;
+use App\Services\crons\EmailInvoiceToAllClients;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
+use App\Traits\SubscriptionConstants;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class InvoiceController extends Controller
 {
-    use BreadCrumpTrait, CompanyIdentityTrait;
+    use BreadCrumpTrait, CompanyIdentityTrait , SubscriptionConstants;
 
     /**
      * @var CommunicationService
      */
     private $CommunicationService;
+    private EmailInvoiceToAllClients $emailInvoiceToAllClients;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct(EmailInvoiceToAllClients $emailInvoiceToAllClients)
+    {
+        $this->emailInvoiceToAllClients = $emailInvoiceToAllClients;
+    }
+
+
     public function index()
     {
 
+       $PackageType = $this->subcriptions();
+
+        $patientsWithPackageType = Packages::getPatientsByPackageType(1);
+
+//        $this->emailInvoiceToAllClients->EmailInvoiceToAllClientsDependingOnTheirSubscription();
+
+//        foreach ($patientsWithPackageType as $patient) {
+//            dd($patient->name);
+//        }
+
+
+
+
+
+//        dd(PackageConstants::YEARLY);
+        $data['name'] = $this->CompanyIdentityDetails();
+        $data['companies'] = Patient::with('packages')->get();
+        $data['date'] = $currentDate = date('j M Y');
+        $data['invoice_number'] = $this->generateInvoiceNumber();
+        $data['company_details'] = $this->CompanyIdentityDetails();
+        return view('billing.invoice')->with($data);
     }
 
     /**
@@ -66,7 +93,7 @@ class InvoiceController extends Controller
         } elseif ($request['amount'] >= $request['owed']) {
             $status = 8;
         }
-		// detemine payment method
+        // detemine payment method
         switch ($request['payment_type']) {
             case "1":
                 $paymentType = 'Cash';
@@ -80,7 +107,7 @@ class InvoiceController extends Controller
             default:
                 $paymentType = 'Cash';
         };
-		// save invoice installment
+        // save invoice installment
         $billProcedure = InvoicePayments::create([
             'billing_invoice_id' => $request['billing_invoice_id'],
             'client_id' => $request['patient_no'],
@@ -95,7 +122,7 @@ class InvoiceController extends Controller
             'description' => 'Payment received:' . ':' . $paymentType . ' ' . '- Patient',
             'payment_type' => $request['payment_type']
         ]);
-		// if credit note save in the database
+        // if credit note save in the database
         if ($request->has('note')) {
             CreditNote::create([
                 'account_no' => $request['account_no'],
@@ -106,12 +133,12 @@ class InvoiceController extends Controller
                 'note' => $request['note'],
             ]);
         }
-		// update invoice table
-		$invoice = BillingInvoice::find($request['billing_invoice_id']);
-		$invoice->invoice_balance_amount = $request['owed'] - $request['amount'];
-		$invoice->status = $status;
-		$invoice->update();
-		// send success message
+        // update invoice table
+        $invoice = BillingInvoice::find($request['billing_invoice_id']);
+        $invoice->invoice_balance_amount = $request['owed'] - $request['amount'];
+        $invoice->status = $status;
+        $invoice->update();
+        // send success message
         Alert::toast('Payment Captured Successfully ', 'success');
 
         return response()->json([
@@ -139,7 +166,7 @@ class InvoiceController extends Controller
         $account = Accounts::getAccountByUuid($id);
 
 
-		$data['purchaseStatus'] = ['' => '', 5 => 'Client Waiting Invoice', 6 => 'Invoice Sent', 7 => 'Partially Paid', 8 => 'Paid'];
+        $data['purchaseStatus'] = ['' => '', 5 => 'Client Waiting Invoice', 6 => 'Invoice Sent', 7 => 'Partially Paid', 8 => 'Paid'];
         $data['labelColors'] = ['' => 'danger', 5 => 'warning', 6 => 'primary', 7 => 'primary', 8 => 'success'];
         $data['avatar'] = asset('images/m-silhouette.jpg');
         $data['runningCost'] = BillingInvoice::where('accounts_id', $account->id)->sum('invoice_amount');
@@ -238,14 +265,16 @@ class InvoiceController extends Controller
         return view('billing.Invoices.statement_index')->with($data);
     }
 
-    public function getFormatedMonth($id, $index){
+    public function getFormatedMonth($id, $index)
+    {
         $lastSixMonth = $this->subMonths()[$index];
         $month = $lastSixMonth['month'];
         $year = $lastSixMonth['year'];
         return InvoicePayments::getDetailsForLastSixMonths($id, $year, $month);
     }
 
-    private function calculateAmountDue($id,$index){
+    private function calculateAmountDue($id, $index)
+    {
         $lastSixMonth = $this->subMonths()[$index];
         $month = $lastSixMonth['month'];
         $year = $lastSixMonth['year'];
@@ -253,7 +282,8 @@ class InvoiceController extends Controller
     }
 
 
-    private function openingBalance($id,$index){
+    private function openingBalance($id, $index)
+    {
         $lastSixMonth = $this->subMonths()[$index];
         $month = $lastSixMonth['month'];
         $year = $lastSixMonth['year'];
@@ -261,28 +291,29 @@ class InvoiceController extends Controller
     }
 
 
-    private function amountPaid($id,$index){
+    private function amountPaid($id, $index)
+    {
         $lastSixMonth = $this->subMonths()[$index];
         $month = $lastSixMonth['month'];
         $year = $lastSixMonth['year'];
-        return  InvoicePayments::totalPaidThisMonth($id, $year, $month);
+        return InvoicePayments::totalPaidThisMonth($id, $year, $month);
     }
 
 
     public function getLastSixMonths()
     {
-        for ($i =0; $i < 6; $i++) {
-            $months[] = date("F Y", strtotime( date( 'Y-m-01' )." -$i months")- 1);
+        for ($i = 0; $i < 6; $i++) {
+            $months[] = date("F Y", strtotime(date('Y-m-01') . " -$i months") - 1);
         }
-     return $months;
+        return $months;
     }
 
-    public function subMonths(){
+    public function subMonths()
+    {
 
         $period = now()->subMonths(6)->monthsUntil(now());
         $data = [];
-        foreach ($period as $date)
-        {
+        foreach ($period as $date) {
             $data[] = [
                 'month' => $date->month,
                 'year' => $date->year,
@@ -291,7 +322,8 @@ class InvoiceController extends Controller
         return $data;
     }
 
-    public function printDetailedStatement(Request $request){
+    public function printDetailedStatement(Request $request)
+    {
         $dates = explode("to", $request['date_range']);
 
         $startDate = $dates[0];
@@ -320,7 +352,7 @@ class InvoiceController extends Controller
         $startDate = $dates[0];
         $endDate = $dates[1];
 
-        $ID =  Accounts::getAccountByUuid($id)->id;
+        $ID = Accounts::getAccountByUuid($id)->id;
 
         $data['patientDetails'] = Patient::getPatientDataById($ID);
         $data['date'] = Carbon::now()->toFormattedDateString();
@@ -328,69 +360,70 @@ class InvoiceController extends Controller
         $data['accountDetails'] = Accounts::getAccount($id);
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
-        $data['amountDue']= InvoicePayments::AmountDue($ID, $startDate, $endDate);
+        $data['amountDue'] = InvoicePayments::AmountDue($ID, $startDate, $endDate);
         $data['openingBalance'] = InvoicePayments::AmountDue($request['client_id'], $startDate, $endDate);
         $data['invoiceDetails'] = InvoiceCompanyProfile::invoiceSettings();
-        $data['totalPaid'] = InvoicePayments::totalPaid($id,$startDate, $endDate);
+        $data['totalPaid'] = InvoicePayments::totalPaid($id, $startDate, $endDate);
         $data['accounts'] = InvoicePayments::getInvoiceDetails($ID, $startDate, $endDate);
         return view('billing.Invoices.InvoicePrint.statement')->with($data);
     }
 
     public function statementMonth1($id)
     {
-        $client_id =  Accounts::getAccountByUuid($id)->client_id;
+        $client_id = Accounts::getAccountByUuid($id)->client_id;
 //            dd($this->calculateAmountDue($client_id,6));
         $data = $this->detailedInfo($id);
-        $data['amountDue']= $this->calculateAmountDue($client_id,5);
-        $data['amountPaid']= $this->amountPaid($client_id,6);
-        $data['openingBalance']= $this->calculateAmountDue($client_id,6);
+        $data['amountDue'] = $this->calculateAmountDue($client_id, 5);
+        $data['amountPaid'] = $this->amountPaid($client_id, 6);
+        $data['openingBalance'] = $this->calculateAmountDue($client_id, 6);
 
         return view('billing.Invoices.InvoicePrint.statement_month_1')->with($data);
     }
 
     public function statementMonth2($id)
     {
-        $client_id =  Accounts::getAccountByUuid($id)->client_id;
+        $client_id = Accounts::getAccountByUuid($id)->client_id;
         $data = $this->detailedInfo($id);
-        $data['amountDue']= $this->calculateAmountDue($client_id,4);
+        $data['amountDue'] = $this->calculateAmountDue($client_id, 4);
         return view('billing.Invoices.InvoicePrint.statement_month_2')->with($data);
     }
 
     public function statementMonth3($id)
     {
-        $client_id =  Accounts::getAccountByUuid($id)->client_id;
+        $client_id = Accounts::getAccountByUuid($id)->client_id;
         $data = $this->detailedInfo($id);
-        $data['amountDue']= $this->calculateAmountDue($client_id,3);
+        $data['amountDue'] = $this->calculateAmountDue($client_id, 3);
         return view('billing.Invoices.InvoicePrint.statement_month_3')->with($data);
     }
 
     public function statementMonth4($id)
     {
-        $client_id =  Accounts::getAccountByUuid($id)->client_id;
+        $client_id = Accounts::getAccountByUuid($id)->client_id;
         $data = $this->detailedInfo($id);
-        $data['amountDue']= $this->calculateAmountDue($client_id,2);
+        $data['amountDue'] = $this->calculateAmountDue($client_id, 2);
         return view('billing.Invoices.InvoicePrint.statement_month_4')->with($data);
     }
 
     public function statementMonth5($id)
     {
-        $client_id =  Accounts::getAccountByUuid($id)->client_id;
+        $client_id = Accounts::getAccountByUuid($id)->client_id;
         $data = $this->detailedInfo($id);
-        $data['amountDue']= $this->calculateAmountDue($client_id,1);
+        $data['amountDue'] = $this->calculateAmountDue($client_id, 1);
         return view('billing.Invoices.InvoicePrint.statement_month_5')->with($data);
     }
 
     public function statementMonth6($id)
     {
-        $client_id =  Accounts::getAccountByUuid($id)->client_id;
+        $client_id = Accounts::getAccountByUuid($id)->client_id;
         $data = $this->detailedInfo($id);
-        $data['amountDue']= $this->calculateAmountDue($client_id,0);
+        $data['amountDue'] = $this->calculateAmountDue($client_id, 0);
         return view('billing.Invoices.InvoicePrint.statement_month_6')->with($data);
     }
 
-    private function detailedInfo($id){
+    private function detailedInfo($id)
+    {
 
-        $account_id =  Accounts::getAccountByUuid($id)->id;
+        $account_id = Accounts::getAccountByUuid($id)->id;
 
         $data['six_months_go'] = $this->getFormatedMonth($id, 0);
         $data['five_months_go'] = $this->getFormatedMonth($id, 1);
@@ -417,5 +450,12 @@ class InvoiceController extends Controller
         $data['name'] = $this->CompanyIdentityDetails();
         $data['accounts'] = BillingInvoice::getPrintInvoiceData($id);
         return $data;
+    }
+
+    public function generateInvoiceNumber(): string
+    {
+        $uniqueId = DB::table('package_invoice')->max('id') + 1;
+        $date = Carbon::now()->format('Ymd');
+        return 'INV-' . $date . '-' . str_pad($uniqueId, 4, '0', STR_PAD_LEFT);
     }
 }

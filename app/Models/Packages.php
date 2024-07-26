@@ -20,10 +20,16 @@ class Packages extends Model
         Notifiable,
         LogsActivity;
 	protected $table = 'packages';
-	
+
 	protected $fillable = [
         'package_name', 'no_table', 'status', 'price'
     ];
+
+    //Packages
+    //Monthly
+    //Yearly
+
+
 	protected static $logName = 'Client Profile';
 
     protected function getDescriptionForEvent(string $eventName): string
@@ -35,4 +41,14 @@ class Packages extends Model
     {
         return Packages::get();
     }
+
+    public static function getPatientsByPackageType(int $type)
+    {
+        return Patient::with('packages')->whereHas('packages', function ($query) use ($type) {
+            $query->where('package_type', $type);
+        })->get();
+
+    }
+
+
 }

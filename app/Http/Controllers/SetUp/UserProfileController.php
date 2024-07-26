@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SetUp;
 
 use App\Http\Controllers\Controller;
 use App\Models\HRPerson;
+use App\Models\Patient;
 use App\Models\Province;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -48,6 +49,7 @@ class UserProfileController extends Controller
             'User Profile'
         );
 
+
         $user = Auth::user()->load('person');
 
 		$data['roles'] = Role::orderBy('id', 'DESC')->paginate(5);
@@ -69,7 +71,8 @@ class UserProfileController extends Controller
             'User Profile'
         );
 
-        $user = $user->load('person');
+//        $user = $user->load('person');
+
 		$role =  DB::table('model_has_roles')->select('model_has_roles.role_id')
 				->where('model_has_roles.model_id', $user->id)
 				->first();
@@ -77,7 +80,7 @@ class UserProfileController extends Controller
 		$data['roles'] = Role::select('id', 'name')->get();
         $data['avatar'] = $this->companyIdentityService->getAvatar($user->id);
         $data['userDetails'] = HRPerson::getDetailsOfLoggedUser();
-        $data['user'] =  $user;
+        $data['user'] = $user->load('person');
         $data['user_role'] =  !empty($role->role_id) ? $role->role_id : 0;
         return view('security.user-profile.index')->with($data);
     }
@@ -97,7 +100,6 @@ class UserProfileController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|max:255',
             'surname' => 'required|max:255',

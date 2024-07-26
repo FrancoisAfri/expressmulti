@@ -50,12 +50,12 @@ class ReportsController extends Controller
         );
 
 		$employees = HRPerson::where('status',1)->get();
-		$CompanyIdentity = $this->CompanyIdentityDetails(); 
+		$CompanyIdentity = $this->CompanyIdentityDetails();
 
 		// get this year and month
 		$year = date('Y');
 		$month = date('m');
-		
+
 		$date = Carbon::now();
         $data['employees'] = $employees;
 		$data['date'] = date("d/m/Y");
@@ -82,7 +82,7 @@ class ReportsController extends Controller
 		// Calculate response time
 		foreach ($waiters as $waiter) {
 			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
-			
+
 			// Create an associative array representing a data point
 			if (!empty($waiter->person->initial))
 				$formattedData = [
@@ -98,7 +98,7 @@ class ReportsController extends Controller
 		$data['date'] = $startDate."-".$endDate;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
-		
+
         return view('restaurant.graphs.waiter_response_time_graph')->with($data);
     }
 	//
@@ -145,9 +145,9 @@ class ReportsController extends Controller
 
 		// Calculate response time
 		foreach ($waiters as $waiter) {
-			
+
 			$amount = Orders::totalSalesPerWaiter($startDate, $endDate, $waiter->person->id);
-			
+
 			// Create an associative array representing a data point
 			if (!empty($waiter->person->initial))
 				$formattedData = [
@@ -176,16 +176,16 @@ class ReportsController extends Controller
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
         $endDate = !empty($dates[1]) ? $dates[1] : '';
-		
+
 		$services = ServiceType::where('status',1)->get();
 
 		$resultData = [];
 
 		// Calculate response time
 		foreach ($services as $service) {
-			
+
 			$numberRequest = OrdersServices::mostPopularServices($startDate, $endDate, $service->id);
-			
+
 			// Create an associative array representing a data point
 			if (!empty($service->name))
 				$formattedData = [
@@ -214,16 +214,16 @@ class ReportsController extends Controller
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
         $endDate = !empty($dates[1]) ? $dates[1] : '';
-		
+
 		$tables = Tables::where('status',1)->orderBy('number_customer')->get();
 
 		$resultData = [];
 
 		// Calculate response time
 		foreach ($tables as $table) {
-			
+
 			$avg = EventsServices::getRequestsPerTableGraphs($startDate, $endDate, $table->id);
-			
+
 			// Create an associative array representing a data point
 			if (!empty($table->number_customer))
 				$formattedData = [
@@ -271,7 +271,7 @@ class ReportsController extends Controller
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
         $endDate = !empty($dates[1]) ? $dates[1] : '';
-		
+
 		$dishes = OrdersProducts::popularDishes($startDate, $endDate);
 
         $data['dishes'] = $dishes;
@@ -282,7 +282,7 @@ class ReportsController extends Controller
 
         return view('restaurant.reports.popular_dishes')->with($data);
     }
-	
+
 	// waiter response reports
     public function restaurantTurnaroundTime(Request $request)
 	{
@@ -307,7 +307,7 @@ class ReportsController extends Controller
 			///echo $currentDate->toDateString() . "<br>";
 			$todayDate = $currentDate->toDateString();
 			$avg = EventsServices::getRestaurantGraphs($todayDate);
-			
+
 			// Create an associative array representing a data point
 			$formattedData = [
 				'y' => $todayDate, // Assuming 'initial' holds the label
@@ -318,15 +318,15 @@ class ReportsController extends Controller
 			// Move to the next day
 			$currentDate->addDay();
 		}
-		
+
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = $startDateS."-".$endDateS;
         $data['user'] = Auth::user()->load('person');
         $data['dataArray'] = $resultData;
-		
+
         return view('restaurant.graphs.restaurant_avg_response_time_graph')->with($data);
-    }	
+    }
 	// restaurant sales reports
 	public function restaurantSalesVolume(Request $request){
 
@@ -349,7 +349,7 @@ class ReportsController extends Controller
 			// Process the current date (e.g., output it, perform some action)
 			//echo $currentDate->toDateString() . "<br>";
 			$todayDate = $currentDate->toDateString();
-			
+
 			$amount = Orders::totalSalesRestaurant($todayDate);
 			// Create an associative array representing a data point
 			$formattedData = [
@@ -370,7 +370,7 @@ class ReportsController extends Controller
 
         return view('restaurant.graphs.restaurant_sales_volune_time_graph')->with($data);
     }
-	// 
+	//
 	// app usage reports
 	public function appUsage(Request $request){
 
@@ -393,7 +393,7 @@ class ReportsController extends Controller
 			// Process the current date (e.g., output it, perform some action)
 			//echo $currentDate->toDateString() . "<br>";
 			$todayDate = $currentDate->toDateString();
-			
+
 			$number = TableScans::getUsageReports($todayDate);
 			// Create an associative array representing a data point
 			$formattedData = [
@@ -428,12 +428,12 @@ class ReportsController extends Controller
 		// Convert the start and end dates to Carbon objects
 		$i = 1;
 
-		while ($i <= 5) 
+		while ($i <= 5)
 		{
 			//echo $i."</br>";
 			// Process the current date (e.g., output it, perform some action)
 			//echo $currentDate->toDateString() . "<br>";
-			
+
 			$ambience = TableScans::getRatingsQoneReports($i,$startDate, $endDate);
 			$food = TableScans::getRatingsQtwoReports($i,$startDate, $endDate);
 			$service = TableScans::getRatingsQthreeReports($i,$startDate, $endDate);
@@ -450,7 +450,7 @@ class ReportsController extends Controller
 			$resultData[] = $formattedData;
 			$i ++;
 		}
-		$resultData = "[{"y":1,"a":12,"b":23,"c":55,"d":43},{"y":2,"a":55,"b":44,"c":33,"d":65},{"y":3,"a":34,"b":54,"c":66,"d":66},{"y":4,"a":67,"b":76,"c":54,"d":56},{"y":5,"a":66,"b":55,"c":76,"d":66}]";
+//		$resultData = "[{"y":1,"a":12,"b":23,"c":55,"d":43},{"y":2,"a":55,"b":44,"c":33,"d":65},{"y":3,"a":34,"b":54,"c":66,"d":66},{"y":4,"a":67,"b":76,"c":54,"d":56},{"y":5,"a":66,"b":55,"c":76,"d":66}]";
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = $startDate."-".$endDate;
@@ -502,7 +502,7 @@ class ReportsController extends Controller
             'Restaurant Management',
             'Reports'
         );
-		$CompanyIdentity = $this->CompanyIdentityDetails(); 
+		$CompanyIdentity = $this->CompanyIdentityDetails();
 
 		// get this year and month
 		$year = date('Y');

@@ -18,7 +18,7 @@
     <link href="{{asset('libs/summernote/summernote-bs4.min.css') }}" rel="stylesheet" type="text/css"/>
 
     <link href="{{asset('libs/intl-tel-input/build/css/intlTelInput.css') }}" rel="stylesheet" type="text/css"/>
-    <link  href="{{ asset('libs/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('libs/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css">
 @endsection
 
 {{-- Page content --}}
@@ -48,7 +48,8 @@
                 <div class="card-box">
                     <div class="tab-content">
                         <div>
-                            <form class="needs-validation" novalidate method="Post" action="{{ route('user_profile.store') }}"
+                            <form class="needs-validation" novalidate method="Post"
+                                  action="{{ route('user_profile.store') }}"
                                   enctype="multipart/form-data">
                                 {{ csrf_field() }}
 
@@ -67,7 +68,8 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="form-group">
-                                            <label for="firstname">First Name <span class="text-danger">*</span> </label>
+                                            <label for="firstname">First Name <span class="text-danger">*</span>
+                                            </label>
                                             <input type="text" class="form-control" id="first_name"
                                                    name="first_name" value="{{ $user->person->first_name }}"
                                                    placeholder="Enter first name" required>
@@ -102,7 +104,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="firstname">Cell Number <span class="text-danger">*</span> </label>
+                                            <label for="firstname">Cell Number <span class="text-danger">*</span>
+                                            </label>
                                             <br>
                                             <input type="text" class="form-control" id="cell_number"
                                                    name="cell_number" value="{{ $user->person->cell_number }}"
@@ -112,7 +115,7 @@
                                             </div>
                                         </div>
                                     </div>
-									<div class="col-md-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="firstname">Email <span class="text-danger">*</span> </label>
                                             <input type="email" class="form-control" id="email"
@@ -125,20 +128,34 @@
                                         </div>
                                     </div>
                                 </div> <!-- end row -->
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="name"> Roles</label>
-											<select id="roles" name="roles"
-													class="form-control" required="">
-												<option value="0">Select Role</option>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="name"> Roles</label>
+                                            <select id="roles" name="roles"
+                                                    class="form-control" required="">
+                                                <option value="0">Select Role</option>
 
-												@foreach($roles as $role)
-													<option value="{{ $role->id }}" {{ ($role->id == $user_role) ? ' selected' : '' }}>{{ $role->name }}</option>
-												@endforeach
-											</select>
-										</div>
-									</div>
+                                                @foreach($roles as $role)
+                                                    <option
+                                                        value="{{ $role->id }}" {{ ($role->id == $user_role) ? ' selected' : '' }}>{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstname">User Time Out minutes <span
+                                                    class="text-danger">*</span> </label>
+                                            <input type="number" class="form-control" id="email"
+                                                   name="lockout_time" value="{{ $user->lockout_time }}"
+                                                   placeholder="Enter lockout time" required>
+                                            <div class="invalid-feedback">
+                                                Please provide lockout time.
+                                            </div>
+                                            <span class="form-text text-muted"></span>
+                                        </div>
+                                    </div>
                                 </div> <!-- end row -->
                                 <h5 class="mb-3 text-uppercase bg-light p-2"><i class="mdi mdi-earth mr-1"></i> Profile
                                     Image</h5>
@@ -149,7 +166,7 @@
                                                id="profile_pic" data-plugins="dropify"
                                                @if(!empty($user->person->profile_pic))
                                                    data-default-file="{{ asset('uploads/'.$user->person->profile_pic) }}"/>
-                                        @endif
+                                               @endif
                                         <p class="text-muted text-center mt-2 mb-0">Profile Picture</p>
                                     </div>
                                 </div>

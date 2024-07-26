@@ -74,7 +74,6 @@ class NotifyClientAboutBokking extends Command
         $details = $this->CompanyIdentityDetails();
 
         foreach ($todayBookings as $bookings) {
-//            dd($details['logo']);
             $bookingDetails = [
                 'logo' => $details['logo'],
                 'name' => $bookings->patient->first_name,

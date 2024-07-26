@@ -20,17 +20,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ClientRegistrationGuestController extends Controller
 {
 	use BreadCrumpTrait, CompanyIdentityTrait;
-	
+
 	/**
      * @var ClientService
      */
     private $clientService;
-	
+
 	public function __construct(ClientService $clientService)
     {
         $this->clientService = $clientService;
     }
-	
+
     /**
      * Display a listing of the resource.
      *
@@ -47,7 +47,8 @@ class ClientRegistrationGuestController extends Controller
             'Client Details'
         );
 		// views call
-        
+
+
 		$data['packages'] = Packages::getPackages();
         return view('guest.client_management')->with($data);
     }
@@ -66,17 +67,17 @@ class ClientRegistrationGuestController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response  
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-		
+
         $clientID = $this->clientService->persistClientTempData($request);
 		//$newClientUrl = "http://".$newClientUrl;
         //alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('New Client Registration');
 		//return redirect()->back();
-		return redirect("/make-payment/$clientID"); 
+		return redirect("/make-payment/$clientID");
     }
 
     /**

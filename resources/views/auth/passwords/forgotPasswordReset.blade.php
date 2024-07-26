@@ -106,7 +106,7 @@
                                 </div>
                             </div>
 
-                            @captcha
+{{--                            @captcha--}}
 
                             <div class="form-group mb-0 text-center">
                                 <button type="submit" class="btn btn-primary btn-block">

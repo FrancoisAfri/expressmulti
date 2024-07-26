@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
          $schedule->command('schedule:alertClientAboutBooking')->dailyAt('07:00');
+         $schedule->command('send:invoices')->monthly('22:00');
     }
 
     /**

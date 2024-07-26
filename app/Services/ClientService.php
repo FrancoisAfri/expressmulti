@@ -2,7 +2,7 @@
 
 namespace App\Services;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use Artisan; 
+use Artisan;
 use App\Models\Accounts;
 use App\Models\Packages;
 use App\Models\ContactPerson;
@@ -22,10 +22,11 @@ use App\Models\Patient;
 use App\Models\Companies_temp;
 //use App\Services\BillingService;
 use App\Traits\FileUpload;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Exception;
-//use Stancl\Tenancy\Tenant; 
+//use Stancl\Tenancy\Tenant;
 use Illuminate\Support\Str;
 
 class ClientService
@@ -50,7 +51,6 @@ class ClientService
      */
     public function persistClientData($request)
     {
-		
 		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
 		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
 		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
@@ -59,9 +59,9 @@ class ClientService
 		$request->merge(array('contact_number' => $contactNumber));
 
 		$patientRecord = Patient::create($request->all());
-		
+
 		$request->request->add(['company_id' => $patientRecord['id']]);
-		
+
 		// save contact person
 		ContactPerson::create([
 			'company_id' => $patientRecord->id,
@@ -83,20 +83,20 @@ class ClientService
             }
         }
 		//$this->uploadImage($request, 'client_logo', 'client_logo', $patientRecord);
-		
+
 		/*
 		 * create a new database
 		 */
 		// make db name
 		$name = str_replace(' ', '', $patientRecord['name']);
 		$name = strtolower($name);
-		
+
 		$url = $this->createTenant($name, $request['first_name'], $request['surname'], $request['contact_email'], $contactNumber);
 
 		// update database name in the system
 		$patientRecord['database_name'] = $url;
 		$patientRecord->update();
-		
+
 		return $url;
     }
 
@@ -106,7 +106,7 @@ class ClientService
      */
     public function persistClientTempData($request)
     {
-		
+
 		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
 		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
 		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
@@ -115,9 +115,9 @@ class ClientService
 		$request->merge(array('contact_number' => $contactNumber));
 
 		$patientRecord = Companies_temp::create($request->all());
-		
+
 		$request->request->add(['company_id' => $patientRecord['id']]);
-		
+
 		// save contact person
 		ContactPersonTemp::create([
 			'company_id' => $patientRecord->id,
@@ -130,12 +130,12 @@ class ClientService
 
 		return $patientRecord->id;
     }
-	
+
 	public function persistClient($companyID)
     {
 		$company = Companies_temp::find($companyID);
 		$contactTemp = ContactPersonTemp::where('company_id',$company->id)->first();
-		
+
 		$name = !empty($company->name) ? $company->name : '';
 		$email = !empty($company->email) ? $company->email : '';
 		$cell_number = !empty($company->cell_number) ? $company->cell_number : '';
@@ -149,40 +149,20 @@ class ClientService
 		$surname = !empty($contactTemp->surname) ? $contactTemp->surname : '';
 		$contact_number = !empty($contactTemp->contact_number) ? $contactTemp->contact_number : '';
 		$contact_email = !empty($contactTemp->email) ? $contactTemp->email : '';
-		
-		$clientRecord = Patient::create([
-			'name' => $name,
-			'email' => $email,
-			'phone_number' => $phone_number,
-			'contact_number' => $cell_number,
-			'res_address' => $res_address,
-			'post_address' => $post_address,
-			'date_joined' => time(),
-			'payment_status' => 1,
-			'package_id' => $package_id,
-			'trading_as' => $trading_as,
-			'vat' => $vat,
-			'is_active' => 1
-		]);
-		
-		// save contact person
-		ContactPerson::create([
-			'company_id' => $clientRecord->id,
-			'first_name' => $first_name,
-			'surname' => $surname,
-			'contact_number' => $contact_number,
-			'email' => $contact_email,
-			'status' => 1
-		]);
 
-		/*
-		 * create a new database
-		 */
+        $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
+
+        // save contact person
+        $this->saveContactPerson($clientRecord, $first_name, $surname, $contact_number, $contact_email);
+
+        /*
+         * create a new database
+         */
 		// make db name
 		$name = str_replace(' ', '', $clientRecord['name']);
 		$name = strtolower($name);
-		
-		$url = $this->createTenant($name, $first_name, $surname, $contact_email, $contact_number);
+
+		$url = $this->createTenant($name, $first_name, $surname, $contact_email, $contact_number,$company ,$contactTemp );
 
 		// update database name in the system
 		$clientRecord['database_name'] = $name;
@@ -191,7 +171,7 @@ class ClientService
 		//delete temp company and contact person
 		$company->delete();
 		$contactTemp->delete();
-		
+
 		return $url;
     }
     /**
@@ -257,7 +237,7 @@ class ClientService
 	// deactivate/ activate package
 	public function activatePackage($package)
     {
-		
+
 		$package['status'] == 1 ? $status = 0 : $status = 1;
 		$package['status'] = $status;
 		$package->update();
@@ -307,13 +287,13 @@ class ClientService
     }
 	//save contact person
 	public function persistContactPerson($request){
-			
+
         try {
 
             DB::beginTransaction();
-			
+
 			$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request['contact_number']);
-		
+
 			ContactPerson::create([
 			'company_id' => $request['company_id'],
 			'first_name' => $request['first_name'],
@@ -336,7 +316,7 @@ class ClientService
     public function completeGuestPatient($request, $id){
         dd($request);
     }
-	
+
 	/// migrate database for new system
 	/*public function migrate($outputLog)
     {
@@ -347,7 +327,7 @@ class ClientService
         //}
         return $this->seed($outputLog);
     }
-	
+
 	// run seed folder after migration
 	public function seed($outputLog)
     {
@@ -366,7 +346,7 @@ class ClientService
 
 	public function createDB($dbname)
 	{
-		
+
 		$outputLog = '';
 		// create new database
 		DB::statement("CREATE DATABASE $dbname");
@@ -377,7 +357,7 @@ class ClientService
 		// call migration function
 		Artisan::call('migrate', ["--force"=> true], $outputLog);
 
-		// run seed 
+		// run seed
 		Artisan::call('db:seed', array_filter([
 			'--class' => 'Database\\Seeders\\DatabaseSeeder',
 			'--force' => true,
@@ -387,52 +367,42 @@ class ClientService
 		DB::reconnect('pgsql');
 		return $dbname;
 	}
-	// create new tenant  
+	// create new tenant
 	public function createTenant($dbname, $firstname, $surname,$email,$contactNumber)
 	{
 		$centralDomains = env('CENTRAL_DOMAINS');
 		$tenant_id = Str::slug($dbname, '');
-		
+
 		// save tenant and domain
 		$tenant = Tenant::create([
             'id' => $tenant_id
         ]);
 		//$newClientUrl = "http://".$newClientUrl;
-        $domain = "http://".$tenant['id'] . '.' . $centralDomains;
+        $domain = $tenant['id'] . '.' . $centralDomains;
         $tenant->createDomain([
             'domain' => $domain
         ]);
 		// run migration
-		Artisan::call('tenants:migrate', [
-			'--tenants' => [$tenant['id']]
-		]);
-		// seed
-		Artisan::call('tenants:seed', [
-			'--tenants' => [$tenant['id']]
-		]);
-		$random_pass = Str::random(10);
+        $this->getCall($tenant['id']);
+        // seed
+        $this->getCall1($tenant['id']);
+
+        $random_pass = Str::random(10);
         $password = Hash::make($random_pass);
-        $tenant->run(function() use ($firstname, $surname, $email, $contactNumber, $password, $random_pass, $domain) 
+
+        $tenant->run(function() use ($firstname, $surname, $email, $contactNumber, $password, $random_pass, $domain)
         {
-            $user = User::create([
-                'name' => $firstname,
-                'email' => $email,
-                'password' => $password,
-                'phone_number' => $contactNumber,
-                'lockout_time' => 10,
-                'type' => 0,
-                'status' => 1,
-            ]);
-			
-			$person = new HRPerson();
-			$person->first_name = $firstname;
-			$person->surname = $surname;
-			$person->email = $email;
-			$person->cell_number = $contactNumber;
-			$person->status = 1;
-			$user->addPerson($person);
-			
-			PasswordHistory::createPassword($user->id ,$password);
+
+            $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
+
+            // save contact person
+            $this->saveContactPerson($clientRecord, $first_name, $surname, $contact_number, $contact_email);
+
+            $user = $this->getUser($firstname, $email, $password, $contactNumber);
+
+            $this->extracted($firstname, $surname, $email, $contactNumber, $user);
+
+            PasswordHistory::createPassword($user->id ,$password);
 			//Assign roles
 			$user->assignRole(5);
 			PasswordSecurity::addExpiryDate($user->id);
@@ -442,9 +412,9 @@ class ClientService
         });
 
         tenancy()->initialize($tenant);
-		
+
 		return $domain;
-	
+
 	}
 	// tenant code from the net
 	/*public function store(Request $request)
@@ -467,9 +437,9 @@ class ClientService
         $tenant->createDomain([
             'domain' => $domain
         ]);
-		// run migration 
+		// run migration
 		Artisan::call(‘tenants:migrate’);
-		
+
 		Artisan::call('tenants:migrate', [
 			'--tenants' => [$tenant['id']]
 		]);
@@ -477,7 +447,7 @@ class ClientService
 		Artisan::call('tenants:seed', [
 			'--tenants' => [$tenant['id']]
 		]);
-		
+
         $tenant->run(function()
         {
             User::create([
@@ -491,4 +461,118 @@ class ClientService
 
         return redirect($domain);
     }*/
+    /**
+     * @param $id
+     * @return void
+     */
+    public function getCall($id): void
+    {
+        Artisan::call('tenants:migrate', [
+            '--tenants' => [$id]
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return void
+     */
+    public function getCall1($id): void
+    {
+        Artisan::call('tenants:seed', [
+            '--tenants' => [$id]
+        ]);
+    }
+
+    /**
+     * @param $firstname
+     * @param $surname
+     * @param $email
+     * @param $contactNumber
+     * @param $user
+     * @return void
+     */
+    function extracted($firstname, $surname, $email, $contactNumber, $user): void
+    {
+        $person = new HRPerson();
+        $person->first_name = $firstname;
+        $person->surname = $surname;
+        $person->email = $email;
+        $person->cell_number = $contactNumber;
+        $person->status = 1;
+        $user->addPerson($person);
+    }
+
+    /**
+     * @param $firstname
+     * @param $email
+     * @param string $password
+     * @param $contactNumber
+     * @return mixed
+     */
+    function getUser($firstname, $email, string $password, $contactNumber)
+    {
+        $user = User::create([
+            'name' => $firstname,
+            'email' => $email,
+            'password' => $password,
+            'phone_number' => $contactNumber,
+            'lockout_time' => 10,
+            'type' => 0,
+            'status' => 1,
+        ]);
+        return $user;
+    }
+
+    /**
+     * @param string $name
+     * @param string $email
+     * @param string $phone_number
+     * @param string $cell_number
+     * @param string $res_address
+     * @param string $post_address
+     * @param int $package_id
+     * @param string $trading_as
+     * @param string $vat
+     * @return mixed
+     */
+    public function getRecord(string $name, string $email, string $phone_number,
+                              string $cell_number, string $res_address, string $post_address,
+                              int $package_id, string $trading_as, string $vat)
+    {
+        $clientRecord = Patient::create([
+            'name' => $name,
+            'email' => $email,
+            'phone_number' => $phone_number,
+            'contact_number' => $cell_number,
+            'res_address' => $res_address,
+            'post_address' => $post_address,
+            'date_joined' => time(),
+            'payment_status' => 1,
+            'package_id' => $package_id,
+            'trading_as' => $trading_as,
+            'vat' => $vat,
+            'is_active' => 1
+        ]);
+        return $clientRecord;
+    }
+
+    /**
+     * @param $clientRecord
+     * @param string $first_name
+     * @param string $surname
+     * @param string $contact_number
+     * @param string $contact_email
+     * @return void
+     */
+    public function saveContactPerson($clientRecord, string $first_name, string $surname, string $contact_number, string $contact_email): void
+    {
+        ContactPerson::create([
+            'company_id' => $clientRecord->id,
+            'first_name' => $first_name,
+            'surname' => $surname,
+            'contact_number' => $contact_number,
+            'email' => $contact_email,
+            'status' => 1
+        ]);
+    }
 }

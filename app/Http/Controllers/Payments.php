@@ -10,7 +10,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\custom\CustomHelper;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 use App\Models\Payfast;
 use App\Services\ClientService;
 use App\Models\Companies_temp;
@@ -32,7 +32,7 @@ class Payments extends Controller {
      * @var ClientService
      */
     private $clientService;
-	
+
 	public function __construct(ClientService $clientService)
     {
         $this->clientService = $clientService;
@@ -48,7 +48,7 @@ class Payments extends Controller {
 			$payfast->setSubscriptionType(2);
 			$payfast->setCustomInt1($request->get("last_4"));
 		} else {
-			return response()->json(["status" => "failed", "err_msg" => "required paramters missing or empty"]);
+			return response()->json(["status" => "failed", "err_msg" => "required parameters missing or empty"]);
 		}
 
 		// Return the payment form.
@@ -56,14 +56,14 @@ class Payments extends Controller {
 	}
 	// make payment, create form, save order in the databse and redirect to payfast
 	public function realCardPayment(Payfast $payfast, Companies_temp $company) {
-		
+
 		//$company_id = !empty($request['company_id']) ? $request->get("company_id") : 0;
 		$total_amount = 0;
-		
+
 		$company = $company->load('packages');
 		// make payment  /**/
 		if (!empty($company->id)) {
-			
+
 			//$company = Companies_temp::where('id', $company_id)->first();
 			$total_amount = !empty($company->packages->price) ? $company->packages->price : 0;
 			$item = "Order".$company->id;
@@ -75,7 +75,7 @@ class Payments extends Controller {
 			$payfast->setSubscriptionType(2);
 			//$payfast->setCustomInt1($request->get("last_4"));
 		}
-		else 
+		else
 		{
 			return response()->json(["status" => "failed", "err_msg" => "required paramters(total amount) missing or empty"]);
 		}
@@ -83,9 +83,9 @@ class Payments extends Controller {
 		// Return the payment form.
 		return $payfast->paymentForm();
 	}
-	
+
     public function itn(Request $request, Payfast $payfast) {
-		
+
         // Verify the payment status.
 		$status = 'COMPLETE';
         $this->createnewclient($request->get("m_payment_id"), $status);
@@ -96,13 +96,13 @@ class Payments extends Controller {
 		//  try {
         switch ($status) {
             case 'COMPLETE': // Things went as planned, update your order status and notify the customer/admins
-                //if (substr($itemName, 0, 12) == "complete_job" || substr($itemName, 0, 14) == "complete_stage") {	
+                //if (substr($itemName, 0, 12) == "complete_job" || substr($itemName, 0, 14) == "complete_stage") {
 				$order->payment_status  = 'Payment Successful';
 				$order->status  = 2;
 				$order->update();
-				// empty cart 
+				// empty cart
 				$cards = OrderCards::where('contact_id',$order->contact_id)->get();
-				foreach ($cards as $card) 
+				foreach ($cards as $card)
 				{
 					$line = OrderCards::find($card->id);
 					$deleterow = $line->delete();
@@ -124,35 +124,35 @@ class Payments extends Controller {
 				'ordersKits'=> $ordersKits,
 			]);
     }
-	
+
 	// create new account after payment
 	private function createnewclient($m_payment_id, $status) {
-       
+
 		//  try {
         switch ($status) {
             case 'COMPLETE': // Things went as planned, update your order status and notify the customer/admins
-                 
+
 				// create new account and domain
 				$url = $this->clientService->persistClient($m_payment_id);
 				echo $url;
                 break;
             default: // We've got problems, notify admin to check logs.
-					
+
                 break;
         }
 		return $url;
     }
-	
+
     public function showSuccessfullMessage() {
-		
+
 		alert()->success('SuccessAlert', 'Your subscription was successful. Email confirmatin have been sent to you!!');
-		return redirect("/new_client_registration"); 
+		return redirect("/new_client_registration");
     }
 
     public function showFailedMessage(Request $request) {
-        
+
 		alert()->success('SuccessAlert', 'The subscriptions was not successful, because the transaction was cancelled!!!');
-		return redirect("/new_client_registration"); 
+		return redirect("/new_client_registration");
     }
 
     function getCustomerPaymentMethod(Request $request) {
@@ -199,7 +199,7 @@ class Payments extends Controller {
         $pfData = ['version' => 'v1', 'merchant-id' => $merchantId['merchant_id'], 'timestamp' => $timeStamp];
 
         $data = [];
-        // Construct variables 
+        // Construct variables
         foreach ($pfData as $key => $val) {
             $data[$key] = stripslashes($val);
         }
@@ -242,5 +242,5 @@ class Payments extends Controller {
         curl_close($ch);
         return $response;
     }
-	
+
 }
