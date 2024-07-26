@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use PhpParser\Node\Expr\Array_;
-
+use Illuminate\Support\Facades\Validator;
 class ReportsController extends Controller
 {
     use BreadCrumpTrait, CompanyIdentityTrait;
@@ -64,17 +64,31 @@ class ReportsController extends Controller
 
 	// waiter response reports
     public function waiterResponse(Request $request){
-
-        $this->validate($request, [
+		
+	$validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
         $endDate = !empty($dates[1]) ? $dates[1] : '';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-				//->where('model_has_roles.role_id', 4)
+				->where('model_has_roles.role_id', 4)
 				->get();
 		$waiters = $users->load('person');
 		$resultData = [];
@@ -86,7 +100,7 @@ class ReportsController extends Controller
 			// Create an associative array representing a data point
 			if (!empty($waiter->person->initial))
 				$formattedData = [
-					'y' => $waiter->person->initial, // Assuming 'initial' holds the label
+					'y' => $waiter->person->first_name, // Assuming 'initial' holds the label
 					'a' => $avg // Assuming $avg holds the average response time
 				];
 			// Assign the formatted data to the $resultData array
@@ -129,9 +143,23 @@ class ReportsController extends Controller
 	// waiter sales reports
 	public function waiterSales(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
@@ -169,9 +197,23 @@ class ReportsController extends Controller
 	// Popular Quick services
 	public function popularServices(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
@@ -207,9 +249,23 @@ class ReportsController extends Controller
 	// turn around time table size
 	public function turnaroundTableSize(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
@@ -245,9 +301,23 @@ class ReportsController extends Controller
 	// waiter sales reports
 	public function reviewsReports(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = $dates[0];
@@ -264,9 +334,23 @@ class ReportsController extends Controller
     }
 	public function popularDishes(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
@@ -287,9 +371,23 @@ class ReportsController extends Controller
     public function restaurantTurnaroundTime(Request $request)
 	{
 
-        $this->validate($request, [
+		$validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
@@ -330,9 +428,23 @@ class ReportsController extends Controller
 	// restaurant sales reports
 	public function restaurantSalesVolume(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
@@ -374,9 +486,23 @@ class ReportsController extends Controller
 	// app usage reports
 	public function appUsage(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDateS = !empty($dates[0]) ? $dates[0] : '';
@@ -417,9 +543,23 @@ class ReportsController extends Controller
 	// reviews star reports
 	public function appStarRating(Request $request){
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'date_range' => 'required',
         ]);
+		
+        $validator->after(function ($validator) use ($request) {
+            // get date 
+            $dates = explode("to", $request['date_range']);
+			$startDate = !empty($dates[0]) ? $dates[0] : '';
+			$endDate = !empty($dates[1]) ? $dates[1] : '';
+			if (empty($startDate) || empty($endDate))
+				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+        });
+        if ($validator->fails()) {
+            return redirect("/restaurant/reports")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';

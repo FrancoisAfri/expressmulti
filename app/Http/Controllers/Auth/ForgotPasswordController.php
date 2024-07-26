@@ -156,17 +156,20 @@ class ForgotPasswordController extends Controller
 
 
 
+	/**
+     * @param Request $request
+     * @return Application|Factory|View|RedirectResponse|Redirector
+     */
     public function submitResetPasswordForm(Request $request)
     {
-        $validator =  $request->validate([
+		$validator =  $request->validate([
             'email' => 'required|email|exists:users',
             'password' => 'required|string|min:6',
             'password_confirmation' => ['same:password'],
         ]);
-
-
+		
         $passwordHistories = PasswordHistory::select('password')->get();
-
+		
         foreach ($passwordHistories as $passwordHistory) {
 
             if (Hash::check($request->get('password_confirmation'), $passwordHistory->password)) {
@@ -178,17 +181,14 @@ class ForgotPasswordController extends Controller
                 );
             }
         }
-
-
-        $userDetails = HRPerson::getUserDetailsByEmail($request->input('email'));
-
-
+		
+		$userDetails = HRPerson::getUserDetailsByEmail($request->input('email'));
         // Validate the token
-        $tokenData = DB::table('password_resets')
+		$tokenData = DB::table('password_resets')
             ->where('token', $request->token)
             ->orderBy('created_at', 'desc')
-            ->first();//
-
+            ->first();
+			
         // Redirect the user back to the password reset request form if the token is invalid
         if (!$tokenData) return redirect()->back()->with("error", "Expired Session, please Contact the Admin for a new Reset Link.");
 

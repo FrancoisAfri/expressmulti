@@ -55,7 +55,6 @@
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                                        name="email" value="{{$email ?? old('email') }}"
                                        placeholder="Enter your email" required autocomplete="new-password">
-
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -83,16 +82,12 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="form-group mb-3">
-
+							<div class="form-group mb-3">
                                 <input id="password-confirm" type="password" class="form-control"
                                        placeholder="Confirm Password"  name="password_confirmation" required autocomplete="new-password">
-
                             </div>
 
                             <input type="hidden" name="token" value="{{$token}}">
-
                             <div class="form-group mb-3">
                                 <div class="custom-control custom-checkbox">
 
@@ -105,9 +100,7 @@
 
                                 </div>
                             </div>
-
-                            @captcha
-
+							<!--@captcha-->
                             <div class="form-group mb-0 text-center">
                                 <button type="submit" class="btn btn-primary btn-block">
                                     {{ __('Login') }}
@@ -123,21 +116,6 @@
 
                     </div> <!-- end card-body -->
                 </div>
-
-
-                <!-- end card -->
-
-                {{--                <div class="row mt-3">--}}
-                {{--                    <div class="col-12 text-center">--}}
-                {{--                        <p><a href="auth-recoverpw.html" class="text-white-50 ml-1">Forgot your password?</a></p>--}}
-
-                {{--                        <p class="text-white-50">Don't have an account? <a href="auth-register.html"--}}
-                {{--                                                                           class="text-white ml-1"><b>Sign Up</b></a>--}}
-                {{--                        </p>--}}
-                {{--                    </div> <!-- end col -->--}}
-                {{--                </div>--}}
-                <!-- end row -->
-
             </div> <!-- end col -->
         </div>
         <!-- end row -->
