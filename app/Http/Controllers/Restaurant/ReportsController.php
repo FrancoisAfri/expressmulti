@@ -182,7 +182,7 @@ class ReportsController extends Controller
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : '';
 		$users =  User::select('users.*', 'model_has_roles.*')
 				->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-				//->where('model_has_roles.role_id', 4)
+				->where('model_has_roles.role_id', 4)
 				->get();
 		$waiters = $users->load('person');
 		$resultData = [];

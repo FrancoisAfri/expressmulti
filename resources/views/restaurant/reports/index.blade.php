@@ -327,7 +327,7 @@
                                                     <div class="col-lg-8 float-sm-right">
 														<div class="form-group">
                                                             <label for="heard"> Date Range </label>
-                                                            <input type="text" id="dates" name="date_range" class="form-control">
+                                                            <input type="text" id="dates_sales" name="date_range" class="form-control">
                                                         </div>
                                                     </div>
                                                 </div> <!-- end row -->
@@ -467,6 +467,13 @@
          defaultDate: "today"
      });
 	 $("#dates").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
+	 $("#dates_sales").flatpickr({
          altInput: !0,
          mode: "range",
          // altFormat: "F j, y",
