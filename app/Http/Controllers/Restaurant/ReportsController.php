@@ -91,21 +91,35 @@ class ReportsController extends Controller
 				->where('model_has_roles.role_id', 4)
 				->get();
 		$waiters = $users->load('person');
+		//return $users;
 		$resultData = [];
-
+		$count = 0;
+		$name = '';
 		// Calculate response time
 		foreach ($waiters as $waiter) {
+			
 			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
 			
 			// Create an associative array representing a data point
-			if (!empty($waiter->person->initial))
-				$formattedData = [
-					'y' => $waiter->person->first_name, // Assuming 'initial' holds the label
-					'a' => $avg // Assuming $avg holds the average response time
-				];
+			if (!empty($waiter->person->first_name))
+			{
+				$name = $waiter->person->first_name;
+				if (!empty($name))
+					//die('ddddddd');
+					$formattedData = [
+						'y' => $name, // Assuming 'initial' holds the label
+						'a' => $avg // Assuming $avg holds the average response time
+					];
+				$name = $avg = '';
+			}
 			// Assign the formatted data to the $resultData array
 			$resultData[] = $formattedData;
+			//$waiter->person->initial = '';
+			$count ++;
+			//echo $waiter->person->first_name."</br>";
 		}
+		//echo $count;
+		//die;
 
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
@@ -177,9 +191,9 @@ class ReportsController extends Controller
 			$amount = Orders::totalSalesPerWaiter($startDate, $endDate, $waiter->person->id);
 			
 			// Create an associative array representing a data point
-			if (!empty($waiter->person->initial))
+			if (!empty($waiter->person->first_name))
 				$formattedData = [
-					'y' => $waiter->person->initial, // Assuming 'initial' holds the label
+					'y' => $waiter->person->first_name, // Assuming 'initial' holds the label
 					'a' => $amount // Assuming $avg holds the average response time
 				];
 			// Assign the formatted data to the $resultData array
