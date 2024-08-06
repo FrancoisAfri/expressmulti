@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mt-3 align-content-left">
-                                <p><b>Reviews</b></p>
+                                <pstyle="text-align:center"><b>Reviews</b></p>
                             </div>
                         </div>
                     </div>
@@ -80,32 +80,20 @@
                                 <table class="table mt-4 table-centered">
                                     <thead>
                                     <tr>
-										<th>Arrived At</th>
-										<th>Departed At</th>
-										<th>Table</th>
-										<th>Waiter</th>
-										<th>Patron</th>
-										<th>Ambience</th>
-                                        <th>Food</th>
-                                        <th>Service</th>
-                                        <th>Rate Our App</th>
-                                        <th>Additional Comments</th>
+										<th style="text-align:center">Ambience</th>
+										<th style="text-align:center">Food</th>
+										<th style="text-align:center">Service</th>
+										<th style="text-align:center">Rate Our App</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-										@if (!empty($scans))
-												@foreach($scans as $scan)
+										@if (!empty($ratings))
+												@foreach($ratings as $rating)
 													<tr>
-														<td>{{ !empty($scan->scan_time) ? date('d/m/Y-H:s:i', $scan->scan_time) : '' }}</td>
-														<td>{{ !empty($scan->closed_time) ? date('d/m/Y-H:s:i', $scan->closed_time) : '' }}</td>
-														<td>{{ !empty($scan->table->name) ? $scan->table->name : '' }}</td>
-														<td>{{ !empty($scan->waiters->first_name) && !empty($scan->waiters->surname) ? $scan->waiters->first_name." ".$scan->waiters->surname : '' }}</td>
-														<td>{{ !empty($scan->nickname)  ? $scan->nickname : '' }}</td>
-														<td>{{ !empty($scan->q_one)  ? $scan->q_one : '' }}</td>
-														<td>{{ !empty($scan->q_two)  ? $scan->q_two : '' }}</td>
-														<td>{{ !empty($scan->q_three)  ? $scan->q_three : '' }}</td>
-														<td>{{ !empty($scan->q_four)  ? $scan->q_four : '' }}</td>
-														<td>{{ !empty($scan->comment)  ? $scan->comment : '' }}</td>
+														<td style="text-align:center">{{ !empty($rating->avg_q_one) ? $rating->avg_q_one : '' }}</td>
+														<td style="text-align:center">{{ !empty($rating->avg_q_two) ? $rating->avg_q_two : '' }}</td>
+														<td style="text-align:center">{{ !empty($rating->avg_q_three) ? $rating->avg_q_three: '' }}</td>
+														<td style="text-align:center">{{ !empty($rating->avg_q_four) ? $rating->avg_q_four : '' }}</td>
 													</tr>
 												@endforeach
 											@else
@@ -121,7 +109,6 @@
                     <!-- end row -->
                     <div class="mt-4 mb-1">
 						<div class="text-right d-print-none">
-
 							<div class="text-left">
 								<button type="button" id="back_button" class="btn btn-dark waves-effect waves-light"
 										data-dismiss="modal">
@@ -129,17 +116,6 @@
 									Back
 								</button>
 							</div>
-
-							<button id="libBtnWrap" onclick="libPrint()" class="btn btn-primary waves-effect waves-light"><i
-									class="mdi mdi-printer mr-1"></i> Print
-							</button>
-
-							<a class="btn btn-blue waves-effect waves-light"
-							   href="" target="_blank">
-								<i class="mdi mdi-arrow-down-circle-outline mr-1"></i>
-								Download
-							</a>
-
 						</div>
 					</div>
                 </div> <!-- end card-box -->
