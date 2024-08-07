@@ -73,11 +73,9 @@ class ClientRegistrationGuestController extends Controller
     {
 
         $clientID = $this->clientService->persistClientTempData($request);
-		//$newClientUrl = "http://".$newClientUrl;
-        //alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('New Client Registration');
-		//return redirect()->back();
-		return redirect("/make-payment/$clientID");
+		//return redirect("/make-payment/$clientID");
+		return redirect("/create-new-tenant/$clientID");
     }
 
     /**
