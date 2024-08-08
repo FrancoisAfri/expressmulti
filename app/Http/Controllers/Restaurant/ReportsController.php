@@ -574,8 +574,8 @@ class ReportsController extends Controller
             $dates = explode("to", $request['date_range']);
 			$startDate = !empty($dates[0]) ? $dates[0] : '';
 			$endDate = !empty($dates[1]) ? $dates[1] : '';
-			if (empty($startDate) || empty($endDate))
-				$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
+			//if (empty($startDate) || empty($endDate))
+				//$validator->errors()->add('date_range', "Please make sure both start and end are selected.");
         });
         if ($validator->fails()) {
             return redirect("/restaurant/reports")
@@ -585,42 +585,19 @@ class ReportsController extends Controller
 
 		$dates = explode("to", $request['date_range']);
         $startDate = !empty($dates[0]) ? $dates[0] : '';
-        $endDate = !empty($dates[1]) ? $dates[1] : '';
+		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
+        $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : $startDate. ' 23:59:00';
 
-		// Convert the start and end dates to Carbon objects
-		$i = 1;
-
-		while ($i <= 5) 
-		{
-			//echo $i."</br>";
-			// Process the current date (e.g., output it, perform some action)
-			//echo $currentDate->toDateString() . "<br>";
-			
-			$ambience = TableScans::getRatingsQoneReports($i,$startDate, $endDate);
-			$food = TableScans::getRatingsQtwoReports($i,$startDate, $endDate);
-			$service = TableScans::getRatingsQthreeReports($i,$startDate, $endDate);
-			$app = TableScans::getRatingsQfourReports($i,$startDate, $endDate);
-			// Create an associative array representing a data point
-			$formattedData = [
-				'y' => $i, // Assuming 'initial' holds the label
-				'a' => $ambience,
-				'b' => $food, // Assuming $avg holds the average response time
-				'c' => $service, // Assuming $avg holds the average response time
-				'd' => $app				// Assuming $avg holds the average response time
-			];
-			// Assign the formatted data to the $resultData array
-			$resultData[] = $formattedData;
-			$i ++;
-		}
-		//[{"y":1,"a":12,"b":23,"c":55,"d":43},{"y":2,"a":55,"b":44,"c":33,"d":65},{"y":3,"a":34,"b":54,"c":66,"d":66},{"y":4,"a":67,"b":76,"c":54,"d":56},{"y":5,"a":66,"b":55,"c":76,"d":66}]
-		$resultData = "";
+		// get ratings
+		$ratings = TableScans::getRatingsReports($startDate, $endDate);
+		
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
-		$data['date'] = $startDate."-".$endDate;
+		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
-        $data['dataArray'] = $resultData;
+        $data['ratings'] = $ratings;
 
-        return view('restaurant.graphs.restaurant_app_usage_graph')->with($data);
+        return view('restaurant.reports.reviews')->with($data);
 	}
 	// calculate response time
     public function responseTime($startDate, $endDate){
@@ -636,13 +613,6 @@ class ReportsController extends Controller
 
 		// You can also get the difference in a human-readable format
 		$humanReadableDiff = $end->diffForHumans($start);
-
-		// Output the differences
-		//echo "Difference in days: $diffInDays\n";
-		//echo "Difference in hours: $diffInHours\n";
-		//echo "Difference in minutes: $diffInMinutes\n";
-		//echo "Difference in seconds: $diffInSeconds\n";
-		//echo "Human readable difference: $humanReadableDiff\n";
 
 		return $humanReadableDiff;
     }

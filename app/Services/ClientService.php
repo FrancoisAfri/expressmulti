@@ -133,27 +133,8 @@ class ClientService
 
 	public function persistClient($companyID)
     {
-		$company = Companies_temp::find($companyID);
-		$contactTemp = ContactPersonTemp::where('company_id',$company->id)->first();
-
-		$name = !empty($company->name) ? $company->name : '';
-		$email = !empty($company->email) ? $company->email : '';
-		$cell_number = !empty($company->cell_number) ? $company->cell_number : '';
-		$phone_number = !empty($company->phone_number) ? $company->phone_number : '';
-		$res_address = !empty($company->res_address) ? $company->res_address : '';
-		$post_address = !empty($company->post_address) ? $company->post_address : '';
-		$package_id = !empty($company->package_id) ? $company->package_id : 0;
-		$trading_as = !empty($company->trading_as) ? $company->trading_as : '';
-		$vat = !empty($company->vat) ? $company->vat : '';
-		$first_name = !empty($contactTemp->first_name) ? $contactTemp->first_name : '';
-		$surname = !empty($contactTemp->surname) ? $contactTemp->surname : '';
-		$contact_number = !empty($contactTemp->contact_number) ? $contactTemp->contact_number : '';
-		$contact_email = !empty($contactTemp->email) ? $contactTemp->email : '';
-
-        $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
-
-        // save contact person
-        $this->saveContactPerson($clientRecord, $first_name, $surname, $contact_number, $contact_email);
+		
+        $clientRecord = $this->SaveCompany($companyID);
 
         /*
          * create a new database
@@ -162,15 +143,17 @@ class ClientService
 		$name = str_replace(' ', '', $clientRecord['name']);
 		$name = strtolower($name);
 
-		$url = $this->createTenant($name, $first_name, $surname, $contact_email, $contact_number,$company ,$contactTemp );
+		$url = $this->createTenant($name, $clientRecord);
 
 		// update database name in the system
 		$clientRecord['database_name'] = $name;
 		$clientRecord['tenant_url'] = $url;
 		$clientRecord->update();
+		
 		//delete temp company and contact person
-		$company->delete();
-		$contactTemp->delete();
+		
+		//$company = Companies_temp::find($companyID);
+		//$contactTemp = ContactPersonTemp::where('company_id',$company->id)->first();
 
 		return $url;
     }
@@ -368,7 +351,7 @@ class ClientService
 		return $dbname;
 	}
 	// create new tenant
-	public function createTenant($dbname, $firstname, $surname,$email,$contactNumber)
+	public function createTenant($dbname, $clientRecord)
 	{
 		$centralDomains = env('CENTRAL_DOMAINS');
 		$tenant_id = Str::slug($dbname, '');
@@ -377,30 +360,29 @@ class ClientService
 		$tenant = Tenant::create([
             'id' => $tenant_id
         ]);
-		//$newClientUrl = "http://".$newClientUrl;
+
         $domain = $tenant['id'] . '.' . $centralDomains;
         $tenant->createDomain([
             'domain' => $domain
         ]);
 		// run migration
-        $this->getCall($tenant['id']);
+        $this->tenantMigrate($tenant['id']);
         // seed
-        $this->getCall1($tenant['id']);
+        $this->tenantSeed($tenant['id']);
 
         $random_pass = Str::random(10);
         $password = Hash::make($random_pass);
+		// get contact record
+		$contacts = ContactPerson::where('company_id',$clientRecord->id)->first();
 
-        $tenant->run(function() use ($firstname, $surname, $email, $contactNumber, $password, $random_pass, $domain)
+        $tenant->run(function() use ($clientRecord, $contacts, $password, $random_pass, $domain)
         {
+			// save company
+			$client = $this->SaveCompanyTenant($clientRecord);
 
-//            $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
+            $user = $this->SaveUser($contacts->first_name, $contacts->email, $password, $contacts->contact_number);
 
-            // save contact person
-//            $this->saveContactPerson($clientRecord, $surname);
-
-            $user = $this->getUser($firstname, $email, $password, $contactNumber);
-
-            $this->extracted($firstname, $surname, $email, $contactNumber, $user);
+            $this->SaveHr($contacts->first_name, $contacts->surname, $contacts->email, $contacts->contact_number, $user);
 
             PasswordHistory::createPassword($user->id ,$password);
 			//Assign roles
@@ -408,7 +390,7 @@ class ClientService
 			PasswordSecurity::addExpiryDate($user->id);
 			// send email
 			$forgotPassword =  new ForgotPasswordController();
-			$forgotPassword->sendResetEmail($email , $random_pass ,$user,$domain);
+			$forgotPassword->sendResetEmail($user->email , $random_pass ,$user,$domain);
         });
 
         tenancy()->initialize($tenant);
@@ -465,7 +447,7 @@ class ClientService
      * @param $id
      * @return void
      */
-    public function getCall($id): void
+    public function tenantMigrate($id): void
     {
         Artisan::call('tenants:migrate', [
             '--tenants' => [$id]
@@ -476,7 +458,7 @@ class ClientService
      * @param $id
      * @return void
      */
-    public function getCall1($id): void
+    public function tenantSeed($id): void
     {
         Artisan::call('tenants:seed', [
             '--tenants' => [$id]
@@ -491,7 +473,7 @@ class ClientService
      * @param $user
      * @return void
      */
-    function extracted($firstname, $surname, $email, $contactNumber, $user): void
+    function SaveHr($firstname, $surname, $email, $contactNumber, $user): void
     {
         $person = new HRPerson();
         $person->first_name = $firstname;
@@ -509,7 +491,7 @@ class ClientService
      * @param $contactNumber
      * @return mixed
      */
-    function getUser($firstname, $email, string $password, $contactNumber)
+    function SaveUser($firstname, $email, string $password, $contactNumber)
     {
         $user = User::create([
             'name' => $firstname,
@@ -535,10 +517,29 @@ class ClientService
      * @param string $vat
      * @return mixed
      */
-    public function getRecord(string $name, string $email, string $phone_number,
-                              string $cell_number, string $res_address, string $post_address,
-                              int $package_id, string $trading_as, string $vat)
+    public function SaveCompany($companyID)
     {
+		
+		$company = Companies_temp::find($companyID);
+		$contactTemp = ContactPersonTemp::where('company_id',$company->id)->first();
+		
+		// get details from model
+		$name = !empty($company->name) ? $company->name : '';
+		$email = !empty($company->email) ? $company->email : '';
+		$cell_number = !empty($company->cell_number) ? $company->cell_number : '';
+		$phone_number = !empty($company->phone_number) ? $company->phone_number : '';
+		$res_address = !empty($company->res_address) ? $company->res_address : '';
+		$post_address = !empty($company->post_address) ? $company->post_address : '';
+		$package_id = !empty($company->package_id) ? $company->package_id : 0;
+		$trading_as = !empty($company->trading_as) ? $company->trading_as : '';
+		$vat = !empty($company->vat) ? $company->vat : '';
+		// assign variable
+		$first_name = !empty($contactTemp->first_name) ? $contactTemp->first_name : '';
+		$surname = !empty($contactTemp->surname) ? $contactTemp->surname : '';
+		$contact_number = !empty($contactTemp->contact_number) ? $contactTemp->contact_number : '';
+		$contact_email = !empty($contactTemp->email) ? $contactTemp->email : '';
+		
+		// save company
         $clientRecord = Patient::create([
             'name' => $name,
             'email' => $email,
@@ -553,19 +554,8 @@ class ClientService
             'vat' => $vat,
             'is_active' => 1
         ]);
-        return $clientRecord;
-    }
-
-    /**
-     * @param $clientRecord
-     * @param string $first_name
-     * @param string $surname
-     * @param string $contact_number
-     * @param string $contact_email
-     * @return void
-     */
-    public function saveContactPerson($clientRecord, string $first_name, string $surname, string $contact_number, string $contact_email): void
-    {
+		
+		// save comtact person
         ContactPerson::create([
             'company_id' => $clientRecord->id,
             'first_name' => $first_name,
@@ -574,5 +564,56 @@ class ClientService
             'email' => $contact_email,
             'status' => 1
         ]);
+		$company->delete();
+		$contactTemp->delete();
+        return $clientRecord;
+    } 
+	// save company and contact in tenant record
+	public function SaveCompanyTenant($clientRecord)
+    {
+		
+		// get details from model
+		$name = !empty($clientRecord->name) ? $clientRecord->name : '';
+		$email = !empty($clientRecord->email) ? $clientRecord->email : '';
+		$cell_number = !empty($clientRecord->cell_number) ? $clientRecord->cell_number : '';
+		$phone_number = !empty($clientRecord->phone_number) ? $clientRecord->phone_number : '';
+		$res_address = !empty($clientRecord->res_address) ? $clientRecord->res_address : '';
+		$post_address = !empty($clientRecord->post_address) ? $clientRecord->post_address : '';
+		$package_id = !empty($clientRecord->package_id) ? $clientRecord->package_id : 0;
+		$trading_as = !empty($clientRecord->trading_as) ? $clientRecord->trading_as : '';
+		$vat = !empty($clientRecord->vat) ? $clientRecord->vat : '';
+		// assign variable
+		$first_name = !empty($clientRecord->contacts->first_name) ? $clientRecord->contacts->first_name : '';
+		$surname = !empty($clientRecord->contacts->surname) ? $clientRecord->contacts->surname : '';
+		$contact_number = !empty($clientRecord->contacts->contact_number) ? $clientRecord->contacts->contact_number : '';
+		$contact_email = !empty($clientRecord->contacts->email) ? $clientRecord->contacts->email : '';
+		
+		// save company
+        $record = Patient::create([
+            'name' => $name,
+            'email' => $email,
+            'phone_number' => $phone_number,
+            'contact_number' => $cell_number,
+            'res_address' => $res_address,
+            'post_address' => $post_address,
+            'date_joined' => time(),
+            'payment_status' => 1,
+            'package_id' => $package_id,
+            'trading_as' => $trading_as,
+            'vat' => $vat,
+            'is_active' => 1
+        ]);
+		
+		// save comtact person
+        ContactPerson::create([
+            'company_id' => $record->id,
+            'first_name' => $first_name,
+            'surname' => $surname,
+            'contact_number' => $contact_number,
+            'email' => $contact_email,
+            'status' => 1
+        ]);
+        return $record;
     }
+
 }

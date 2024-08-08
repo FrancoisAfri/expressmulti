@@ -242,5 +242,16 @@ class Payments extends Controller {
         curl_close($ch);
         return $response;
     }
+	// new tenant creation
+	// create new account after payment
+	public function createNewTenants($clientID) {
+
+		// create new account and domain
+		$url = $this->clientService->persistClient($clientID);
+
+		activity()->log('New Client Registration Successful> please check your email.');
+		//return redirect("/make-payment/$clientID");
+		return redirect("/new_client_registration");
+    }
 
 }

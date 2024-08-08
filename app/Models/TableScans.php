@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\DB;
 
 class TableScans extends Model
 {
@@ -84,6 +85,22 @@ class TableScans extends Model
 		->where('status',2)->count();
             
 		 return  $totalTransactions;
+    }
+	// get ratings reports
+	public static function getRatingsReports($startDate, $endDate)
+    {
+
+		$ratings = TableScans::select(
+			DB::raw('AVG(CAST(q_one AS FLOAT)) as avg_q_one'),
+			DB::raw('AVG(CAST(q_two AS FLOAT)) as avg_q_two'),
+			DB::raw('AVG(CAST(q_three AS FLOAT)) as avg_q_three'),
+			DB::raw('AVG(CAST(q_four AS FLOAT)) as avg_q_four')
+		)
+		/*->whereBetween('created_at', [$startDate, $endDate])*/
+		->where('status', 2)
+		->get();
+	
+		 return  $ratings;
     }
 	// get usage reports
 	public static function getRatingsQoneReports($i,$startDate, $endDate)
