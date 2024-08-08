@@ -385,7 +385,7 @@ Route::get('myInvoice', [InvoiceController::class, 'index']);
 //edit compony details
 Route::get('users/company_details', [ClientController::class, 'edit']);
 Route::get('users/view_company_details', [ClientController::class, 'editCompany']);
-Route::post('client/edit_company_details', [ClientController::class, 'editCompanyDetails'])
+Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
     ->name('edit_client.store');
 
 Route::middleware(['check.payment'])->group(function () {

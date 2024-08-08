@@ -51,8 +51,6 @@ class InvoiceController extends Controller
 
         $this->emailInvoiceToAllClients->EmailInvoiceToAllClientsDependingOnTheirSubscription();
 
-
-//        dd(PackageConstants::YEARLY);
         $data['name'] = $this->CompanyIdentityDetails();
         $data['companies'] = Patient::with('packages')->get();
         $data['date'] = $currentDate = date('j M Y');
