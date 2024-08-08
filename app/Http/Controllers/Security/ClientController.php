@@ -47,7 +47,15 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
+    }
+
+    public function editCompanyDetails(Request $request)
+    {
+        //logic
+        //open connection to db
+        // save details
+        //close connection
     }
 
     /**
@@ -93,5 +101,21 @@ class ClientController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function editCompany()
+    {
+
+        $data = $this->breadcrumb(
+            'Client ',
+            'Client page for Client related settings',
+            'patient_details',
+            'Client Profile',
+            'Client Details'
+        );
+
+        $data['packages'] = Packages::getPackages();
+        return view('security.client.edit_client_management')->with($data);
+
     }
 }

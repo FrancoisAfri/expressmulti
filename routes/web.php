@@ -379,8 +379,13 @@ Route::get('notify', 'App\Http\Controllers\Payments@notify');
 Route::get('create-new-tenant/{clientID}', 'App\Http\Controllers\Payments@createNewTenants');
 
 
+//testin
 Route::get('myInvoice', [InvoiceController::class, 'index']);
 
 //edit compony details
 Route::get('users/company_details', [ClientController::class, 'edit']);
+Route::get('users/view_company_details', [ClientController::class, 'editCompany']);
+Route::post('client/edit_company_details', [ClientController::class, 'editCompanyDetails'])
+    ->name('edit_client.store');
+
 

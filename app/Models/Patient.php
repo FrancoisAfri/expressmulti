@@ -135,4 +135,10 @@ class Patient extends Model
         return $isPackagesExist;
     }
 
+    public static function getPaymentStatus($vat)
+    {
+        return Patient::where('vat', $vat)
+            ->select('payment_status')->first();
+    }
+
 }

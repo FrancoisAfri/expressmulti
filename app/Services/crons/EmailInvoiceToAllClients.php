@@ -19,6 +19,48 @@ class EmailInvoiceToAllClients
 {
     use  CompanyIdentityTrait;
 
+    public function EmailInvoiceToAllClientsDependingOnTheirSubscriptionBasedOnSubscription()
+    {
+        // Fetch all patients with their packages and creation dates
+        $patients = Patient::with(['packages' => function($query) {
+            $query->select('package_id', 'package_type', 'package_price', 'created_at');
+        }])->get();
+
+        $currentDate = new \DateTime();
+
+        foreach ($patients as $patient) {
+            // Get the package details
+            $package = $patient->packages->first(); // Assuming each patient has only one package
+            if (!$package) continue;
+
+            $packageType = $package->package_type;
+            $packagePrice = $package->package_price;
+            $creationDate = new \DateTime($package->creation_date);
+
+            // Determine if an invoice should be sent based on the package type and subscription duration
+            if ($packageType == 'monthly') {
+                // Send invoice every month for monthly packages
+                $invoiceNumber = $this->generateInvoiceNumber();
+                $data = $this->prepareInvoiceData($patient, $invoiceNumber, $packagePrice);
+
+                $pdf = PDF::loadView('invoice.invoice_demo', $data)->setPaper([0, 0, 609.4488, 935.433], 'landscape');
+                $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf);
+            } elseif ($packageType == 'yearly') {
+                // Calculate subscription duration
+                $interval = $currentDate->diff($creationDate);
+
+                // Send invoice if exactly one year or 11 months have passed
+                if ($interval->y >= 1 || ($interval->m >= 11 && $interval->y == 0)) {
+                    $invoiceNumber = $this->generateInvoiceNumber();
+                    $data = $this->prepareInvoiceData($patient, $invoiceNumber, $packagePrice);
+
+                    $pdf = PDF::loadView('invoice.invoice_demo', $data)->setPaper([0, 0, 609.4488, 935.433], 'landscape');
+                    $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf);
+                }
+            }
+        }
+    }
+
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
         $patientsWithPackageType = Packages::getPatientsByPackageType(1);
@@ -36,11 +78,7 @@ class EmailInvoiceToAllClients
 
 
             // Send email with the PDF attachment
-            Mail::send('Email.invoice', $data, function ($message) use ($patient, $invoiceNumber, $pdf) {
-                $message->to($patient->email, $patient->name)
-                    ->subject('Invoice for ' . $patient->name)
-                    ->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNumber . '.pdf');
-            });
+            $this->sendInvoiceEmail($data, $patient, $invoiceNumber, $pdf);
         }
     }
 
@@ -117,6 +155,40 @@ class EmailInvoiceToAllClients
         $data['daily_revenue_target'] = $companyDetails['daily_revenue_target'];
         $data['terms_and_conditions'] = $companyDetails['terms_and_conditions'];
         return $data;
+    }
+
+    /**
+     * @param $data
+     * @param $patient
+     * @param string $invoiceNumber
+     * @param \Barryvdh\DomPDF\PDF $pdf
+     * @return void
+     */
+    public function sendInvoiceEmail($data, $patient, string $invoiceNumber, \Barryvdh\DomPDF\PDF $pdf): void
+    {
+        Mail::send('Email.invoice', $data, function ($message) use ($patient, $invoiceNumber, $pdf) {
+            $message->to($patient->email, $patient->name)
+                ->subject('Invoice for ' . $patient->name)
+                ->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNumber . '.pdf');
+        });
+    }
+
+    /**
+     * @param $patient
+     * @param $invoiceNumber
+     * @param $packagePrice
+     * @return array
+     */
+    private function prepareInvoiceData($patient, $invoiceNumber, $packagePrice)
+    {
+        return [
+            'name' => $this->CompanyIdentityDetails(),
+            'companies' => $patient,
+            'date' => date('j M Y'),
+            'invoice_number' => $invoiceNumber,
+            'company_details' => $this->CompanyIdentityDetails(),
+            'package_price' => $packagePrice
+        ];
     }
 
 
