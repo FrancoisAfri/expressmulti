@@ -6,7 +6,7 @@
 <head>
     <meta name="viewport" content="width=device-width"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>UBold - Responsive Bootstrap 4 Admin Dashboard</title>
+    <title></title>
 </head>
 
 <body itemscope itemtype="http://schema.org/EmailMessage"
@@ -31,7 +31,7 @@
                         <td class=""
                             style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #38414a; margin: 0; padding: 20px;"
                             align="center" bgcolor="#71b6f9" valign="top">
-                            <a href="{{ route('booking_calender.index') }}"> <img src="{{ asset($logo) }}" height="24" alt="logo"/></a> <br/>
+                            <a href=""> <img src="" height="24" alt="logo"/></a> <br/>
                             <span style="margin-top: 10px;display: block;">Invoice.</span>
                         </td>
                     </tr>
@@ -45,7 +45,7 @@
                                     <td class="content-block"
                                         style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                         valign="top">
-                                        Good Day <strong style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> {{  $firstname. ' ' . $surname }}</strong> .
+                                        Good Day <strong style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> </strong> .
                                     </td>
                                 </tr>
                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">

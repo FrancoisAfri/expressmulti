@@ -11,38 +11,39 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class EmailInvoiceToAllClients
 {
     use  CompanyIdentityTrait;
 
-    //query client management table. get all client, check their packages. now there is two packages,
-    // one monthly and yearly.
-    // if monthly send invoice, the invoice amount should be the price of the package.
-    // if yearly check the creation date of the client is one year. if one year send invoice. 11 months send invoice.
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
-
-        $invoiceNUmber = $this->generateInvoiceNumber();
         $patientsWithPackageType = Packages::getPatientsByPackageType(1);
+
         $data['name'] = $this->CompanyIdentityDetails();
         $data['companies'] = Patient::with('packages')->get();
         $data['date'] = $currentDate = date('j M Y');
-        $data['invoice_number'] = $invoiceNUmber;
-        $data['company_details'] = $this->CompanyIdentityDetails();
-
-        $pdf = PDF::loadView('billing.invoice', $data)->setPaper(array(0, 0, 609.4488, 935.433), 'landscape');
 
         foreach ($patientsWithPackageType as $patient) {
-            Mail::send('Email.invoice', $data, function ($message) use ($invoiceNUmber, $patient, $data , $pdf) {
+            $invoiceNumber = $this->generateInvoiceNumber();
+            $data['invoice_number'] = $invoiceNumber;
+            $data['company_details'] = $this->CompanyIdentityDetails();
 
-                $message->to($patient->email, $patient->email)
+            $pdf = PDF::loadView('invoice.invoice_demo', $data)->setPaper(array(0, 0, 609.4488, 935.433), 'landscape');
+
+
+            // Send email with the PDF attachment
+            Mail::send('Email.invoice', $data, function ($message) use ($patient, $invoiceNumber, $pdf) {
+                $message->to($patient->email, $patient->name)
                     ->subject('Invoice for ' . $patient->name)
-                    ->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNUmber . '.pdf');
+                    ->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNumber . '.pdf');
             });
         }
-
     }
+
 
     public function createInvoice()
     {

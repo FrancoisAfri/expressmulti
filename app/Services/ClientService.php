@@ -22,7 +22,7 @@ use App\Models\Patient;
 use App\Models\Companies_temp;
 //use App\Services\BillingService;
 use App\Traits\FileUpload;
-use Illuminate\Support\Facades\Artisan;
+//use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Exception;
@@ -396,7 +396,7 @@ class ClientService
 //            $clientRecord = $this->getRecord($name, $email, $phone_number, $cell_number, $res_address, $post_address, $package_id, $trading_as, $vat);
 
             // save contact person
-            $this->saveContactPerson($clientRecord, $surname);
+//            $this->saveContactPerson($clientRecord, $surname);
 
             $user = $this->getUser($firstname, $email, $password, $contactNumber);
 

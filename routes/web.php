@@ -18,6 +18,7 @@ use App\Http\Controllers\SetUp\UserProfileController;
 use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\AuditController;
 use App\Http\Controllers\Patients\PatientControlle;
+use App\Http\Controllers\Billing\InvoiceController;
 use App\Http\Controllers\Restaurant\RestaurantController;
 use App\Http\Controllers\ClientRegistrationGuestController;
 use App\Http\Controllers\Restaurant\ReportsController;
@@ -377,7 +378,7 @@ Route::get('cancel', 'App\Http\Controllers\Payments@cancel');
 Route::get('notify', 'App\Http\Controllers\Payments@notify');
 
 
-Route::get('myInvoice', [\App\Http\Controllers\Billing\InvoiceController::class, 'index']);
+Route::get('myInvoice', [InvoiceController::class, 'index']);
 
 //edit compony details
 Route::get('users/company_details', [ClientController::class, 'edit']);
