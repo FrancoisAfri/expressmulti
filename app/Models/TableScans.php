@@ -96,7 +96,7 @@ class TableScans extends Model
 			DB::raw('AVG(CAST(q_three AS FLOAT)) as avg_q_three'),
 			DB::raw('AVG(CAST(q_four AS FLOAT)) as avg_q_four')
 		)
-		/*->whereBetween('created_at', [$startDate, $endDate])*/
+		->whereBetween('created_at', [$startDate, $endDate])
 		->where('status', 2)
 		->get();
 	
