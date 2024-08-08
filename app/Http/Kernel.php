@@ -71,7 +71,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 		'check.page.usage' => \App\Http\Middleware\CheckPageUsage::class,
-        'check.payment' => \App\Http\Middleware\CheckPaymentAmount::class,
+        'check.payment' => \App\Http\Middleware\CheckPaymentStatus::class,
 
     ];
 }

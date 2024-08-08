@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CheckPaymentAmount
+class CheckPaymentStatus
 {
     /**
      * Handle an incoming request.
