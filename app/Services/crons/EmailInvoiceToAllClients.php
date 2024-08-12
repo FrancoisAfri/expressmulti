@@ -10,6 +10,7 @@ use App\Traits\CompanyIdentityTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -61,24 +62,54 @@ class EmailInvoiceToAllClients
         }
     }
 
+
+
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
-        $patientsWithPackageType = Packages::getPatientsByPackageType(1);
 
-        $data['name'] = $this->CompanyIdentityDetails();
-        $data['companies'] = Patient::with('packages')->get();
-        $data['date'] = $currentDate = date('j M Y');
+        $type = 1;
 
-        foreach ($patientsWithPackageType as $patient) {
-            dd($patient);
+//        $patientsWithPackageType =  Patient::with('packages')->whereHas('packages', function ($query) use ($type) {
+//        $query->where('package_type', $type);
+//    })->get();
+
+        // Eloquent: Get posts with user information
+//        $posts = Post::join('users', 'posts.user_id', '=', 'users.id')
+//            ->select('posts.*', 'users.name as user_name')
+//            ->get();
+
+        $patientsWithPackageType =  Patient::join('packages', 'companies.package_id', '=', 'packages.id')
+            ->select('companies.*', 'packages.*')
+            ->distinct()
+            ->get();
+
+
+//        $patientsWithPackageType =  Patient::join('packages', 'patients.id', '=', 'packages.patient_id')
+////            ->where('packages.package_type', $type)
+////            ->select('patients.*')  // Selects all columns from the patients table
+////            ->distinct()           // Ensures that each patient appears only once
+//            ->get();
+
+        if ($patientsWithPackageType->isEmpty()) {
+            return 0;
+        }
+
+        $date = date('j M Y');
+
+
+        foreach ($patientsWithPackageType as $companies) {
+//            dd($companies);
+            $details = $this->CompanyIdentityDetails();
+//            dd($details['company_name']);
             $invoiceNumber = $this->generateInvoiceNumber();
             $data['invoice_number'] = $invoiceNumber;
             $data['company_details'] = $this->CompanyIdentityDetails();
-
+            $data['date'] = date('j M Y');
+            $data['companies'] =
+            $data['companies'] = $companies;
             $pdf = PDF::loadView('invoice.test', $data)->setPaper('a4', 'landscape');
-
             // Send email with the PDF attachment
-            $this->sendInvoiceEmail($data, $patient, $invoiceNumber, $pdf);
+            $this->sendInvoiceEmail($data, $companies, $invoiceNumber, $pdf);
         }
     }
 
