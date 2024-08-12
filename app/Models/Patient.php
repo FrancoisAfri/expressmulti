@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,9 +48,9 @@ class Patient extends Model
         return $this->belongsTo(Packages::class, 'package_id', 'id');
     }
 
-	public function contacts(): HasMany
+	public function contacts(): HasOne
     {
-        return $this->hasMany(ContactPerson::class, 'company_id', 'id');
+        return $this->HasOne(ContactPerson::class, 'company_id', 'id');
     }
 
     /**

@@ -1,4 +1,4 @@
-@extends('layouts.main-guest')
+@extends('layouts.main-layout')
 
 @section('page_dependencies')
 
@@ -20,12 +20,13 @@
     <link href="{{asset('libs/intl-tel-input/build/css/intlTelInput.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('libs/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css">
 @endsection
+
 <!-- Begin page -->
 
 @section('content')
     @section('content_data')
         <div class="container-fluid">
-            <form class="needs-validation" novalidate method="Post" action="{{ route('edit_client.store') }}"
+            <form class="needs-validation" novalidate method="Post" action="{{ route('edit_client.store', ['client' => $client->id]) }}"
                   enctype="multipart/form-data">
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -49,7 +50,7 @@
                                     <div class="form-group">
                                         <label for="name">Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="name"
-                                               name="name" placeholder="Enter Name" required>
+                                               name="name" placeholder="Enter Name" value="{{ $client->name ??  '' }}" required>
                                         <div class="invalid-feedback">
                                             Please provide Name.
                                         </div>
@@ -59,7 +60,7 @@
                                     <div class="form-group">
                                         <label for="email">Email Address <span class="text-danger">*</span> </label>
                                         <input type="email" required parsley-type="email" class="form-control"
-                                               id="inputEmail3" name="email" placeholder="Enter Email">
+                                               id="inputEmail3" name="email" value="{{ $client->email ??  '' }}"  placeholder="Enter Email">
                                         <span class="form-text text-muted"></span>
                                     </div>
                                 </div><!-- end col -->
@@ -69,7 +70,7 @@
                                     <div class="form-group">
                                         <label for="trading_as">Trading As <span class="text-danger"></span></label>
                                         <input type="text" class="form-control" id="trading_as"
-                                               name="trading_as" placeholder="Enter Trading As">
+                                               name="trading_as" value="{{ $client->trading_as ??  '' }}"  placeholder="Enter Trading As">
                                         <div class="invalid-feedback">
                                             Please provide Trading_ As Name.
                                         </div>
@@ -79,7 +80,7 @@
                                     <div class="form-group">
                                         <label for="vat">Vat <span class="text-danger"></span></label>
                                         <input type="text" class="form-control" id="vat"
-                                               name="vat" placeholder="Enter Vat">
+                                               name="vat" value="{{ $client->vat ??  '' }}"  placeholder="Enter Vat">
                                         <div class="invalid-feedback">
                                             Please provide VAT.
                                         </div>
@@ -92,7 +93,7 @@
                                         <label> Phone Number </label>
                                         <br>
                                         <input type="text" class="form-control" id="phone_number" maxlength="15"
-                                               name="phone_number" value="" placeholder="Enter Phone Number">
+                                               name="phone_number" value="{{ $client->phone_number ??  '' }}"  placeholder="Enter Phone Number">
                                         <div class="invalid-feedback">
                                             Please provide Phone Number.
                                         </div>
@@ -103,7 +104,7 @@
                                         <label> Cell Number <span class="text-danger">*</span></label>
                                         <br>
                                         <input type="text" class="form-control" id="cell_number" maxlength="15"
-                                               name="cell_number" value="" placeholder="Enter Cell Number" required>
+                                               name="cell_number" value="{{ $client->cell_number ??  '' }}"  placeholder="Enter Cell Number" required>
                                         <div class="invalid-feedback">
                                             Please provide Cell Number.
                                         </div>
@@ -116,7 +117,7 @@
                                     <div class="form-group">
                                         <label for="res_address">Physical Address <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="res_address"
-                                               name="res_address" value="" placeholder="Enter Physical Address" required>
+                                               name="res_address"  value="{{ $client->res_address ??  '' }}"  placeholder="Enter Physical Address" required>
 
                                         <div class="invalid-feedback">
                                             Please provide Physical Address.
@@ -127,7 +128,7 @@
                                     <div class="form-group">
                                         <label for="post_address">Postal Address </label>
                                         <input type="text" class="form-control" id="post_address" name="post_address"
-                                               value="" placeholder="Enter Postal Address">
+                                                value="{{ $client->post_address ??  '' }}"  placeholder="Enter Postal Address">
 
                                         <div class="invalid-feedback">
                                             Please provide Postal Address.
@@ -146,7 +147,7 @@
                                     <div class="form-group">
                                         <label for="first_name">First Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="first_name"
-                                               name="first_name" placeholder="Enter First name" required>
+                                               name="first_name" value="{{ $client->contacts->first_name ??  '' }}"  placeholder="Enter First name" required>
                                         <div class="invalid-feedback">
                                             Please provide First Name.
                                         </div>
@@ -156,7 +157,7 @@
                                     <div class="form-group">
                                         <label for="surname">Last Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="surname"
-                                               name="surname" placeholder="Enter Surname" required>
+                                               name="surname" value="{{ $client->contacts->surname ??  '' }}"  placeholder="Enter Surname" required>
                                         <div class="invalid-feedback">
                                             Please provide Surname.
                                         </div>
@@ -168,7 +169,7 @@
                                     <div class="form-group">
                                         <label> Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="contact_number"
-                                               name="contact_number" value=""
+                                               name="contact_number" value="{{ $client->contacts->contact_number ??  '' }}" 
                                                placeholder="Enter Contact Number" maxlength="15" required>
                                         <div class="invalid-feedback">
                                             Please provide Contact Number.
@@ -179,7 +180,7 @@
                                     <div class="form-group">
                                         <label> Contact Email <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="contact_email"
-                                               name="contact_email" value=""
+                                               name="contact_email" value="{{ $client->contacts->email ??  '' }}" 
                                                placeholder="Enter Email" required>
                                         <div class="invalid-feedback">
                                             Please provide Contact email.
@@ -201,7 +202,7 @@
 											<option value="">Select a Package ...</option>
 											@foreach($packages as $package)
 												<option
-													value="{{ $package->id }}">{{ $package->package_name." | ". $package->no_table." "."Tables"." | "."R".$package->price  }}
+													value="{{ $package->id }}" {{ ($package->id == $client->package_id ) ? ' selected' : '' }}>{{ $package->package_name." | ". $package->no_table." "."Tables"." | "."R".$package->price  }}
 												</option>
 											@endforeach
 										</select>
