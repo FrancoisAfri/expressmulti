@@ -47,10 +47,8 @@ class InvoiceController extends Controller
 
        $PackageType = $this->subcriptions();
 
-        $patientsWithPackageType = Packages::getPatientsByPackageType(1);
-
+//        $patientsWithPackageType = Packages::getPatientsByPackageType(1);
         $this->emailInvoiceToAllClients->EmailInvoiceToAllClientsDependingOnTheirSubscription();
-
 
 //        dd(PackageConstants::YEARLY);
         $data['name'] = $this->CompanyIdentityDetails();
@@ -58,7 +56,7 @@ class InvoiceController extends Controller
         $data['date'] = $currentDate = date('j M Y');
         $data['invoice_number'] = $this->generateInvoiceNumber();
         $data['company_details'] = $this->CompanyIdentityDetails();
-        return view('invoice.invoice_demo')->with($data);
+        return view('invoice.test')->with($data);
     }
 
     /**

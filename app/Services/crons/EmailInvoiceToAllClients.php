@@ -26,7 +26,7 @@ class EmailInvoiceToAllClients
             $query->select('package_id', 'package_type', 'package_price', 'created_at');
         }])->get();
 
-        $currentDate = new \DateTime();
+        $currentDate = new DateTime();
 
         foreach ($patients as $patient) {
             // Get the package details
@@ -54,7 +54,7 @@ class EmailInvoiceToAllClients
                     $invoiceNumber = $this->generateInvoiceNumber();
                     $data = $this->prepareInvoiceData($patient, $invoiceNumber, $packagePrice);
 
-                    $pdf = PDF::loadView('invoice.invoice_demo', $data)->setPaper([0, 0, 609.4488, 935.433], 'landscape');
+                    $pdf = PDF::loadView('invoice.invoice_demo', $data);
                     $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf);
                 }
             }
@@ -70,12 +70,12 @@ class EmailInvoiceToAllClients
         $data['date'] = $currentDate = date('j M Y');
 
         foreach ($patientsWithPackageType as $patient) {
+            dd($patient);
             $invoiceNumber = $this->generateInvoiceNumber();
             $data['invoice_number'] = $invoiceNumber;
             $data['company_details'] = $this->CompanyIdentityDetails();
 
-            $pdf = PDF::loadView('invoice.invoice_demo', $data)->setPaper(array(0, 0, 609.4488, 935.433), 'landscape');
-
+            $pdf = PDF::loadView('invoice.test', $data)->setPaper('a4', 'landscape');
 
             // Send email with the PDF attachment
             $this->sendInvoiceEmail($data, $patient, $invoiceNumber, $pdf);

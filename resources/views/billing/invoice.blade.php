@@ -48,6 +48,7 @@
                                             <p class="mb-0">Invoice Date: <span>{{ $date }}</span></p>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
