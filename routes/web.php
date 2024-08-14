@@ -350,10 +350,14 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('app.usage');
 	Route::post('reports/reviews-app', [ReportsController::class, 'appStarRating'])
         ->name('reviews.app');
-});
-Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin' , 'check.payment']], function () {
 
+    Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
+        ->name('edit_client.store');
 });
+Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin' ]], function () {
+    Route::get('users/view_company_details', [ClientController::class, 'editCompany'])->name('editCompany');
+});
+
 // Api for services
 Route::get('/api/get-check-services', [RestaurantController::class, 'create'])
         ->name('service.check');
@@ -384,9 +388,7 @@ Route::get('myInvoice', [InvoiceController::class, 'index']);
 
 //edit compony details
 //Route::get('users/company_details', [ClientController::class, 'edit']);
-Route::get('users/view_company_details', [ClientController::class, 'editCompany'])->name('editCompany');
-Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
-    ->name('edit_client.store');
+
 
 //Route::middleware(['check.payment'])->group(function () {
 //    //use this middleware to check if payment is done
