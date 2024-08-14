@@ -3,23 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Models\Patient;
-use App\Services\CompanyService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CheckPaymentStatus
 {
-    private CompanyService $companyService;
-
-    /**
-     * @param CompanyService $companyService
-     */
-    public function __construct(CompanyService $companyService)
-    {
-        $this->companyService = $companyService;
-    }
-
 
     /**
      * Handle an incoming request.
