@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Packages;
 use App\Models\Patient;
 use App\Models\ContactPerson;
+use App\Services\CompanyService;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use Illuminate\Http\Request;
@@ -15,6 +16,13 @@ class ClientController extends Controller
 {
     use BreadCrumpTrait, CompanyIdentityTrait;
 
+
+    private CompanyService $companyService;
+
+    public function __construct(CompanyService $companyService)
+    {
+        $this->companyService = $companyService;
+    }
 
     public function index()
     {
@@ -55,12 +63,12 @@ class ClientController extends Controller
 
     public function editCompanyDetails(Request $request, Patient $client)
     {
-		
+
 		//get central domain
 		$centralDomains = env('CENTRAL_DOMAINS');
 		// get host url
 		$host = request()->getHost();
-		if ($host === $centralDomains) 
+		if ($host === $centralDomains)
 		{
 			// Main system
 			$client->update($request->all());
@@ -72,9 +80,9 @@ class ClientController extends Controller
 			$contact->email = !empty($request->email) ? $request->email :'';
 			$contact->contact_number = !empty($request->contact_number) ? $request->contact_number : '';
 			$contact->update();
-			
-		} 
-		else 
+
+		}
+		else
 		{
 			// Likely a tenant
 			$client->update($request->all());
@@ -86,16 +94,16 @@ class ClientController extends Controller
 			$contact->email = !empty($request->email) ? $request->email :'';
 			$contact->contact_number = !empty($request->contact_number) ? $request->contact_number : '';
 			$contact->update();
-			// connect to main database to change  
+			// connect to main database to change
 			$currentDatabaseName = DB::connection()->getDatabaseName();
-			
+
 			// Temporarily switch to another database
 			$DB_HOST = env('DB_HOST');
 			$DB_PORT = env('DB_PORT');
 			$DB_DATABASE = env('DB_DATABASE');
 			$DB_USERNAME = env('DB_USERNAME');
 			$DB_PASSWORD = env('DB_PASSWORD');
-			
+
 			Config::set('database.connections.'.$DB_DATABASE, [
 				'driver'    => env('DB_CONNECTION'),
 				'host'      => env('DB_HOST'),
@@ -119,16 +127,16 @@ class ClientController extends Controller
 			$newContact->email = !empty($request->email) ? $request->email :'';
 			$newContact->contact_number = !empty($request->contact_number) ? $request->contact_number : '';
 			$newContact->update();
-			
+
 			// disconnect database
 			DB::disconnect($DB_DATABASE);
 			// reconnect to database
 			DB::purge($currentDatabaseName);
 			DB::reconnect($currentDatabaseName);
 			DB::setDefaultConnection($currentDatabaseName);
-			
+
 		}
-		
+
 		return back();
         //logic
         //open connection to db
@@ -183,37 +191,7 @@ class ClientController extends Controller
 
     public function editCompany()
     {
-
-        $data = $this->breadcrumb(
-            'Client ',
-            'Client page for Client related settings',
-            'patient_details',
-            'Client Profile',
-            'Client Details'
-        );
-
-		// get central domain
-		$centralDomains = env('CENTRAL_DOMAINS');
-		// get host url
-		$host = request()->getHost();
-		
-		if ($host === $centralDomains) 
-		{
-			// Main system
-			$client = Patient::latest()->first();
-			$client->load('packages','contacts');
-			
-		} 
-		else 
-		{
-			// Likely a tenant
-			$client = Patient::latest()->first();
-			$client->load('packages','contacts');
-		}
-
-	//	return $client;
-        $data['client'] = $client;
-        $data['packages'] = Packages::getPackages();
+        $data =  $this->companyService->renderEditCompanyPage();
         return view('security.client.edit_client_management')->with($data);
 
     }
