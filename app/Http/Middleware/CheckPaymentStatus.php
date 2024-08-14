@@ -25,16 +25,18 @@ class CheckPaymentStatus
 
         //get logged in client vat
         $vat = 'get vat ';
-        $paymentAmount = Patient::getPaymentStatus();
-
+        //$paymentAmount = Patient::getPaymentStatus();
+        $paymentAmount = 1;
+		
         // If the payment amount is zero, redirect to 'please-pay' route
-        if ($paymentAmount === 0) {
-            return redirect()->route('please.pay');
-        if ($status->payment_status === 0) {
-            return redirect()->route('editCompany');
-        }
+        //if ($paymentAmount === 0) {
+        //    return redirect()->route('please.pay');
+			if ($status->payment_status === 0) {
+				return redirect()->route('editCompany');
+			}
 
-        return $next($request);
-    }
+			return $next($request);
+		//}
 
+	}
 }
