@@ -38,6 +38,18 @@
                         </ul>
                     </div>
                 @endif
+                    @if( $client->payment_status == 0 ??  '')
+                        <div class="col-lg-8">
+                            <div class="card-box ribbon-box">
+                                <div class="ribbon ribbon-danger float-right"><i class="mdi mdi-access-point mr-1"></i> Pay Urgently</div>
+                                <h4 class="text-danger float-left mt-0">Account in Arrears</h4>
+                                <div class="ribbon-content">
+                                    <p class="mb-0 align-content-center">You haven't paid your Account .</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                 <div class="row">
                     {{ csrf_field() }}
                     <div class="col-lg-6">
@@ -169,7 +181,7 @@
                                     <div class="form-group">
                                         <label> Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="contact_number"
-                                               name="contact_number" value="{{ $client->contacts->contact_number ??  '' }}" 
+                                               name="contact_number" value="{{ $client->contacts->contact_number ??  '' }}"
                                                placeholder="Enter Contact Number" maxlength="15" required>
                                         <div class="invalid-feedback">
                                             Please provide Contact Number.
@@ -180,7 +192,7 @@
                                     <div class="form-group">
                                         <label> Contact Email <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="contact_email"
-                                               name="contact_email" value="{{ $client->contacts->email ??  '' }}" 
+                                               name="contact_email" value="{{ $client->contacts->email ??  '' }}"
                                                placeholder="Enter Email" required>
                                         <div class="invalid-feedback">
                                             Please provide Contact email.
@@ -217,6 +229,12 @@
                     <button type="submit" class="btn w-sm btn-success waves-effect waves-light">Save
                     </button>
                 </div>
+                    @if( $client->payment_status == 0 ??  '')
+                        <div class="text-lg-right">
+                            <button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light"><i class="mdi mdi-basket mr-1"></i>Pay Account</button>
+                        </div>
+                    @endif
+
             </form>
         </div>
         <br><br>

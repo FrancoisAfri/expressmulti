@@ -115,7 +115,7 @@ Route::get('getWaiterResponseTime', [ReportsController::class, 'getWaiterRespons
 
 Route::get('getDailyProfit', [DashboardController::class, 'getDailyProfit']);
 
-Route::group(['middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
+Route::group(['middleware' => ['web', 'auth', 'auth.lock', '2fa', 'check.payment']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('home')
         ->middleware(['auth', 'prevent-back-history']);
 
@@ -134,7 +134,7 @@ Route::resource('user_profile', UserProfileController::class)
 
 
 Route::group(['prefix' => 'users', 'middleware' => [
-    'web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
+    'web', 'auth', 'auth.lock', '2fa', 'role:Admin' , 'check.payment']], function () {
 
     Route::resource('module', ModuleController::class);
 
@@ -180,7 +180,7 @@ Route::group(['prefix' => 'users', 'middleware' => [
 
 }) ;
 Route::get('test', fn () => phpinfo());
-Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
+Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa' ,'check.payment']], function () {
 
     Route::resource('client_details', PatientControlle::class);
     Route::get('profile_management', [PatientControlle::class, 'clientslist'])
@@ -222,7 +222,7 @@ Route::middleware('check.page.usage')->get('/restaurant/terminal', [RestaurantCo
 Route::post('/logout-other-user', 'App\Http\Controllers\PageUsageController@logoutOtherUser')->name('logout-other-user');
 
 // restaurant middleware
-Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
+Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa','check.payment']], function () {
 
 	Route::get('download-qr-code/{table}', [RestaurantController::class, 'printQrCode'])
         ->name('qr-code.download');
@@ -350,10 +350,14 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('app.usage');
 	Route::post('reports/reviews-app', [ReportsController::class, 'appStarRating'])
         ->name('reviews.app');
-});
-Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
+    Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
+        ->name('edit_client.store');
 });
+Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin' ]], function () {
+    Route::get('users/view_company_details', [ClientController::class, 'editCompany'])->name('editCompany');
+});
+
 // Api for services
 Route::get('/api/get-check-services', [RestaurantController::class, 'create'])
         ->name('service.check');
@@ -383,16 +387,14 @@ Route::get('create-new-tenant/{clientID}', 'App\Http\Controllers\Payments@create
 Route::get('myInvoice', [InvoiceController::class, 'index']);
 
 //edit compony details
-Route::get('users/company_details', [ClientController::class, 'edit']);
-Route::get('users/view_company_details', [ClientController::class, 'editCompany']);
-Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
-    ->name('edit_client.store');
+//Route::get('users/company_details', [ClientController::class, 'edit']);
 
-Route::middleware(['check.payment'])->group(function () {
-    //use this middleware to check if payment is done
-    // the view needs to be created
-    //since l cant find client id , i used vat because it uniquw
-//    Route::get('/some-protected-route', [SomeController::class, 'someMethod'])->name('some.route');
-});
+
+//Route::middleware(['check.payment'])->group(function () {
+//    //use this middleware to check if payment is done
+//    // the view needs to be created
+//    //since l cant find client id , i used vat because it uniquw
+////    Route::get('/some-protected-route', [SomeController::class, 'someMethod'])->name('some.route');
+//});
 
 
