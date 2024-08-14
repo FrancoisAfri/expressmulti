@@ -138,7 +138,7 @@ class Patient extends Model
 
     public static function getPaymentStatus($vat)
     {
-        return Patient::where('vat', $vat)
+        return Patient::with('')->where('vat', $vat)
             ->select('payment_status')->first();
     }
 

@@ -22,7 +22,7 @@ class Packages extends Model
 	protected $table = 'packages';
 
 	protected $fillable = [
-        'package_name', 'no_table', 'status', 'price'
+        'package_name', 'no_table', 'status', 'price', 'package_type'
     ];
 
     //Packages
@@ -30,11 +30,11 @@ class Packages extends Model
     //Yearly
 
 
-	protected static $logName = 'Client Profile';
+	protected static $logName = 'Packages';
 
     protected function getDescriptionForEvent(string $eventName): string
     {
-        return "Client Profile {$eventName} ";
+        return "Packages {$eventName} ";
     }
 	// get all packages
 	 public static function getPackages()

@@ -6,6 +6,7 @@ use App\Models\Patient;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CheckPaymentStatus
 {
@@ -21,7 +22,7 @@ class CheckPaymentStatus
 
         //get logged in client vat
         $vat = 'get vat ';
-        $paymentAmount = Patient::getPaymentStatus($vat);
+        $paymentAmount = Patient::getPaymentStatus();
 
         // If the payment amount is zero, redirect to 'please-pay' route
         if ($paymentAmount === 0) {
