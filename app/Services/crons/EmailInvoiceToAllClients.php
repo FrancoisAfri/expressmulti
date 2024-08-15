@@ -66,50 +66,35 @@ class EmailInvoiceToAllClients
 
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
-
+		ini_set('memory_limit', '100M');
         $type = 1;
-
-//        $patientsWithPackageType =  Patient::with('packages')->whereHas('packages', function ($query) use ($type) {
-//        $query->where('package_type', $type);
-//    })->get();
-
-        // Eloquent: Get posts with user information
-//        $posts = Post::join('users', 'posts.user_id', '=', 'users.id')
-//            ->select('posts.*', 'users.name as user_name')
-//            ->get();
-
-        $patientsWithPackageType =  Patient::join('packages', 'companies.package_id', '=', 'packages.id')
+        $companies =  Patient::join('packages', 'companies.package_id', '=', 'packages.id')
             ->select('companies.*', 'packages.*')
+			->where('companies.is_active', 1)
             ->distinct()
             ->get();
 
-
-//        $patientsWithPackageType =  Patient::join('packages', 'patients.id', '=', 'packages.patient_id')
-////            ->where('packages.package_type', $type)
-////            ->select('patients.*')  // Selects all columns from the patients table
-////            ->distinct()           // Ensures that each patient appears only once
-//            ->get();
-
-        if ($patientsWithPackageType->isEmpty()) {
+        if ($companies->isEmpty()) {
             return 0;
         }
 
         $date = date('j M Y');
+		$details = $this->CompanyIdentityDetails();
+		// dd($companies);
+		$logo = (!empty($details['company_logo_url'])) ? 'uploads/'.$details['company_logo_url']  : 'images/logo_default.png';
 
-
-        foreach ($patientsWithPackageType as $companies) {
-//            dd($companies);
-            $details = $this->CompanyIdentityDetails();
-//            dd($details['company_name']);
-            $invoiceNumber = $this->generateInvoiceNumber();
+        foreach ($companies as $company) {
+            //dd($company);
+            $invoiceNumber = $this->generateInvoiceNumber($company->id);
             $data['invoice_number'] = $invoiceNumber;
             $data['company_details'] = $this->CompanyIdentityDetails();
             $data['date'] = date('j M Y');
-            $data['companies'] =
-            $data['companies'] = $companies;
+            $data['logo'] = $logo;
+            $data['company'] = $company;
             $pdf = PDF::loadView('invoice.test', $data)->setPaper('a4', 'landscape');
             // Send email with the PDF attachment
-            $this->sendInvoiceEmail($data, $companies, $invoiceNumber, $pdf);
+            $this->sendInvoiceEmail($data, $company, $invoiceNumber, $pdf);
+			$pdf = '';
         }
     }
 
@@ -154,9 +139,33 @@ class EmailInvoiceToAllClients
         }
     }
 
-    public function generateInvoiceNumber(): string
+    public function generateInvoiceNumber($id): string
     {
-        $uniqueId = DB::table('package_invoice')->max('id') + 1;
+		
+		//$companyId = 123; // Replace with the actual company_id you're checking for
+
+		/*$record = DB::table('package_invoice')
+			->where('is_paid', false) // is_paid is 0 (false)
+			->where('company_id', $id) // company_id matches the provided value
+			->whereNotNull('time') // Ensure time is not null before extracting month
+			->select(DB::raw('MONTH(FROM_UNIXTIME(time)) as month')) // Extract month from UNIX timestamp
+			->first(); // Get the first matching record
+
+		if ($record) {
+			$month = $record->month;
+			// Do something with the month value
+		} else {
+			// Handle case where no matching record is found
+		}*/
+		$record = DB::table('package_invoice')->insert([
+			'company_id' => $id, // Set the company_id
+			'is_paid' => false, // Set the company_id
+			'time' => time(), // Set the current time as a UNIX timestamp
+		]);
+		
+		//$uniqueId = $record->id;
+		$uniqueId = DB::table('package_invoice')->max('id');
+		
         $date = Carbon::now()->format('Ymd');
         return 'INV-' . $date . '-' . str_pad($uniqueId, 4, '0', STR_PAD_LEFT);
     }
@@ -172,6 +181,7 @@ class EmailInvoiceToAllClients
             asset('uploads/' . $companyDetails['company_logo_url']) :
             $data['system_background_image_url'] = $companyDetails['system_background_image_url'];
 
+        $data['company_logo_url'] = !empty($companyDetails['company_logo_url']) ? $companyDetails['company_logo_url'] : '';
         $data['mailing_address'] = $companyDetails['mailing_address'];
         $data['mailing_name'] = $companyDetails['mailing_name'];
         $data['company_name'] = $companyDetails['company_name'];
@@ -200,7 +210,7 @@ class EmailInvoiceToAllClients
         Mail::send('Email.invoice', $data, function ($message) use ($patient, $invoiceNumber, $pdf) {
             $message->to($patient->email, $patient->name)
                 ->subject('Invoice for ' . $patient->name)
-                ->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNumber . '.pdf');
+                ->attachData($pdf->output(), 'Invoice_' . $invoiceNumber . '.pdf');
         });
     }
 
@@ -222,5 +232,18 @@ class EmailInvoiceToAllClients
         ];
     }
 
+//        $patientsWithPackageType =  Patient::with('packages')->whereHas('packages', function ($query) use ($type) {
+//        $query->where('package_type', $type);
+//    })->get();
 
+        // Eloquent: Get posts with user information
+//        $posts = Post::join('users', 'posts.user_id', '=', 'users.id')
+//            ->select('posts.*', 'users.name as user_name')
+//            ->get();
+
+//        $patientsWithPackageType =  Patient::join('packages', 'patients.id', '=', 'packages.patient_id')
+////            ->where('packages.package_type', $type)
+////            ->select('patients.*')  // Selects all columns from the patients table
+////            ->distinct()           // Ensures that each patient appears only once
+//            ->get();
 }

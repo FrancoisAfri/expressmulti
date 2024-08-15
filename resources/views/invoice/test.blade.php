@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Example 1</title>
+    <title>Invoice</title>
     <style>
         .clearfix:after {
             content: "";
@@ -33,7 +33,7 @@
         }
 
         #logo {
-            text-align: center;
+            text-align: right;
             margin-bottom: 10px;
         }
 
@@ -143,29 +143,33 @@
     </style>
 </head>
 <body>
-@foreach($companies as $company)
 <header class="clearfix">
     <div id="logo">
-{{--        <img src="logo.png">--}}
-        <img src="{{ asset($company_details['logo']) }}" alt="logo">
+		@if(file_exists(public_path($logo)))
+			<img src="{{ public_path($logo) }}" class="img-fluid" alt="Company Logo">
+			
+		@else
+			<p>No logo available</p>
+		@endif
         <p class="mb-1" align="left">Invoice Number: <span>#{{ $invoice_number }}</span></p>
         <p class="mb-1" align="left">Invoice Date: <span>{{ $date }}</span></p>
     </div>
     <h1></h1>
 
     <div id="company" class="clearfix">
+		<h4 class="inv-title-1">Invoice To</h4>
         <div>{{ $company->trading_as ?? '' }}</div>
-        <div>{{ $company->email ?? '' }}</div>
+        <div>{{ $company->res_address ?? '' }}</div>
         <div><a href="mailto:{{ $company->email ?? '' }}">{{ $company->email ?? '' }}</a></div>
     </div>
     <div id="project">
         <h4 class="inv-title-1">Invoice From</h4>
-        <div><span></span>{{ $company_details['company_name'] }}</div>
-        <div><span></span> {{ $company_details['address'] }}</div>
-        <div><span></span> {{ $company_details['suburb'] }}</div>
-        <div><span></span> {{ $company_details['city'] }}</div>
-        <div><span></span> {{ $company_details['postal_code'] }}</div>
-        <div><span></span> <a href="mailto:{{ $company_details['mailing_address'] }}">{{ $company_details['mailing_address'] }}</a></div>
+        <div>{{ $company_details['company_name'] }}</div>
+        <div>{{ $company_details['address'] }}</div>
+        <div>{{ $company_details['suburb'] }}</div>
+        <div>{{ $company_details['city'] }}</div>
+        <div>{{ $company_details['postal_code'] }}</div>
+        <div><a href="mailto:{{ $company_details['mailing_address'] }}">{{ $company_details['mailing_address'] }}</a></div>
 
     </div>
 
@@ -173,51 +177,47 @@
 <main>
     <table>
         <thead>
-        <tr>
-            <th class="service">SERVICE</th>
-            <th class="desc">DESCRIPTION</th>
-            <th>PRICE</th>
-            <th>QTY</th>
-            <th>TOTAL</th>
-        </tr>
+			<tr>
+				<th style="text-align: center">Item</th>
+				<th style="text-align: center">PRICE</th>
+				<th style="text-align: center">QTY</th>
+				<th style="text-align: right">TOTAL</th>
+			</tr>
         </thead>
         <tbody>
-        <tr>
-            <td class="service">{{ $company->id  ?? '' }}</td>
-            <td class="desc">{{ $company->package_name ?? '' }}</td>
-            <td class="unit">R {{ $company->price ?? '' }}</td>
-            <td class="qty">{{ $company->no_table ?? '' }}</td>
-            <td class="total">R {{ $company->price ?? '' }}</td>
-        </tr>
-
-        <tr>
-            <td colspan="4">SUBTOTAL</td>
-{{--            <td class="total">R {{ number_format($company->price, 2 ) ?? '' }}</td>--}}
-        </tr>
-{{--        @php--}}
-{{--            $amount = $company->price ; // Replace with your actual amount or variable--}}
-{{--            $taxPercentage = 15;--}}
-{{--            $taxAmount = ($amount * $taxPercentage) / 100;--}}
-{{--        @endphp--}}
-        <tr>
-            <td colspan="4">TAX 25%</td>
-{{--            <td class="total">R{{ number_format($taxAmount, 2) }}</td>--}}
-        </tr>
-        <tr>
-            <td colspan="4" class="grand total">GRAND TOTAL</td>
-{{--            <td class="grand total">R{{ number_format($amount + $taxAmount, 2) }}</td>--}}
-        </tr>
+			<tr>
+				<td style="text-align: center">{{ $company->package_name ?? '' }}</td>
+				<td style="text-align: center">R {{ $company->price ?? '' }}</td>
+				<td style="text-align: center">1</td>
+				<td style="text-align: right">R {{ $company->price ?? '' }}</td>
+			</tr>
+			<tr>
+				<td colspan="3">SUBTOTAL</td>
+			   <td class="total">R {{ number_format($company->price, 2 ) ?? '' }}</td>
+			</tr>
+			@php
+				$amount = $company->price ;
+				$taxPercentage = 15;
+				$taxAmount = ($amount * $taxPercentage) / 100;
+			@endphp
+			<tr>
+				<td colspan="3">VAT 15%</td>
+			   <td class="total">R{{ number_format($taxAmount, 2) }}</td>
+			</tr>
+			<tr>
+				<td colspan="3" class="grand total">GRAND TOTAL</td>
+				<td class="grand total">R{{ number_format($amount + $taxAmount, 2) }}</td>
+			</tr>
         </tbody>
     </table>
     <div id="notices">
-        <div>NOTICE:</div>
+        <div>Term & Conditions:</div>
         <div class="notice">THANK YOU FOR YOUR BUSINESS <br>
             We will automatically charge the outstanding amount to your Bank Account.<br>
             If your account has changed or you know of any other problem,<br>
             kindly get in touch with us to avoid possible billing problems..</div>
     </div>
 </main>
-@endforeach
 <footer>
 
 </footer>
