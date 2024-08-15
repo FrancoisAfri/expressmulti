@@ -38,7 +38,7 @@
                         </ul>
                     </div>
                 @endif
-                    @if( $client->payment_status == 1 ??  '')
+                    @if( $client->payment_status == 0 ??  '')
                         <div class="col-lg-12">
                             <div class="card-box ribbon-box">
                                 <h4 class="text-danger float-left mt-0">Account in Arrears</h4>
@@ -228,7 +228,7 @@
                     <button type="submit" class="btn w-sm btn-success waves-effect waves-light">Save
                     </button>
                 </div>
-                    @if( $client->payment_status == 1 ??  '')
+                    @if( $client->payment_status == 0  ??  '')
                         <div class="text-lg-right">
                             <button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light"><i class="mdi mdi-basket mr-1"></i>Pay Account</button>
                         </div>
