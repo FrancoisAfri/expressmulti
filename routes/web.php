@@ -390,11 +390,11 @@ Route::get('myInvoice', [InvoiceController::class, 'index']);
 //Route::get('users/company_details', [ClientController::class, 'edit']);
 
 
-//Route::middleware(['check.payment'])->group(function () {
-//    //use this middleware to check if payment is done
-//    // the view needs to be created
-//    //since l cant find client id , i used vat because it uniquw
-////    Route::get('/some-protected-route', [SomeController::class, 'someMethod'])->name('some.route');
-//});
+Route::middleware(['check.payment'])->group(function () {
+    //use this middleware to check if payment is done
+    // the view needs to be created
+    //since l cant find client id , i used vat because it uniquw
+//    Route::get('/some-protected-route', [SomeController::class, 'someMethod'])->name('some.route');
+});
 
 
