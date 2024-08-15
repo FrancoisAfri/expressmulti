@@ -66,7 +66,7 @@ class EmailInvoiceToAllClients
 
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
-
+		ini_set('memory_limit', '100M');
         $type = 1;
         $companies =  Patient::join('packages', 'companies.package_id', '=', 'packages.id')
             ->select('companies.*', 'packages.*')
