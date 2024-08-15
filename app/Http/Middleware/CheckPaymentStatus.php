@@ -31,7 +31,7 @@ class CheckPaymentStatus
         // If the payment amount is zero, redirect to 'please-pay' route
         //if ($paymentAmount === 0) {
         //    return redirect()->route('please.pay');
-			if ($status->payment_status === 0) {
+			if ($status->payment_status === 1) {
 				return redirect()->route('editCompany');
 			}
 
