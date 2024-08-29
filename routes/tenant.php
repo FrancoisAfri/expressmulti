@@ -3,21 +3,16 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+//use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Security\ClientController;
 use App\Http\Controllers\Auth\AccountsController;
 use App\Http\Controllers\Auth\TwoFactorAuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Bookings\BookingsController;
-use App\Http\Controllers\Bookings\ReminderController;
-use App\Http\Controllers\Bookings\ReportController;
-use App\Http\Controllers\Billing\BillingSetupController;
-use App\Http\Controllers\Billing\BillingController;
-use App\Http\Controllers\Billing\InvoiceController;
-use App\Http\Controllers\Billing\ReportsController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Modules\ModuleAccessController;
 use App\Http\Controllers\Modules\ModuleController;
@@ -29,8 +24,13 @@ use App\Http\Controllers\SetUp\UserProfileController;
 use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\AuditController;
 use App\Http\Controllers\Patients\PatientControlle;
+use App\Http\Controllers\Billing\InvoiceController;
 use App\Http\Controllers\Restaurant\RestaurantController;
+use App\Http\Controllers\ClientRegistrationGuestController;
+use App\Http\Controllers\Restaurant\ReportsController;
 use App\Http\Controllers\RestaurantGuestController;
+use App\Http\Controllers\PageUsageController;
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -45,14 +45,14 @@ use App\Http\Controllers\RestaurantGuestController;
 
 Route::middleware([
     'web',
-    InitializeTenancyByDomain::class,
+    InitializeTenancyBySubdomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::get('/', function () {
-		
+
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
-	
+
 	Auth::routes(['register' => false]);
 
 	Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
@@ -75,7 +75,7 @@ Route::middleware([
 			->name('cart.store');
 	Route::get('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
 			->name('order.store');
-		
+
 	Route::get('2fa', [TwoFactorAuthController::class, 'index'])
 		->name('2fa.index');
 
@@ -152,7 +152,7 @@ Route::middleware([
 		'web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
 		Route::resource('module', ModuleController::class);
-		
+
 		Route::get('module/act/{mod}', [ModuleController::class, 'activateModule'])
 			->name('module.activate');
 		Route::get('profile_edit/{user}', [UserProfileController::class, 'profile'])
@@ -205,7 +205,7 @@ Route::middleware([
 		Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
 			->name('patientManagement.guest.update');
 		Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
-			->name('clientManagement.activate'); 
+			->name('clientManagement.activate');
 		Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
 			->name('client_details.show');
 		Route::get('send-message', [ContactControllere::class, 'sendMessages'])
@@ -235,13 +235,13 @@ Route::middleware([
 	Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
 		Route::get('download-qr-code/{table}', [RestaurantController::class, 'printQrCode'])
-			->name('qr-code.download'); 
+			->name('qr-code.download');
 		Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
 			->name('client_details.update');
 		Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
 			->name('patientManagement.guest.update');
 		Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
-			->name('clientManagement.activate'); 
+			->name('clientManagement.activate');
 		Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
 			->name('client_details.show');
 		Route::get('send-message', [ContactControllere::class, 'sendMessages'])

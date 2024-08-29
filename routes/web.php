@@ -177,7 +177,8 @@ Route::group(['prefix' => 'users', 'middleware' => [
 
     Route::post('edit_patient_sms', [ContactControllere::class, 'editPatientSms'])
         ->name('edit.PatientSms');
-
+	Route::get('view_company_details', [ClientController::class, 'editCompany'])
+		->name('editCompany');
 }) ;
 Route::get('test', fn () => phpinfo());
 Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa' ,'check.payment']], function () {
@@ -353,9 +354,6 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
 
     Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
         ->name('edit_client.store');
-});
-Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin' ]], function () {
-    Route::get('users/view_company_details', [ClientController::class, 'editCompany'])->name('editCompany');
 });
 
 // Api for services
