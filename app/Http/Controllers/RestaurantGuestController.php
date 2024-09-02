@@ -468,7 +468,7 @@ class RestaurantGuestController extends Controller
             }
         }
         // Read service account details
-        $authConfigString = file_get_contents($fcmFile . "afrixcel-3098e-firebase-adminsdk-9fbd2-4789c8f582.json");
+        $authConfigString = file_get_contents($fcmFile . "afrixcel-3098e-firebase-adminsdk-9fbd2-b01d186744.json");
 
 		// Parse service account details
         $authConfig = json_decode($authConfigString);
