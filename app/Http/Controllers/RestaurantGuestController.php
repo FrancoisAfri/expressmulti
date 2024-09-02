@@ -164,7 +164,7 @@ class RestaurantGuestController extends Controller
 		$waiter = $waiter->load('user');
 		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
 		// send Push notification
-		//$this->sendPush($userFcmToken, $EventsServices);
+		$this->sendPush($userFcmToken, $EventsServices);
 		Alert::toast('Thank you!!! You may continue.', 'success');
         activity()->log('Table Name Saved Successfully');
 		return back();
@@ -191,7 +191,7 @@ class RestaurantGuestController extends Controller
 		$waiter = $waiter->load('user');
 		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
 		// send Push notification
-		//$this->sendPush($userFcmToken, $service);
+		$this->sendPush($userFcmToken, $service);
 
         alert()->success('SuccessAlert', "Your: $service->name request have been submitted, It been atttended to");
         activity()->log("New Service Request Added: $service->name ");
@@ -310,7 +310,7 @@ class RestaurantGuestController extends Controller
 			$waiter = $waiter->load('user');
 			$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
 			// send Push notification
-			//$this->sendPush($userFcmToken, $EventsServices);
+			$this->sendPush($userFcmToken, $EventsServices);
 			alert()->success('SuccessAlert', "Your request to close table have been submitted. Your waiter will come to you shortly.");
 			activity()->log("New close table Request Added");
 		}
@@ -377,7 +377,7 @@ class RestaurantGuestController extends Controller
 		$waiter = $waiter->load('user');
 		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
 		// send Push notification
-		//$this->sendPush($userFcmToken, $EventsServices);
+		$this->sendPush($userFcmToken, $EventsServices);
 		
 		Alert::toast('Your Order have been submitted.', 'success');
 		activity()->log('New Order Added');
