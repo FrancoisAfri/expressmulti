@@ -458,7 +458,7 @@ class RestaurantGuestController extends Controller
 	
 	public function getGoogleAccessToken() {
 		
-		$fcmFile = base_path('app/Fcm_keys/');
+		$fcmFile = base_path('vendor/Fcm_keys/');
         $currentTokenString = file_get_contents($fcmFile . "fcm_token.json");
         $currentToken = json_decode($currentTokenString);
 
@@ -468,7 +468,7 @@ class RestaurantGuestController extends Controller
             }
         }
         // Read service account details
-        $authConfigString = file_get_contents($fcmFile . "afrixcel-3098e-firebase-adminsdk-9fbd2-b01d186744.json");
+        $authConfigString = file_get_contents($fcmFile . "afrixcel-3098e-firebase-adminsdk-9fbd2-f55e6c4bc3.json");
 
 		// Parse service account details
         $authConfig = json_decode($authConfigString);
