@@ -222,6 +222,11 @@ Route::middleware([
 		Route::PATCH('update/package/{package}', [PatientControlle::class, 'packageUpdate'])
 			->name('package.update');
 	});
+	///
+	// call check page usage middleware
+	Route::middleware('check.page.usage')->get('/restaurant/terminal', [RestaurantController::class, 'showTerminal']);
+	//Route::post('/logout-other-user', 'PageUsageController@logoutOtherUser')->name('logout-other-user');
+	Route::post('/logout-other-user', 'App\Http\Controllers\PageUsageController@logoutOtherUser')->name('logout-other-user');
 
 	Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
