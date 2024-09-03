@@ -186,17 +186,17 @@
         </thead>
         <tbody>
 			<tr>
-				<td style="text-align: center">{{ $company->package_name ?? '' }}</td>
-				<td style="text-align: center">R {{ $company->price ?? '' }}</td>
+				<td style="text-align: center">{{ $company->packages->package_name ?? '' }}</td>
+				<td style="text-align: center">R {{ $company->packages->price ?? '' }}</td>
 				<td style="text-align: center">1</td>
-				<td style="text-align: right">R {{ $company->price ?? '' }}</td>
+				<td style="text-align: right">R {{ $company->packages->price ?? '' }}</td>
 			</tr>
 			<tr>
 				<td colspan="3">SUBTOTAL</td>
-			   <td class="total">R {{ number_format($company->price, 2 ) ?? '' }}</td>
+			   <td class="total">R {{ number_format($company->packages->price, 2 ) ?? '' }}</td>
 			</tr>
 			@php
-				$amount = $company->price ;
+				$amount = $company->packages->price;
 				$taxPercentage = 15;
 				$taxAmount = ($amount * $taxPercentage) / 100;
 			@endphp

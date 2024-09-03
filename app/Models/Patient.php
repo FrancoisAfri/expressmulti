@@ -140,5 +140,14 @@ class Patient extends Model
     {
         return Patient::select('payment_status')->first();
     }
-
+	// get all active clients
+	public static function getAllActiveClients()
+    {
+        return Patient::with(
+            'packages',
+            'contacts'
+        )
+		->where('is_active',1)
+		->get();
+    }
 }

@@ -68,11 +68,7 @@ class EmailInvoiceToAllClients
     {
 		ini_set('memory_limit', '100M');
         $type = 1;
-        $companies =  Patient::join('packages', 'companies.package_id', '=', 'packages.id')
-            ->select('companies.*', 'packages.*')
-			->where('companies.is_active', 1)
-            ->distinct()
-            ->get();
+        $companies =  Patient::getAllActiveClients();
 
         if ($companies->isEmpty()) {
             return 0;
@@ -84,7 +80,7 @@ class EmailInvoiceToAllClients
 		$logo = (!empty($details['company_logo_url'])) ? 'uploads/'.$details['company_logo_url']  : 'images/logo_default.png';
 
         foreach ($companies as $company) {
-            //dd($company);
+          //  dd($company);
             $invoiceNumber = $this->generateInvoiceNumber($company->id);
             $data['invoice_number'] = $invoiceNumber;
             $data['company_details'] = $this->CompanyIdentityDetails();
@@ -205,11 +201,11 @@ class EmailInvoiceToAllClients
      * @param \Barryvdh\DomPDF\PDF $pdf
      * @return void
      */
-    public function sendInvoiceEmail($data, $patient, string $invoiceNumber, \Barryvdh\DomPDF\PDF $pdf): void
+    public function sendInvoiceEmail($data, $client, string $invoiceNumber, \Barryvdh\DomPDF\PDF $pdf): void
     {
-        Mail::send('Email.invoice', $data, function ($message) use ($patient, $invoiceNumber, $pdf) {
-            $message->to($patient->email, $patient->name)
-                ->subject('Invoice for ' . $patient->name)
+        Mail::send('Email.invoice', $data, function ($message) use ($client, $invoiceNumber, $pdf) {
+            $message->to($client->contacts->email, $client->contacts->name)
+                ->subject('Invoice for ' . $client->name)
                 ->attachData($pdf->output(), 'Invoice_' . $invoiceNumber . '.pdf');
         });
     }

@@ -63,7 +63,7 @@ class ClientController extends Controller
 
     public function editCompanyDetails(Request $request, Patient $client)
     {
-		die('ddd');
+		//die('ddd');
 		//get central domain
 		$centralDomains = env('CENTRAL_DOMAINS');
 		// get host url
