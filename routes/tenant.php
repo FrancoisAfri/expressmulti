@@ -48,29 +48,18 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/', function () {
-
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-    });
 
 	Auth::routes(['register' => false]);
-
-	Route::get('/new_client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@index');
-	Route::post('client/client_registration', 'App\Http\Controllers\ClientRegistrationGuestController@store');
-
-	// table scanning /2
-	Route::get('restaurant/scan/{table}', [RestaurantGuestController::class, 'index'])
-		->name('seating.plan');
-	Route::get('restaurant/qr_code/', [RestaurantGuestController::class, 'inactiveQrcode'])
+		
+	Route::get('restaurant/scan/{table}', 'App\Http\Controllers\RestaurantGuestController@index')
+    ->name('seating.plan');
+	Route::get('restaurant/qr_code/', 'App\Http\Controllers\RestaurantGuestController@inactiveQrcode')
 		->name('qr_code.activate');
-	//Route::get('//{table}', 'App\Http\Controllers\RestaurantGuestController@');
 	Route::get('/restaurant/close-table/request/{table}', 'App\Http\Controllers\RestaurantGuestController@closeTableRequest');
 	Route::get('/restaurant/cart-trash/{cart}', 'App\Http\Controllers\RestaurantGuestController@deleteItems');
 	Route::get('/restaurant/service-request/{table}/{service}', 'App\Http\Controllers\RestaurantGuestController@serviceRequest');
 	Route::post('restaurant/rate/service/{scan}', 'App\Http\Controllers\RestaurantGuestController@rateService');
-	Route::post('restaurant/add-table-name/{scan}', 'App\Http\Controllers\RestaurantGuestController@saveName');
-	//Route::post('restaurant/make-order/{scan}', [RestaurantGuestController::class, 'storeOrder'])
-	 //       ->name('order.store');
+	Route::post('restaurant/add-table-name/{table}', 'App\Http\Controllers\RestaurantGuestController@openTable');
 	Route::post('restaurant/add-cart/{table}/{menu}', [RestaurantGuestController::class, 'saveCart'])
 			->name('cart.store');
 	Route::get('restaurant/place-order/{table}', [RestaurantGuestController::class, 'storeOrder'])
@@ -192,6 +181,8 @@ Route::middleware([
 
 		Route::post('edit_patient_sms', [ContactControllere::class, 'editPatientSms'])
 			->name('edit.PatientSms');
+		Route::get('view_company_details', [ClientController::class, 'editCompany'])
+		->name('editCompany');																	 
 
 	}) ;
 	Route::get('test', fn () => phpinfo());
@@ -235,99 +226,134 @@ Route::middleware([
 	Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
 
 		Route::get('download-qr-code/{table}', [RestaurantController::class, 'printQrCode'])
-			->name('qr-code.download');
-		Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
-			->name('client_details.update');
-		Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
-			->name('patientManagement.guest.update');
-		Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
-			->name('clientManagement.activate');
-		Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
-			->name('client_details.show');
-		Route::get('send-message', [ContactControllere::class, 'sendMessages'])
-			->name('sendMessages.view');
-		Route::post('send-message', [ContactControllere::class, 'sendSmsMessages'])
-			->name('sendMessages.sendSms');
-		Route::post('send-email', [ContactControllere::class, 'sendEmailCommunication'])
-			->name('sendMessages.sendEmail');
-		Route::post('add_contact_person', [PatientControlle::class, 'storeContactPerson'])
-			->name('contact_person.store');
-		Route::get('destroy_contact_person/{contact}', [PatientControlle::class, 'destroyContactPerson'])
-			->name('contact_person.destroy');
-		Route::post('company/delete/{id}', [PatientControlle::class, 'destroy'])
-			->name('company_details.destroy');
-		Route::get('category', [RestaurantController::class, 'categories'])
-			->name('categories.view');
-		Route::delete('destroy_category/{category}', [RestaurantController::class, 'destroyCategory'])
-			->name('category.destroy');
-		Route::post('add_category', [RestaurantController::class, 'storeCategory'])
-			->name('category.store');
-		Route::get('category/act/{category}', [RestaurantController::class, 'activateCategory'])
-			->name('category.activate');
-		Route::PATCH('update/category/{category}', [RestaurantController::class, 'categoryUpdate'])
-			->name('category.update');
-		Route::get('menu', [RestaurantController::class, 'menus'])
-			->name('menus.view');
-		Route::get('menu-edit/{menu}', [RestaurantController::class, 'menuEdit'])
-			->name('menu.edit');
-		Route::get('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
-			->name('menu.destroy');
-		Route::post('add_menu', [RestaurantController::class, 'storeMenu'])
-			->name('menu.store');
-		Route::get('menu/act/{menu}', [RestaurantController::class, 'activateMenu'])
-			->name('menu.activate');
-		Route::post('update/menu/{menu}', [RestaurantController::class, 'menuUpdate'])
-			->name('menu.update');
-		Route::get('seating_plan', [RestaurantController::class, 'plans'])
-			->name('tables.view');
-		Route::delete('destroy_plan/{plan}', [RestaurantController::class, 'destroyPlan'])
-			->name('table.destroy');
-		Route::post('add_plan', [RestaurantController::class, 'storePlan'])
-			->name('table.store');
-		Route::get('plan/act/{plan}', [RestaurantController::class, 'activatePlan'])
-			->name('table.activate');
-		Route::PATCH('update/table/{table}', [RestaurantController::class, 'planUpdate'])
-			->name('table.update');
-		Route::get('service_type', [RestaurantController::class, 'services'])
-			->name('services.view');
-		Route::delete('destroy_service/{service}', [RestaurantController::class, 'destroyService'])
-			->name('service.destroy');
-		Route::post('add_service', [RestaurantController::class, 'storeService'])
-			->name('service.store');
-		Route::get('service/act/{service}', [RestaurantController::class, 'activateService'])
-			->name('service.activate');
-		Route::PATCH('update/service/{service}', [RestaurantController::class, 'serviceUpdate'])
-			->name('service.update');
-		Route::get('qr_code/print/{table}', [RestaurantController::class, 'printQrCode'])
-			->name('print.qr_code');
-		Route::post('assign/employee/{table}', [RestaurantController::class, 'assignEmployee'])
-			->name('assign.employee');
-		Route::get('menu-type', [RestaurantController::class, 'menuType'])
-			->name('menu-type.view');
-		Route::delete('destroy_menu-type/{type}', [RestaurantController::class, 'destroyMenuType'])
-			->name('menu-type.destroy');
-		Route::post('add_menu_type', [RestaurantController::class, 'storeMenuType'])
-			->name('menu-type.store');
-		Route::get('menu-type/act/{type}', [RestaurantController::class, 'activateMenuType'])
-			->name('menu-type.activate');
-		Route::PATCH('update/menu-type/{type}', [RestaurantController::class, 'menuTypeUpdate'])
-			->name('menu-type.update');
-		Route::get('table/close/{table}', [DashboardController::class, 'closeTable'])
-			->name('table.close');
-		Route::get('request/close/{close}', [DashboardController::class, 'closeRequest'])
-			->name('request.close');
-		Route::get('request-denied/close/{close}', [DashboardController::class, 'closeDeniedRequest'])
-			->name('request-denied.close');
-		Route::get('service/close/{service}', [DashboardController::class, 'closeService'])
-			->name('service.close');
-		Route::get('order/close/{order}', [DashboardController::class, 'closeOrder'])
-			->name('order.close');
-		Route::get('delete-order/{order}', [DashboardController::class, 'deleteOrder'])
-			->name('delete.close');
-		Route::get('setup', [RestaurantController::class, 'setup'])
-			->name('setup.res');
-		Route::post('settings_save', [RestaurantController::class, 'storeSetup'])
-			->name('restaurant_settings.store');
+        ->name('qr-code.download');
+	Route::PATCH('update_client/{id}', [PatientControlle::class, 'update'])
+        ->name('client_details.update');
+    Route::PATCH('patient_details/guest/{patient_detail}', [PatientControlle::class, 'patientManagementGuest'])
+        ->name('patientManagement.guest.update');
+    Route::get('profile_management/act/{client}', [PatientControlle::class, 'activateClient'])
+        ->name('clientManagement.activate');
+	Route::get('client_details/show/{patient}', [PatientControlle::class, 'show'])
+        ->name('client_details.show');
+    Route::get('send-message', [ContactControllere::class, 'sendMessages'])
+        ->name('sendMessages.view');
+	Route::post('send-message', [ContactControllere::class, 'sendSmsMessages'])
+        ->name('sendMessages.sendSms');
+    Route::post('send-email', [ContactControllere::class, 'sendEmailCommunication'])
+        ->name('sendMessages.sendEmail');
+	Route::post('add_contact_person', [PatientControlle::class, 'storeContactPerson'])
+        ->name('contact_person.store');
+    Route::get('destroy_contact_person/{contact}', [PatientControlle::class, 'destroyContactPerson'])
+        ->name('contact_person.destroy');
+	Route::post('company/delete/{id}', [PatientControlle::class, 'destroy'])
+        ->name('company_details.destroy');
+    Route::get('category', [RestaurantController::class, 'categories'])
+        ->name('categories.view');
+	Route::delete('destroy_category/{category}', [RestaurantController::class, 'destroyCategory'])
+        ->name('category.destroy');
+	Route::post('add_category', [RestaurantController::class, 'storeCategory'])
+        ->name('category.store');
+	Route::get('category-edit/{category}', [RestaurantController::class, 'categoryEdit'])
+        ->name('category.edit');
+	Route::get('category-delete-image/{category}', [RestaurantController::class, 'categoryImageDelete'])
+        ->name('category.delete-image');
+	Route::get('category/act/{category}', [RestaurantController::class, 'activateCategory'])
+        ->name('category.activate');
+	Route::post('update/category/{category}', [RestaurantController::class, 'categoryUpdate'])
+        ->name('category.update');
+	Route::get('menu', [RestaurantController::class, 'menus'])
+        ->name('menus.view');
+	Route::get('menu-edit/{menu}', [RestaurantController::class, 'menuEdit'])
+        ->name('menu.edit');
+	Route::get('menu-image-delete/{menu}', [RestaurantController::class, 'deleteImage'])
+        ->name('menu.delete-image');
+	Route::get('destroy_menu/{menu}', [RestaurantController::class, 'destroyMenu'])
+        ->name('menu.destroy');
+	Route::post('add_menu', [RestaurantController::class, 'storeMenu'])
+        ->name('menu.store');
+	Route::get('menu/act/{menu}', [RestaurantController::class, 'activateMenu'])
+        ->name('menu.activate');
+	Route::post('update/menu/{menu}', [RestaurantController::class, 'menuUpdate'])
+        ->name('menu.update');
+	Route::get('seating_plan', [RestaurantController::class, 'plans'])
+        ->name('tables.view');
+	Route::delete('destroy_plan/{plan}', [RestaurantController::class, 'destroyPlan'])
+        ->name('table.destroy');
+	Route::post('add_plan', [RestaurantController::class, 'storePlan'])
+        ->name('table.store');
+	Route::get('plan/act/{plan}', [RestaurantController::class, 'activatePlan'])
+        ->name('table.activate');
+	Route::PATCH('update/table/{table}', [RestaurantController::class, 'planUpdate'])
+        ->name('table.update');
+	Route::get('service_type', [RestaurantController::class, 'services'])
+        ->name('services.view');
+	Route::delete('destroy_service/{service}', [RestaurantController::class, 'destroyService'])
+        ->name('service.destroy');
+	Route::post('add_service', [RestaurantController::class, 'storeService'])
+        ->name('service.store');
+	Route::get('service/act/{service}', [RestaurantController::class, 'activateService'])
+        ->name('service.activate');
+	Route::PATCH('update/service/{service}', [RestaurantController::class, 'serviceUpdate'])
+        ->name('service.update');
+	Route::get('qr_code/print/{table}', [RestaurantController::class, 'printQrCode'])
+        ->name('print.qr_code');
+	Route::post('assign/employee/{table}', [RestaurantController::class, 'assignEmployee'])
+        ->name('assign.employee');
+	Route::get('menu-type', [RestaurantController::class, 'menuType'])
+        ->name('menu-type.view');
+	Route::delete('destroy_menu-type/{type}', [RestaurantController::class, 'destroyMenuType'])
+        ->name('menu-type.destroy');
+	Route::post('add_menu_type', [RestaurantController::class, 'storeMenuType'])
+        ->name('menu-type.store');
+	Route::get('menu-type/act/{type}', [RestaurantController::class, 'activateMenuType'])
+        ->name('menu-type.activate');
+	Route::PATCH('update/menu-type/{type}', [RestaurantController::class, 'menuTypeUpdate'])
+        ->name('menu-type.update');
+	Route::get('table/close/{table}', [DashboardController::class, 'closeTable'])
+        ->name('table.close');
+	Route::get('request/close/{close}', [DashboardController::class, 'closeRequest'])
+        ->name('request.close');
+	Route::get('request-denied/close/{close}', [DashboardController::class, 'closeDeniedRequest'])
+        ->name('request-denied.close');
+	Route::get('service/close/{service}', [DashboardController::class, 'closeService'])
+        ->name('service.close');
+	Route::get('order/close/{order}', [DashboardController::class, 'closeOrder'])
+        ->name('order.close');
+	Route::get('delete-order/{order}', [DashboardController::class, 'deleteOrder'])
+        ->name('delete.close');
+	Route::get('setup', [RestaurantController::class, 'setup'])
+        ->name('setup.res');
+	Route::post('settings_save', [RestaurantController::class, 'storeSetup'])
+        ->name('restaurant_settings.store');
+	Route::get('reports', [ReportsController::class, 'index'])
+        ->name('reports.index');
+	Route::post('report/waiter-response', [ReportsController::class, 'waiterResponse'])
+        ->name('waiter.response');
+	Route::post('report/sales-value-ordered', [ReportsController::class, 'waiterSales'])
+        ->name('waiter.sales');
+	Route::post('reviews-reports', [ReportsController::class, 'reviewsReports'])
+        ->name('reviews.reports');
+	Route::post('popular-dishes', [ReportsController::class, 'popularDishes'])
+        ->name('popular.dishes');
+	Route::post('report/financials', [ReportsController::class, 'financials'])
+        ->name('reports.financials');
+	Route::post('reports/popular-quick-services', [ReportsController::class, 'popularServices'])
+        ->name('popular.services');
+	Route::post('reports/popular-dish', [ReportsController::class, 'popularDishes'])
+        ->name('popular.dish');
+	Route::post('reports/turnaround-table-size', [ReportsController::class, 'turnaroundTableSize'])
+        ->name('turnaround.table');
+	Route::post('reports/restaurant-turnaround-time', [ReportsController::class, 'restaurantTurnaroundTime'])
+        ->name('turnaround.time');
+	Route::post('reports/restaurant-sales-volume', [ReportsController::class, 'restaurantSalesVolume'])
+        ->name('restaurant.sales');
+	Route::post('reports/app-usage', [ReportsController::class, 'appUsage'])
+        ->name('app.usage');
+	Route::post('reports/reviews-app', [ReportsController::class, 'appStarRating'])
+        ->name('reviews.app');
+
+    Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
+        ->name('edit_client.store');
 	});
 	Route::group(['prefix' => 'contacts', 'middleware' => ['web', 'auth', 'auth.lock', '2fa', 'role:Admin']], function () {
 
