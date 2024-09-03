@@ -33,6 +33,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
+
 class RestaurantController extends Controller
 {
 	use BreadCrumpTrait, CompanyIdentityTrait;
@@ -479,7 +480,11 @@ class RestaurantController extends Controller
             'Tables Management',
             'Tables'
         );
-		$url = config('app.url') . '/restaurant/scan' ;
+		
+		$currentUrl = url()->full();
+		$modifiedUrl = preg_replace('/\/restaurant\/seating_plan/', '', $currentUrl);
+		$url = $modifiedUrl. '/restaurant/scan' ;
+
 		$data['users'] = HRPerson::getAllUsers();
 		$data['tables'] = Tables::getTables();
 		$data['current_url'] = $url;
