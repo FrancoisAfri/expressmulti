@@ -129,7 +129,15 @@ class CompanyIdentityService
         $user->lockout_time = $lockoutTime;
         return $user->save();
     }
-
+	
+	private static function updateEmail(Request $request)
+    {
+        $user = auth()->user();
+        $lockoutTime = $request->input('lockout_time');
+        $user->lockout_time = $lockoutTime;
+        return $user->save();
+    }
+	
     public function getAvatar($id)
     {
 
@@ -236,6 +244,8 @@ class CompanyIdentityService
      */
     public function getUserDetails(Request $request, $mobile)
     {
+		
+		//return $request;
         $userDetails = HRPerson::updateOrCreate(
             [
                 'user_id' => $request->get('user_id'),
@@ -245,6 +255,15 @@ class CompanyIdentityService
                 'surname' => $request->get('surname'),
                 'initial' => $request->get('initial'),
                 'cell_number' => $mobile,
+                'email' => $request->get('email'),
+            ],
+        );
+		$LoginDetails = User::updateOrCreate(
+            [
+                'id' => $request->get('user_id'),
+            ],
+            [
+                'email' => $request->get('email'),
             ],
         );
         return $userDetails;
