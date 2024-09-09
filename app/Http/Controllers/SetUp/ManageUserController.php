@@ -44,14 +44,15 @@ class ManageUserController extends Controller
     {
 		
         $data = $this->breadcrumb(
-            'Settings Modules',
+            'Settings Users',
             'Admin page for security related settings',
             'manage',
             'Settings',
             'Manage Users'
         );
 
-
+		//$user = User::with('person')->get();
+		//return $user;
         $data['roles'] = Role::select('id', 'name')->get();
         $data['users'] = User::with('person')->get();
         $data['defaultAvatar'] = User::defaultAvatar();

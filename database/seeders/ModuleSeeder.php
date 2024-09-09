@@ -23,17 +23,6 @@ class ModuleSeeder extends Seeder
             'path' => 'users',
             'font_awesome' => 'fe-lock'
         ]);
-
-        $ribbon = new module_ribbons();
-        $ribbon->active = 1;
-        $ribbon->sort_order = 1;
-        $ribbon->ribbon_name = 'Modules';
-        $ribbon->description = 'Modules';
-        $ribbon->ribbon_path = 'users/module';
-        $ribbon->font_awesome = 'fe-command';
-        $ribbon->access_level = 5;
-        $module->addRibbon($ribbon);
-
         $ribbon = new module_ribbons();
         $ribbon->active = 1;
         $ribbon->sort_order = 2;

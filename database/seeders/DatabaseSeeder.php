@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RestaurantSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(RolesSeeder::class);
+        $this->call(AdvancedSettingsSeeder::class);
 
     }
 }

@@ -22,7 +22,7 @@
                         <i class="mdi mdi-plus-circle"></i> Create New User
                     </button>
 
-                    <h4 class="header-title mb-4">Modules</h4>
+                    <h4 class="header-title mb-4">Users</h4>
 
                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                            id="tickets-table">
@@ -96,7 +96,7 @@
                                             <button onclick="postData({{$user->id}}, 'actdeac');"
                                                     class="dropdown-item"><i
                                                     class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-                                                {{(!empty($user->activate) && $user->activate == 1) ? "De-Activate" : "Activate"}}
+                                                {{(!empty($user->status) && $user->status == 1) ? "De-Activate" : "Activate"}}
                                             </button>
 											<button onclick="postData({{$user->id}}, 'edit');"
                                                     class="dropdown-item"><i

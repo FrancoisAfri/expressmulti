@@ -10,6 +10,7 @@ use App\Services\CommunicationService;
 use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use App\Models\ContactPerson;
+use App\Http\Requests\NewClientRequest;
 use App\Models\Packages;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -69,7 +70,7 @@ class ClientRegistrationGuestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NewClientRequest $request)
     {
 
         $clientID = $this->clientService->persistClientTempData($request);

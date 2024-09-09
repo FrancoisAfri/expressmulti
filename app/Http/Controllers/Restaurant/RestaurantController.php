@@ -263,8 +263,6 @@ class RestaurantController extends Controller
 	// delete category
     public function destroyCategory(Categories $category)
     {
-        //$category->delete();
-		//return $category;
 		$this->RestaurantService->destroyCategory($category); 
         Alert::toast('Record Deleted Successfully ', 'success');
 		activity()->log('Category deleted');

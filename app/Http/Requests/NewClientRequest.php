@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class NewClientRequest extends FormRequest
 {
@@ -24,15 +25,15 @@ class NewClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required',
-            'cell_number' => 'required',
-            'res_address' => 'required',
-            'package_id' => 'required',
-            'first_name' => 'required',
-            'surname' => 'required',
-            'contact_number' => 'required',
-            'surname' => 'required',
+            'name' => 'required|string|max:255',
+			'email' => 'required|email|max:255|unique:companies',
+			//'contact_email' => 'required|email|max:255|unique:contacts_person',
+			'cell_number' => 'required',
+			'res_address' => 'required|string|max:500',
+			'package_id' => 'required|exists:packages,id',
+			'first_name' => 'required|string|max:255',
+			'surname' => 'required|string|max:255',
+			'contact_number' => 'required',
         ];
     }
 }

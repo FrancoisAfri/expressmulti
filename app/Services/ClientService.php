@@ -21,6 +21,7 @@ use App\Models\Tenant;
 use App\Models\Patient;
 use App\Models\Companies_temp;
 //use App\Services\BillingService;
+use App\Services\Modules\ModuleService;
 use App\Traits\FileUpload;
 //use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -36,11 +37,11 @@ class ClientService
     /**
      * @var \App\Services\BillingService
      */
-    //private $billingService;
-	//BillingService $billingService
-    public function __construct()
+    private $moduleService;
+	
+    public function __construct(ModuleService $moduleService)
 	{
-        //$this->billingService = $billingService;
+        $this->moduleService = $moduleService;
     }
 
 
@@ -388,6 +389,9 @@ class ClientService
 			//Assign roles
 			$user->assignRole(5);
 			PasswordSecurity::addExpiryDate($user->id);
+			// save rights 
+			$this->moduleService::giveUserAccess($user->id, 1, 4);
+			$this->moduleService::giveUserAccess($user->id, 2, 4);
 			// send email
 			$forgotPassword =  new ForgotPasswordController();
 			$forgotPassword->sendResetEmail($user->email , $random_pass ,$user,$domain);

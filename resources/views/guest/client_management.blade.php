@@ -213,7 +213,7 @@
                     </div> <!-- end col-->
                 </div>
                 <div class="text-center mb-3">
-                    <button type="submit" class="btn w-sm btn-success waves-effect waves-light">Save
+                    <button type="submit" id="saveButton" class="btn w-sm btn-success waves-effect waves-light">Save
                     </button>
                 </div>
             </form>
@@ -265,6 +265,10 @@
                 utilsScript: "/js/utils.js",
             });
         })
-
+		document.querySelector('form').addEventListener('submit', function(e) {
+			var saveButton = document.getElementById('saveButton');
+			saveButton.disabled = true;
+			saveButton.innerHTML = 'Saving...'; // Optional: change the button text while saving
+		});
     </script>
 @endsection
