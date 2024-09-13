@@ -183,7 +183,7 @@ Route::middleware([
 			->name('edit.PatientSms');																 
 
 	});
-	Route::get('view_company_details', [ClientController::class, 'editCompany'])
+	Route::get('users/view_company_details', [ClientController::class, 'editCompany'])
 		->name('editCompany');	
 	Route::get('test', fn () => phpinfo());
 	Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock', '2fa']], function () {
