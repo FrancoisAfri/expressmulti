@@ -11,6 +11,7 @@ use App\Traits\BreadCrumpTrait;
 use App\Traits\CompanyIdentityTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ClientController extends Controller
 {
@@ -63,7 +64,6 @@ class ClientController extends Controller
 
     public function editCompanyDetails(Request $request, Patient $client)
     {
-		//die('ddd');
 		//get central domain
 		$centralDomains = env('CENTRAL_DOMAINS');
 		// get host url
@@ -80,7 +80,6 @@ class ClientController extends Controller
 			$contact->email = !empty($request->email) ? $request->email :'';
 			$contact->contact_number = !empty($request->contact_number) ? $request->contact_number : '';
 			$contact->update();
-
 		}
 		else
 		{
@@ -96,7 +95,19 @@ class ClientController extends Controller
 			$contact->update();
 			// connect to main database to change
 			$currentDatabaseName = DB::connection()->getDatabaseName();
-
+			// tenant database configuration
+			$tenantDatabaseConfig = [
+				'driver'    => 'pgsql',
+				'host'      => env('DB_HOST', '127.0.0.1'),
+				'database'  => $currentDatabaseName,
+				'username'  => env('DB_USERNAME'),
+				'password'  => env('DB_PASSWORD'),
+				'charset' => 'utf8',
+				'prefix' => '',
+				'prefix_indexes' => true,
+				'schema' => 'public',
+				'sslmode' => 'prefer',
+			];
 			// Temporarily switch to another database
 			$DB_HOST = env('DB_HOST');
 			$DB_PORT = env('DB_PORT');
@@ -117,8 +128,11 @@ class ClientController extends Controller
 
 			// Set the connection to the other database
 			DB::setDefaultConnection($DB_DATABASE);
+			$currentDatabaseNames = DB::connection()->getDatabaseName();
+
 			// get detail
-			$newClient = Patient::where('database_name',$client->database_name)->first();
+			$newClient = Patient::where('email',$client->email)->first();
+
 			$newClient->update($request->all());
 			$newClient->load('contacts');
 			$newContact = ContactPerson::find($newClient->contacts->id);
@@ -131,17 +145,14 @@ class ClientController extends Controller
 			// disconnect database
 			DB::disconnect($DB_DATABASE);
 			// reconnect to database
+			\Config::set("database.connections.$currentDatabaseName", $tenantDatabaseConfig);
 			DB::purge($currentDatabaseName);
 			DB::reconnect($currentDatabaseName);
 			DB::setDefaultConnection($currentDatabaseName);
-
 		}
-
+		alert()->success('SuccessAlert', 'Company Details Updated Successfully');
+		activity()->log('Company Updated');
 		return back();
-        //logic
-        //open connection to db
-        // save details
-        //close connection
     }
 
     /**

@@ -38,7 +38,7 @@ class ModuleSeeder extends Seeder
         $ribbon->sort_order = 2;
         $ribbon->ribbon_name = 'Edit company Details';
         $ribbon->description = 'edit_company_details';
-        $ribbon->ribbon_path = 'users/company_details';
+        $ribbon->ribbon_path = 'users/view_company_details';
         $ribbon->font_awesome = 'fe-settings';
         $ribbon->access_level = 5;
         $module->addRibbon($ribbon);
