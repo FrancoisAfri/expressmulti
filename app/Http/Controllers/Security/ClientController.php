@@ -104,7 +104,7 @@ class ClientController extends Controller
 			$DB_USERNAME = env('DB_USERNAME');
 			$DB_PASSWORD = env('DB_PASSWORD');
 
-			Config::set('database.connections.'.$DB_DATABASE, [
+			\Config::set('database.connections.'.$DB_DATABASE, [
 				'driver'    => env('DB_CONNECTION'),
 				'host'      => env('DB_HOST'),
 				'database'  => env('DB_DATABASE'),
