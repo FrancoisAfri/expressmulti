@@ -150,8 +150,80 @@ class AuthService
 
         //Assign roles
         $user->assignRole($request->input('roles'));
-        //
+		  //
         PasswordSecurity::addExpiryDate($user->id);
+		// if role is waiter save and database is not the main one save in the main with their database
+		$centralDomains = env('CENTRAL_DOMAINS');
+		$host = request()->getHost();
+		if ($host !== $centralDomains)
+		{
+			$currentDatabaseName = DB::connection()->getDatabaseName();
+			// tenant database configuration
+			$tenantDatabaseConfig = [
+				'driver'    => 'pgsql',
+				'host'      => env('DB_HOST', '127.0.0.1'),
+				'database'  => $currentDatabaseName,
+				'username'  => env('DB_USERNAME'),
+				'password'  => env('DB_PASSWORD'),
+				'charset' => 'utf8',
+				'prefix' => '',
+				'prefix_indexes' => true,
+				'schema' => 'public',
+				'sslmode' => 'prefer',
+			];
+			// Temporarily switch to another database
+			$DB_HOST = env('DB_HOST');
+			$DB_PORT = env('DB_PORT');
+			$DB_DATABASE = env('DB_DATABASE');
+			$DB_USERNAME = env('DB_USERNAME');
+			$DB_PASSWORD = env('DB_PASSWORD');
+
+			\Config::set('database.connections.'.$DB_DATABASE, [
+				'driver'    => env('DB_CONNECTION'),
+				'host'      => env('DB_HOST'),
+				'database'  => env('DB_DATABASE'),
+				'username'  => env('DB_USERNAME'),
+				'password'  => env('DB_PASSWORD'),
+			]);
+
+			DB::purge($DB_DATABASE);
+			DB::reconnect($DB_DATABASE);
+
+			// Set the connection to the other database
+			DB::setDefaultConnection($DB_DATABASE);
+			$currentDatabaseNames = DB::connection()->getDatabaseName();
+			// create user in the main database
+			$user = User::create(
+				[
+					'name' => $request['first_name'],
+					'email' => $request['email'],
+					'password' => $password,
+					'phone_number' => $mobile,
+					'database_name' => $currentDatabaseName,
+					'lockout_time' => 50,
+					'type' => 0,
+					'status' => 1,
+				]
+			);
+
+			$person = new HRPerson();
+			$person->first_name = $request['first_name'];
+			$person->surname = $request['surname'];
+			$person->email = $request['email'];
+			$person->cell_number = $request['cell_number'];
+			$person->status = 1;
+			$user->addPerson($person);
+			PasswordHistory::createPassword($user->id ,$password);
+			
+			// disconnect database
+			DB::disconnect($DB_DATABASE);
+			// reconnect to database
+			\Config::set("database.connections.$currentDatabaseName", $tenantDatabaseConfig);
+			DB::purge($currentDatabaseName);
+			DB::reconnect($currentDatabaseName);
+			DB::setDefaultConnection($currentDatabaseName);
+		}
+      
         //Get the token just created above
         $forgotPassword =  new ForgotPasswordController();
         $forgotPassword->sendResetDetails($request , $random_pass ,$user);

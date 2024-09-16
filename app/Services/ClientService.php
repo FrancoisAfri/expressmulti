@@ -390,8 +390,8 @@ class ClientService
 			$user->assignRole(5);
 			PasswordSecurity::addExpiryDate($user->id);
 			// save rights 
-			$this->moduleService::giveUserAccess($user->id, 1, 4);
-			$this->moduleService::giveUserAccess($user->id, 2, 4);
+			$this->moduleService::giveUserAccessAllModules($user->id, 4);
+			//$this->moduleService::giveUserAccess($user->id, 2, 4);
 			// send email
 			$forgotPassword =  new ForgotPasswordController();
 			$forgotPassword->sendResetEmail($user->email , $random_pass ,$user,$domain);

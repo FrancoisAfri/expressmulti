@@ -22,12 +22,37 @@ class AuthController extends \App\Http\Controllers\Controller {
     public function authenticateUser(Request $request) {
         if ($request->has("email") && $request->has("password")) {
             $user = User::where('email', $request->email)->first();
-								 
+			// connect to the right database
+			if (!empty($user->database_name))
+			{
+				$tenantDatabaseConfig = [
+					'driver'    => 'pgsql',
+					'host'      => env('DB_HOST', '127.0.0.1'),
+					'database'  => $user->database_name,
+					'username'  => env('DB_USERNAME'),
+					'password'  => env('DB_PASSWORD'),
+					'charset' => 'utf8',
+					'prefix' => '',
+					'prefix_indexes' => true,
+					'schema' => 'public',
+					'sslmode' => 'prefer',
+				];
+
+				// reconnect to database
+				\Config::set("database.connections.$user->database_name", $tenantDatabaseConfig);
+				DB::purge($user->database_name);
+				DB::reconnect($user->database_name);
+				DB::setDefaultConnection($user->database_name);
+				// get user from database
+				$user = User::where('email', $request->email)->first();
+			}
             if ($user) {
                 if (Hash::check($request->get('password'), $user->password)) {
 					$user->user_fcm_token = !empty($request->user_fcm_token) ? $request->user_fcm_token : '';
 					$user->online = 1;
                     $user->update();
+					// connect to the right database.
+					
                     unset($user->password);
                     $person = $user->load('person');
                     return response()->json(['success' => true, 'user' => $person], Response::HTTP_OK);

@@ -134,5 +134,24 @@ class ModuleService
 		$access->module_id = $moduleID;
 		$access->access_level = $accessLevel;
 		$access->save();
-    }
+    } 
+	public static function giveUserAccessAllModules($userID, $accessLevel){
+		// delete current rights
+		module_access::where('user_id', $userID)->delete();
+
+		// get all modules
+		$modules = modules::where('active', 1)->get();
+
+		// save rights in the database
+		if (!$modules->isEmpty()) {
+			foreach ($modules as $module) {
+				$access = new module_access();
+				$access->user_id = $userID;
+				$access->module_id = $module->id;
+				$access->access_level = $accessLevel;
+				$access->save();
+			}
+		}
+	}
+
 }
