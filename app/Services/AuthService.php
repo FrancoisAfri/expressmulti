@@ -155,7 +155,7 @@ class AuthService
 		// if role is waiter save and database is not the main one save in the main with their database
 		$centralDomains = env('CENTRAL_DOMAINS');
 		$host = request()->getHost();
-		if ($host !== $centralDomains)
+		if ($host !== $centralDomains && $request->input('roles') == 4)
 		{
 			$currentDatabaseName = DB::connection()->getDatabaseName();
 			// tenant database configuration
