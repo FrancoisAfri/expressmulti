@@ -77,6 +77,7 @@ class ManageUserController extends Controller
             'surname' => 'required',
             'email' => 'required|email|unique:users',
             'cell_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:hr_people',
+			'employee_number' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {

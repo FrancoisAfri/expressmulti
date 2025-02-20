@@ -342,7 +342,7 @@ class ReportsController extends Controller
 		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' :  $startDate. ' 23:59:00';
 		$scans = TableScans::getReports($startDate, $endDate);
-
+die('dddddddddd');
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDateDisplay;
 		$data['date'] = date("d/m/Y");

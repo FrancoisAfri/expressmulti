@@ -28,9 +28,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Employees </label>
-										<select class="form-control" name="employee_id"
-											  id="employee_id"  data-toggle="select2"
-												data-placeholder="Choose ...">
+										<select class="form-control" name="employee_id" id="employee_id"  data-toggle="select2" data-placeholder="Choose ...">
 											<option value="">Select an employee ...</option>
 											@foreach($users as $user)
 												<option

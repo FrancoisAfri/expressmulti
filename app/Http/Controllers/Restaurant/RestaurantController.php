@@ -581,7 +581,9 @@ class RestaurantController extends Controller
 	// store Tables
 	public function assignEmployee(AssingnEmployeeRequest $request, Tables $table)
     {
-        $requestData = $request->validationData();
+        $validated = $request->validate([
+			'employee_id' => 'required',
+		]);
 		// assign employee
 		$table->employee_id= $request['employee_id'];
 		$table->update();

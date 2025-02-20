@@ -30,6 +30,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToText\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Events\NewRecordAdded;
 
 class RestaurantGuestController extends Controller
@@ -63,8 +64,6 @@ class RestaurantGuestController extends Controller
 		$category = !empty($request['category']) ? $request['category'] : 0;
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
-			//  Restaurant ordering page
-			//return $services;
 			$localName = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
 			// data to display on views
 			$data = $this->breadcrumb(
@@ -130,15 +129,46 @@ class RestaurantGuestController extends Controller
 	// open a new table
 	public function openTable(Request $request, Tables $table)
     {
+		//Validation
+
+        $validator = Validator::make($request->all(), [
+			'nickname' => 'required|string|max:255', // applies validation only if 'name' is present and not null
+        ]);
 		
+        $validator->after(function ($validator) use ($request) {
+            $employee_number = $request->input('employee_number');
+			if (!empty($employee_number) && empty($table->employee_id))
+			{
+				// check if the emplo number is valid
+				$hr_person = HRPerson::where(['employee_number' => $employee_number, 'status' => 1])->select('id')->first();
+					
+				if (empty($hr_person))
+					$validator->errors()->add('employee_number', "Sorry!!! The Employee number you entered is not valid. Ple enter a valid one.");
+			}
+        });
+        if ($validator->fails()) {
+			//dd($validator);
+			Alert::toast('Sorry!!! The Employee number you entered is not valid. Ple enter a valid one.', 'warning');
+            return redirect("/restaurant/scan/$table->id")
+                ->withErrors($validator)
+                ->withInput();
+        }
 		// open new table
 		$nickname = !empty($request['nickname']) ? $request['nickname'] : '';
+		$employee_number = !empty($request['employee_number']) ? $request['employee_number'] : '';
 		$ipAddress = $this->getUserIpAddress($request);
-			
+		$hr_person = HRPerson::where(['employee_number' => $employee_number, 'status' => 1])->select('id')->first();
+		$employeeID = !(empty($table->employee_id)) ? $table->employee_id : $hr_person->id;
+		if (empty($table->employee_id))
+		{
+			$table->employee_id = $employeeID;
+			$table->update();
+		
+		}
 		$scanned = TableScans::create([
 				'ip_address' => $ipAddress,
 				'table_id' => $table->id,
-				'waiter' => $table->employee_id,
+				'waiter' => $employeeID,
 				'scan_time' => time(),
 				'nickname' => $nickname,
 				'status' => 1,
@@ -153,14 +183,14 @@ class RestaurantGuestController extends Controller
 						'scan_id' => $scanned->id,
 						'table_id' => $table->id,
 						'service_type' => 1,
-						'waiter' => $table->employee_id,
+						'waiter' => $employeeID,
 						'requested_time' => time(),
 						'service' => "New Table Scanned",
 						'item_id' => 0, 
 						'status' => 1,
 					]);
 		// get waiter user token
-		$waiter = HRPerson::find($table->employee_id);
+		$waiter = HRPerson::find($employeeID);
 		$waiter = $waiter->load('user');
 		$userFcmToken = !empty($waiter->user->user_fcm_token) ? $waiter->user->user_fcm_token : '' ;
 		// send Push notification

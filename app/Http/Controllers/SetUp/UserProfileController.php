@@ -105,6 +105,7 @@ class UserProfileController extends Controller
             'surname' => 'required|max:255',
             'initial' => 'required|max:255',
             'cell_number' => 'required|max:255',
+            'employee_number' => 'required|max:255',
             'email' => 'required',
         ]);
 

@@ -134,6 +134,7 @@ class AuthService
         $person->surname = $request['surname'];
         $person->email = $request['email'];
         $person->cell_number = $request['cell_number'];
+        $person->employee_number = $request['employee_number'];
         $person->status = 1;
         $user->addPerson($person);
 
@@ -212,6 +213,7 @@ class AuthService
 			$person->email = $request['email'];
 			$person->cell_number = $request['cell_number'];
 			$person->status = 1;
+			$person->employee_number = $request['employee_number'];
 			$user->addPerson($person);
 			PasswordHistory::createPassword($user->id ,$password);
 			

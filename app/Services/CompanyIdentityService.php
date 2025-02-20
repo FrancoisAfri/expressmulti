@@ -111,7 +111,6 @@ class CompanyIdentityService
         * avatar
         */
         $this->extracted($request, $userDetails);
-        //$this->uploadImage($request, 'uploads', '', $userDetails);
         // assign role
 
         list($user, $role) = $this->assignRole($request);
@@ -246,6 +245,8 @@ class CompanyIdentityService
     {
 		
 		//return $request;
+		//echo $request->get('employee_number');
+		//die();
         $userDetails = HRPerson::updateOrCreate(
             [
                 'user_id' => $request->get('user_id'),
@@ -256,6 +257,7 @@ class CompanyIdentityService
                 'initial' => $request->get('initial'),
                 'cell_number' => $mobile,
                 'email' => $request->get('email'),
+                'employee_number' => $request->get('employee_number'),
             ],
         );
 		$LoginDetails = User::updateOrCreate(

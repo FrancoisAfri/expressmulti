@@ -318,7 +318,6 @@
 					</div>
 				</div>	
         <!-- Include add new modal -->
-    </div>
 			@else
 				<div class="row">
 					<div class="col-xl-12">
@@ -334,13 +333,23 @@
 										<form action="/restaurant/add-table-name/{{$table->id}}" method="POST">
 										{{ csrf_field() }}
 											<div class="box-body">
-												<div class="form-group">
-													<label for="table_name" class="col-sm-2 control-label"></label>
+												<div class="form-group {{ $errors->has('nickname') ? ' has-error' : '' }}">
+													<label for="nickname" class="col-sm-2 control-label"></label>
 													<div class="col-sm-10">
 													<input type="text" name="nickname" id="nickname" value="" class="form-control"  placeholder="Please Enter Name / Group name / Occasion">
 													</div>
-												</div>
+												</div>  
 											</div>
+											@if (empty($table->employee_id))
+												<div class="box-body">
+													<div class="form-group {{ $errors->has('employee_number') ? ' has-error' : '' }}">
+														<label for="table_name" class="col-sm-2 control-label"></label>
+														<div class="col-sm-10">
+														<input type="text" name="employee_number" id="employee_number" value="" class="form-control"  placeholder="Please Enter Employee Number">
+														</div>
+													</div>  
+												</div>
+											@endif
 											<div class="box-footer">
 												<input type="submit" id="submit" name="submit" class="btn btn-primary btn-flat pull-right" value="Submit">
 											</div>
@@ -356,7 +365,6 @@
         <br><br>
     @endsection
 @stop
-
 @section('page_script')
     <script src="{{ asset('libs/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>

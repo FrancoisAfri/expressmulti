@@ -230,7 +230,7 @@
                     employee_id: $('#' + modalID).find('#employee_id').val(),
                     _token: $('#' + modalID).find('input[name=_token]').val()
                 };
-
+				
                 let submitBtnID = 'assign-employee';
                 let redirectUrl = '{{route('home')}}';
                 let successMsgTitle = 'Changes Saved!';
@@ -349,49 +349,5 @@
 				}, 100);
 			}
 		}
-		
-		// Define the function to perform the fetch and handle the response
-		/*function checkAndUpdateTable() {
-			fetch('{{ route('service.check') }}')
-				.then(response => {
-					if (!response.ok) {
-						throw new Error('Network response was not ok');
-					}
-					return response.json();
-				})
-				.then(data => {
-					// Handle the response from the server
-					if (data.table_updated === true) {
-						console.log('refreshed');
-						// Initialize ion.sound and play the sound
-						playNotificationSound();
-						// Reload the table data after playing the sound
-						//window.location.reload();
-					}
-				})
-				.catch(error => {
-					// Handle errors
-					console.error('Error:', error);
-				});
-		}
-		
-		// Define a function to initialize ion.sound and play the sound
-		function playNotificationSound() {
-			// Initialize ion.sound with your sound settings
-			ion.sound({
-				sounds: [
-					{
-						name: "bell_ring"
-					}
-				],
-				volume: 0.5,
-				path: "/sounds/",
-				preload: true
-			});
-
-			// Play the sound
-			ion.sound.play("bell_ring");
-		}*/
-
     </script>
 @stop

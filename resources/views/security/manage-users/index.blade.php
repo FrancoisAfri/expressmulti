@@ -127,9 +127,6 @@
         </div>
         <!-- end row -->
         @include('security.manage-users.partials.add_new_user')
-
-        {{--        @include('security.modules.partials.edit_new_module')--}}
-
     @endsection
 
 @stop

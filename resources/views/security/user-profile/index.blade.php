@@ -145,13 +145,28 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="firstname">User Time Out minutes <span
+                                            <label for="lockout_time">User Time Out minutes <span
                                                     class="text-danger">*</span> </label>
-                                            <input type="number" class="form-control" id="email"
+                                            <input type="number" class="form-control" id="lockout_time"
                                                    name="lockout_time" value="{{ $user->lockout_time }}"
                                                    placeholder="Enter lockout time" required>
                                             <div class="invalid-feedback">
                                                 Please provide lockout time.
+                                            </div>
+                                            <span class="form-text text-muted"></span>
+                                        </div>
+                                    </div>
+                                </div> <!-- end row -->
+								<div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="employee_number">Employee Number <span
+                                                    class="text-danger">*</span> </label>
+                                            <input type="text" class="form-control" id="employee_number"
+                                                   name="employee_number" value="{{ $user->person->employee_number }}"
+                                                   placeholder="Enter Employee Number" required>
+                                            <div class="invalid-feedback">
+                                                Please provide Employee Number.
                                             </div>
                                             <span class="form-text text-muted"></span>
                                         </div>
