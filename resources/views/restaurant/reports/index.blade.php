@@ -522,5 +522,12 @@
          // altFormat: "y,j,f",
          defaultDate: "today"
      });
+	 $("#range-datepicker").flatpickr({
+         altInput: !0,
+         mode: "range",
+         // altFormat: "F j, y",
+         // altFormat: "y,j,f",
+         defaultDate: "today"
+     });
  </script>
 @endsection
