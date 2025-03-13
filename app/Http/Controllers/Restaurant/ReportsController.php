@@ -425,7 +425,7 @@ class ReportsController extends Controller
 			///echo $currentDate->toDateString() . "<br>";
 			$todayDate = $currentDate->toDateString();
 			$avg = EventsServices::getRestaurantGraphs($todayDate);
-			
+			$avg  = round($avg ?? 0, 2);
 			// Create an associative array representing a data point
 			$formattedData = [
 				'y' => $todayDate, // Assuming 'initial' holds the label
