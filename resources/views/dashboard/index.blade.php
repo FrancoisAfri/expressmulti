@@ -136,9 +136,15 @@
 																	<div class="dropdown-menu dropdown-menu-right">
 																		<button	class="dropdown-item" data-toggle="modal"
 																				data-target="#assign-employees-modal"
-																				title='Assign Employee' data-id="{{ $table->id }}">
+																				title='Assign Waiter' data-id="{{ $table->id }}">
 																				<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-																				 Assign Employee
+																				 Assign Waiter
+																		</button>
+																		<button onclick="postData({{$table->id}}, 'removewaiter');"
+																					class="dropdown-item" data-toggle="tooltip"
+																					title='Remove Waiter'>
+																					<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+																				Remove Waiter
 																		</button>
 																		@if ( \App\Models\TableScans::getTableStatus($table->id) == 1 )
 																			<button onclick="postData({{$table->id}}, 'closetable');"
@@ -206,6 +212,8 @@
 				location.href = "{{route('request-denied.close', '')}}" + "/" + id;
 			else if (data == 'deleteorder')
 				location.href = "{{route('delete.close', '')}}" + "/" + id;
+			else if (data == 'removewaiter')
+				location.href = "{{route('remove.waiter', '')}}" + "/" + id;
         }
         
 		(

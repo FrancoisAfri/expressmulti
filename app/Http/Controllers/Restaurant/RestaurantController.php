@@ -592,6 +592,18 @@ class RestaurantController extends Controller
 		activity()->log('Table Updated');
         return response()->json(['message' => 'success'], 200);
     }
+	// remove employee
+	public function removeEmployee(Tables $table)
+    {
+		
+		// assign employee
+		$table->employee_id= null;
+		$table->update();
+		// send alert
+        alert()->success('SuccessAlert', 'Waiter Removed Successfully');
+		activity()->log('Table Updated');
+        return back();
+    }
 	/// menu type
 	public function menuType()
     {

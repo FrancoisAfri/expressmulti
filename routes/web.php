@@ -322,6 +322,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
         ->name('order.close');
 	Route::get('delete-order/{order}', [DashboardController::class, 'deleteOrder'])
         ->name('delete.close');
+	Route::get('remove-waiter/{table}', [RestaurantController::class, 'removeEmployee'])
+        ->name('remove.waiter');
 	Route::get('setup', [RestaurantController::class, 'setup'])
         ->name('setup.res');
 	Route::post('settings_save', [RestaurantController::class, 'storeSetup'])
