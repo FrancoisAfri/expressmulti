@@ -587,17 +587,42 @@ class ReportsController extends Controller
         $startDate = !empty($dates[0]) ? $dates[0] : '';
 		$endDateDisplay = !empty($dates[1]) ? $dates[1] : $startDate;
         $endDate = !empty($dates[1]) ? $dates[1] . ' 23:59:00' : $startDate. ' 23:59:00';
-
+		$resultData = [];
 		// get ratings
 		$ratings = TableScans::getRatingsReports($startDate, $endDate);
+
+		//
+		//$avgQOne   = $ratings[0]->avg_q_one ?? 0;
+		//$avgQTwo   = $ratings[0]->avg_q_two ?? 0;
+		////$avgQThree = $ratings[0]->avg_q_three ?? 0;
+		//$avgQFour  = $ratings[0]->avg_q_four ?? 0;
 		
+		/// good code
+		if (!empty($ratings) && isset($ratings[0])) {
+			$avgQOne   = $ratings[0]->avg_q_one ?? 0;
+			$avgQTwo   = $ratings[0]->avg_q_two ?? 0;
+			$avgQThree = $ratings[0]->avg_q_three ?? 0;
+			$avgQFour  = $ratings[0]->avg_q_four ?? 0;
+			/// assign into the area
+			$resultData = [
+				['y' => 'Ambience', 'a' => $avgQOne],
+				['y' => 'Food', 'a' => $avgQTwo],
+				['y' => 'Service', 'a' => $avgQThree],
+				['y' => 'Rate Our App', 'a' => $avgQFour],
+			];
+		}
+
+		//
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
 		$data['date'] = $startDate."-".$endDateDisplay;
         $data['user'] = Auth::user()->load('person');
-        $data['ratings'] = $ratings;
+        //$data['ratings'] = $ratings;
 
-        return view('restaurant.reports.reviews')->with($data);
+        $data['dataArray'] = $resultData;
+		
+        //return view('restaurant.reports.reviews')->with($data);
+        return view('restaurant.graphs.restaurant_avg_review_graph')->with($data);
 	}
 	// calculate response time
     public function responseTime($startDate, $endDate){
