@@ -42,23 +42,20 @@
                         @foreach ($users as $key => $user)
                             <tr>
                                 <td>
-                                    <a href="{{route('user_profile.show', $user->person->uuid)}}" class="text-body">
+                                    @if(empty($user->person->profile_pic))
+										<img src="{{ $defaultAvatar }}"
+											 alt="contact-img" title="contact-img" class="rounded-circle avatar-xs">
+									@else(!empty($module->person->profile_pic))
+										<img src="{{(!empty(asset('uploads/'.$user->person->profile_pic)))
+													? asset('uploads/'.$user->person->profile_pic) : $defaultAvatar }}"
+											 alt="contact-img" title="contact-img" class="rounded-circle avatar-xs">
+									@endif
 
-                                        @if(empty($user->person->profile_pic))
-                                            <img src="{{ $defaultAvatar }}"
-                                                 alt="contact-img" title="contact-img" class="rounded-circle avatar-xs">
-                                        @else(!empty($module->person->profile_pic))
-                                            <img src="{{(!empty(asset('uploads/'.$user->person->profile_pic)))
-                                                        ? asset('uploads/'.$user->person->profile_pic) : $defaultAvatar }}"
-                                                 alt="contact-img" title="contact-img" class="rounded-circle avatar-xs">
-                                        @endif
+									<span
 
-                                        <span
-
-                                            class="ml-2">{{ (!empty($user->person->first_name . ' ' . $user->person->surname)) ?
-                                                         $user->person->first_name . ' ' . $user->person->surname : ''}}
-                                        </span>
-                                    </a>
+										class="ml-2">{{ (!empty($user->person->first_name . ' ' . $user->person->surname)) ?
+													 $user->person->first_name . ' ' . $user->person->surname : ''}}
+									</span>
                                 </td>
                                 <td>
 									<span>
