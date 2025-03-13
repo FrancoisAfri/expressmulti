@@ -24,10 +24,11 @@ class CompanyIdentityRequest extends FormRequest
     public function rules()
     {
         return [
-            'mailing_address' => 'email',
-            'support_email' => 'email',
-           // 'company_logo' => 'image|mimes:jpeg,png,jpg|max:3000',
-            //'login_background_image' => 'image|mimes:jpeg,png,jpg|max:3000',
+            'company_name' => 'required',
+            'mailing_name' => 'required',
+            'mailing_address' => 'required',
+            'support_email' => 'required',
+            'full_company_name' => 'required',
         ];
     }
 }
