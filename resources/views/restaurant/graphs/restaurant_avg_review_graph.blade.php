@@ -49,7 +49,7 @@
                                                  class="morris-chart mt-3"></div>
                                         </div>
 										<div class="mt-3">
-											<p style="text-align:center;"><b>Date</b></p>
+											<p style="text-align:center;"><b>Review Type</b></p>
 										</div>
                                     </div> <!-- end collapse-->
                                 </div> <!-- end card-body-->
