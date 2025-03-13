@@ -64,6 +64,7 @@ class RestaurantGuestController extends Controller
 		$category = !empty($request['category']) ? $request['category'] : 0;
 		if (!empty($scanned->status)  &&  $scanned->status === 1)
 		{
+			
 			$localName = (!empty($scanned['nickname'])) ? $scanned['nickname'] : '';
 			// data to display on views
 			$data = $this->breadcrumb(
@@ -124,7 +125,14 @@ class RestaurantGuestController extends Controller
 		}
 		else
 		{
+			if (!empty($table->employee_id))
+			{
+				$hrUser = HRPerson::where('id', $table->employee_id)->first();
+				$employeeNumber = !empty($hrUser->employee_number) ? $hrUser->employee_number : '';
+			}
+			else $employeeNumber = '';
 			$data['table'] = $table;
+			$data['employee_number'] = $employeeNumber;
 			return view('guest.index')->with($data);
 		}
     }
