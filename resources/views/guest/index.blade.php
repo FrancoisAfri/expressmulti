@@ -349,6 +349,8 @@
 														</div>
 													</div>  
 												</div>
+											@else 
+												<input type="hidden" name="employee_number" value="{{$employee_number}}">
 											@endif
 											<div class="box-footer">
 												<input type="submit" id="submit" name="submit" class="btn btn-primary btn-flat pull-right" value="Submit">

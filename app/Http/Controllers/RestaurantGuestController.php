@@ -98,10 +98,11 @@ class RestaurantGuestController extends Controller
 			if (!empty($table->employee_id))
 			{
 				$hrUser = HRPerson::where('id', $table->employee_id)->first();
+				$employeeNumber = !empty($hrUser->employee_number) ? $hrUser->employee_number : '';
 				$defaultAvatar = ($hrUser->gender === 0) ? asset('images/m-silhouette.jpg') : asset('images/f-silhouette.jpg');
 				$profilePic = (!empty( $hrUser->profile_pic)) ? asset('uploads/' . $hrUser->profile_pic) : $defaultAvatar;
 			}
-			else $profilePic = '';
+			else $profilePic = $employeeNumber = '';
 			
 			$data['scanned'] = $scanned;
 			$data['profilePic'] = $profilePic;
@@ -115,6 +116,7 @@ class RestaurantGuestController extends Controller
 			$data['carts'] = Cart::getCart($table->id);
 			$data['table'] = $table;
 			$data['localName'] = $localName;
+			$data['employee_number'] = $employeeNumber;
 			$data['events'] =  EventsServices::getUserRequests($table->id, $scanned->id);
 			$data['serviceRequests'] = ServiceType::getServices();
 			$data['resquest_type'] = EventsServices::SERVICES_SELECT;
