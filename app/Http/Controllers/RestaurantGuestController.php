@@ -133,6 +133,7 @@ class RestaurantGuestController extends Controller
 
         $validator = Validator::make($request->all(), [
 			'nickname' => 'required|string|max:255', // applies validation only if 'name' is present and not null
+			'employee_number' => 'required|string|max:255', // applies validation only if 'name' is present and not null
         ]);
 		
         $validator->after(function ($validator) use ($request) {
