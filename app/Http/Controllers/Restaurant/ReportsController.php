@@ -100,7 +100,7 @@ class ReportsController extends Controller
 		foreach ($waiters as $waiter) {
 			
 			$avg = EventsServices::getRequestsGraphs($startDate, $endDate, $waiter->person->id);
-			
+			$avg  = round($avg ?? 0, 2);
 			// Create an associative array representing a data point
 			if (!empty($waiter->person->first_name))
 			{
