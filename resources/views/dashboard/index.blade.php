@@ -140,12 +140,14 @@
 																				<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
 																				 Assign Waiter
 																		</button>
+																		@if ( \App\Models\TableScans::getTableStatus($table->id) != 1 )
 																		<button onclick="postData({{$table->id}}, 'removewaiter');"
 																					class="dropdown-item" data-toggle="tooltip"
 																					title='Remove Waiter'>
 																					<i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
 																				Remove Waiter
 																		</button>
+																		@endif
 																		@if ( \App\Models\TableScans::getTableStatus($table->id) == 1 )
 																			<button onclick="postData({{$table->id}}, 'closetable');"
 																					class="dropdown-item" data-toggle="tooltip"
