@@ -26,8 +26,8 @@ class Packages extends Model
     ];
 
     //Packages
-    //Monthly
-    //Yearly
+    //Monthly == 1
+    //Yearly == 2
 
 
 	protected static $logName = 'Packages';

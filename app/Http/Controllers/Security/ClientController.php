@@ -203,6 +203,26 @@ class ClientController extends Controller
     public function editCompany()
     {
         $data =  $this->companyService->renderEditCompanyPage();
+		//return $data;
+        return view('security.client.edit_client_management')->with($data);
+
+    }
+	public function cancelSubscription()
+    {
+        alert()->success('SuccessAlert', 'Your subscription was successful. Email confirmatin have been sent to you!!');
+		return redirect("/users/view_company_details");
+
+    } 
+	public function SuccessSubscription()
+    {
+        alert()->success('SuccessAlert', 'Your subscription was successful. Email confirmatin have been sent to you!!');
+		return redirect("/users/view_company_details");
+
+    } 
+	public function notifySubscription()
+    {
+        $data =  $this->companyService->renderEditCompanyPage();
+		//return $data;
         return view('security.client.edit_client_management')->with($data);
 
     }

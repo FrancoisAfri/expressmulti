@@ -165,22 +165,18 @@ class LoginController extends Controller
                 return redirect(RouteServiceProvider::HOME);
                 break;
             case 3:
-                return redirect('/billing/accounts');
+                return redirect(RouteServiceProvider::HOME);
                 break;
             case 4:
-//                return 'fuck y';
-                return redirect('/patients/booking_calender');
-//                return '/patients/booking_calender';
+                return redirect(RouteServiceProvider::HOME);
                 break;
             case 5:
-//                return '/home';
                 return redirect(RouteServiceProvider::HOME);
                 break;
             default:
                 return '/login';
                 break;
         }
-
 
         $request->session()->forget('password_expired_id');
 

@@ -38,17 +38,16 @@
                         </ul>
                     </div>
                 @endif
-                    @if( $client->payment_status == 0 ??  '')
+                    @if( $client->payment_status == 1 ??  '')
                         <div class="col-lg-12">
                             <div class="card-box ribbon-box">
-                                <h4 class="text-danger float-left mt-0">Account in Arrears</h4>
+                                <h4 class="text-danger float-left mt-0">Account Subcription Required</h4>
                                 <div class="ribbon-content">
-                                    <p class="mb-0 align-content-center">You haven't paid your Account .</p>
+                                    <p class="mb-0 align-content-center">You haven't subscribed.</p>
                                 </div>
                             </div>
                         </div>
                     @endif
-
                 <div class="row">
                     {{ csrf_field() }}
                     <div class="col-lg-6">
@@ -227,13 +226,26 @@
                 <div class="text-center mb-3">
                     <button type="submit" class="btn w-sm btn-success waves-effect waves-light">Save
                     </button>
-                </div>
-                    @if( $client->payment_status == 0  ??  '')
-                        <div class="text-lg-right">
-                            <button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light"><i class="mdi mdi-basket mr-1"></i>Pay Account</button>
-                        </div>
+                </div> 
+                    @if( $client->payment_status == 1  ??  '')
+						@if( $client->packages->package_type == 1  ??  '')
+							<div class="text-lg-right">
+								<a href="https://payf.st/yfx5i" target="_blank">
+									<button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light">
+										<i class="mdi mdi-basket mr-1"></i> Subcribe (Monthy Subcription)
+									</button>
+								</a>
+							</div>
+						@else 
+							<div class="text-lg-right">
+								<a href="https://payf.st/yfx5i" target="_blank">
+									<button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light">
+										<i class="mdi mdi-basket mr-1"></i> Subscribe (Yearly Subscription)
+									</button>
+								</a>
+							</div>
+						@endif
                     @endif
-
             </form>
         </div>
         <br><br>

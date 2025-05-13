@@ -382,7 +382,9 @@ Route::get('success', 'App\Http\Controllers\Payments@showSuccessfullMessage');
 Route::get('cancel', 'App\Http\Controllers\Payments@cancel');
 Route::get('notify', 'App\Http\Controllers\Payments@notify');
 Route::get('create-new-tenant/{clientID}', 'App\Http\Controllers\Payments@createNewTenants');
-
+Route::get('subscribe-success', [ClientController::class , 'SuccessSubscription']);
+Route::get('subscribe-cancel', [ClientController::class , 'cancelSubscription']);
+Route::get('subscribe-notify', [ClientController::class , 'notifySubscription']);
 
 //testin
 Route::get('myInvoice', [InvoiceController::class, 'index']);
