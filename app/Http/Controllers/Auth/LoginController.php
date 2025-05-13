@@ -170,7 +170,7 @@ class LoginController extends Controller
             case 4:
                 return redirect(RouteServiceProvider::HOME);
                 break;
-            case 5:
+            case 5: 
                 return redirect(RouteServiceProvider::HOME);
                 break;
             default:
