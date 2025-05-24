@@ -68,7 +68,7 @@ class Companies_temp extends Model
      */
     public static function getPatientByUuid($id)
     {
-        return Patient::with(
+        return Companies_temp::with(
             'packages',
             'contacts'
         )->where(
@@ -87,7 +87,7 @@ class Companies_temp extends Model
      */
     public static function getPatientDetails()
     {
-        return Patient::with(
+        return Companies_temp::with(
             'packages',
             'contacts'
         )->get();
@@ -95,7 +95,7 @@ class Companies_temp extends Model
 
     public static function getUserDetailsByEmail($email)
     {
-        return Patient::where('email', $email)
+        return Companies_temp::where('email', $email)
             ->select('first_name', 'surname')
             ->first();
     }
@@ -105,7 +105,7 @@ class Companies_temp extends Model
      */
     public static function getPatientInfo()
     {
-        return Patient::select(
+        return Companies_temp::select(
             'id',
             'cell_number',
             'phone_number',
@@ -119,20 +119,20 @@ class Companies_temp extends Model
     }
 
     public static function getPatientDataById($id){
-        return Patient::where('id',$id)->first();
+        return Companies_temp::where('id',$id)->first();
     }
 
     public static function totalPatients(){
-        return Patient::where('is_active',1)->count();
+        return Companies_temp::where('is_active',1)->count();
     }
 
     public static function getDetailsById($id){
-        return Patient::where('id',  $id)->first();
+        return Companies_temp::where('id',  $id)->first();
     }
 	
 	 public static function isPackageExist($id){
 
-        $packages =  Patient::where('package_id', $id)->first();
+        $packages =  Companies_temp::where('package_id', $id)->first();
 
         $isPackagesExist = 0;
         if (isset($packages) === True){

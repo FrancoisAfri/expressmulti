@@ -177,6 +177,8 @@ Route::group(['prefix' => 'users', 'middleware' => [
 
     Route::post('edit_patient_sms', [ContactControllere::class, 'editPatientSms'])
         ->name('edit.PatientSms');
+	// clients Routes
+	
 	
 }) ;
 Route::get('users/view_company_details', [ClientController::class, 'editCompany'])
@@ -217,6 +219,8 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
         ->name('package.activate');
 	Route::PATCH('update/package/{package}', [PatientControlle::class, 'packageUpdate'])
         ->name('package.update');
+	Route::get('approvals', [PatientControlle::class, 'approvals'])
+        ->name('client.approal');
 });
 // call check page usage middleware
 Route::middleware('check.page.usage')->get('/restaurant/terminal', [RestaurantController::class, 'showTerminal']);

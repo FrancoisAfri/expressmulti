@@ -11,6 +11,7 @@ use App\Models\CompanyIdentity;
 use App\Models\ContactPerson;
 use App\Models\Packages;
 use App\Models\Patient;
+use App\Models\Companies_temp;
 use App\Models\Url;
 use App\Models\Province;
 use App\Services\CommunicationService;
@@ -220,7 +221,7 @@ class PatientControlle extends Controller
          //   'phone_number' => 'required|unique:companies'
         //]);
 
-        $patientRecord = $this->ClientService->persistClientData($request);
+        $patientRecord = $this->ClientService->persistClientTempData($request);
 		
         alert()->success('SuccessAlert', 'New record have been saved successfully');
         activity()->log('Client Information created');
@@ -356,5 +357,20 @@ class PatientControlle extends Controller
         Alert::toast('guest session link sent ', 'success');
         activity()->log('guest session link sent');
         return back();
+    }
+	////
+	public function approvals()
+    {
+        $data = $this->breadcrumb(
+            'Client',
+            'Client page for Client related settings',
+            'clients_details',
+            'Client Profile',
+            'Client Management'
+        );
+
+        $data['clients'] = Companies_temp::getPatientDetails();
+
+        return view('client.client_management_approval')->with($data);
     }
 }
