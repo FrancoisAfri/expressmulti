@@ -3,6 +3,7 @@
 namespace App\Services;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use Artisan;
+use App\Traits\CompanyIdentityTrait;
 use App\Models\Accounts;
 use App\Models\Packages;
 use App\Models\ContactPerson;
@@ -20,20 +21,22 @@ use App\Models\MainMember;
 use App\Models\Tenant;
 use App\Models\Patient;
 use App\Models\Companies_temp;
+use App\Mail\ClientApplicationApproval;
+use App\Mail\SendDebitOrderForm;
 //use App\Services\BillingService;
 use App\Services\Modules\ModuleService;
 use App\Traits\FileUpload;
 //use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Exception;
 //use Stancl\Tenancy\Tenant;
 use Illuminate\Support\Str;
 
 class ClientService
 {
-    use FileUpload;
-
+    use FileUpload, CompanyIdentityTrait;
     /**
      * @var \App\Services\BillingService
      */
@@ -128,15 +131,23 @@ class ClientService
 			'email' => $request['contact_email'],
 			'status' => 1
 		]);
-
+		//  send email to admin 
+		$companyDetails = $this->CompanyIdentityDetails();
+        $companyEmail = !empty($companyDetails['admin_email']) ? $companyDetails['admin_email'] : '';
+		if (!empty($companyEmail))
+			Mail::to($companyEmail)->send(new ClientApplicationApproval());
+		// send debit order form to client
+		if (!empty($request['contact_email']))
+			Mail::to($request['contact_email'])->send(new SendDebitOrderForm($request['first_name']));
+		
+		
 		return $patientRecord->id;
     }
 
 	public function persistClient($companyID)
     {
-		die;
+		
         $clientRecord = $this->SaveCompany($companyID);
-
         /*
          * create a new database
          */
@@ -211,13 +222,61 @@ class ClientService
      * @param $patient
      * @return void
      */
-    public function activeClient($client)
-    {
+   	
+	public function activeClient($client)
+	{
+		try {
+			// Toggle is_active
+			$client->is_active = $client->is_active == 1 ? 0 : 1;
+			$client->update();
 
-        $client['is_active'] == 1 ? $status = 0 : $status = 1;
-        $client['is_active'] = $status;
-        $client->update();
-    }
+			// Store main connection
+			$currentConnection = DB::getDefaultConnection();
+			$currentDatabase = DB::connection($currentConnection)->getDatabaseName();
+
+			$tenantDatabase = $client->database_name ?? '';
+
+			if (!empty($tenantDatabase)) {
+				$tenantConnectionName = 'tenant_connection';
+
+				// Configure tenant DB
+				Config::set("database.connections.$tenantConnectionName", [
+					'driver'   => 'pgsql',
+					'host'     => env('DB_HOST', '127.0.0.1'),
+					'port'     => env('DB_PORT', '5432'),
+					'database' => $tenantDatabase,
+					'username' => env('DB_USERNAME'),
+					'password' => env('DB_PASSWORD'),
+					'charset'  => 'utf8',
+					'prefix'   => '',
+					'schema'   => 'public',
+					'sslmode'  => 'prefer',
+				]);
+
+				// Switch to tenant
+				DB::purge($tenantConnectionName);
+				DB::reconnect($tenantConnectionName);
+				DB::setDefaultConnection($tenantConnectionName);
+
+				// Perform operation in tenant DB
+				$newClient = \App\Models\Patient::where('email', $client->email)->first();
+
+				if ($newClient) {
+					$newClient->payment_status = 1;
+					$newClient->save();
+				}
+
+				// Restore connection
+				DB::disconnect($tenantConnectionName);
+				DB::setDefaultConnection($currentConnection);
+				DB::reconnect($currentConnection);
+			}
+		} catch (\Exception $e) {
+			Log::error('Error toggling client status: ' . $e->getMessage());
+			// Optional: throw or handle error gracefully
+		}
+	}
+
 	// deactivate/ activate package
 	public function activatePackage($package)
     {

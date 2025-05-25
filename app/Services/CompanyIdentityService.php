@@ -68,6 +68,17 @@ class CompanyIdentityService
                 $CompanyIdentity->update();
             }
         }
+		//Upload debit order form
+        if ($request->hasFile('debit_order_form')) {
+            $fileExt = $request->file('debit_order_form')->extension();
+            if (in_array($fileExt, ['pdf']) && $request->file('debit_order_form')->isValid()) {
+                $fileName = time() . "debit_order_form." . $fileExt;
+                $request->file('debit_order_form')->storeAs('uploads', $fileName);
+                //Update file name in the database
+                $CompanyIdentity->debit_order_form = $fileName;
+                $CompanyIdentity->update();
+            }
+        }
         //$this->uploadImage($request, 'login_background_image', 'companyIdentity', $CompanyIdentity);
 
         /*

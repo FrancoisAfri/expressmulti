@@ -38,7 +38,15 @@ class SetupController extends Controller
             'Settings',
             'Company Identity'
         );
-        $data['companyDetails'] =$this->companyIdentityService->ViewComponyIdenties();
+		// get central domain
+        $centralDomains = env('CENTRAL_DOMAINS');
+        // get host url
+        $host = request()->getHost();
+
+        if ($host === $centralDomains) $showFields = 1;
+		else $showFields = 2;
+        $data['showFields'] = $showFields;
+        $data['companyDetails'] = $this->companyIdentityService->ViewComponyIdenties();
         return view('security.company-identity.index')->with($data);
     }
 
@@ -63,7 +71,6 @@ class SetupController extends Controller
         alert()->success('SuccessAlert', 'Your changes have been saved successfully');
         return back()
             ->with('message', 'User created successfully.');
-
     }
 
     /**

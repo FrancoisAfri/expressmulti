@@ -117,6 +117,17 @@
                                                parsley-type="email" placeholder="Enter a valid support e-mail"/>
                                     </div>
                                 </div>
+								@if ($showFields == 1)
+									<div class="form-group">
+										<label> Admin E-Mail</label>
+										<div>
+											<input type="email" name="admin_email" id="admin_email"
+												   class="form-control" required
+												   value="{{ $companyDetails->admin_email ?? '' }}"
+												   parsley-type="email" placeholder="Enter a valid admin e-mail"/>
+										</div>
+									</div>
+								@endif
                                 <div class="form-group">
                                     <label for="project-budget">Password Duration (Months)</label>
                                     <input type="number" name="password_expiring_month"
@@ -181,6 +192,19 @@
                                         <p class="text-muted text-center mt-2 mb-0">Login Background Image</p>
                                     </div>
                                 </div>
+								@if ($showFields == 1)
+									<div class="form-group mb-3">
+										<label for="validationCustom04">Debit Order Form</label>
+										<div class="mt-3">
+											<input type="file" name="debit_order_form"
+												   id="debit_order_form" data-plugins="dropify"
+												   @if(!empty($companyDetails->debit_order_form))
+													   data-default-file="{{ asset('uploads/'.$companyDetails->debit_order_form) }}"/>
+												   @endif
+											<p class="text-muted text-center mt-2 mb-0">Debit Order Form</p>
+										</div>
+									</div>
+								@endif
                             </div> <!-- end col-->
                             <!-- end row -->
                             <div class="row mt-3">

@@ -35,6 +35,7 @@ trait CompanyIdentityTrait
         $data['monthly_revenue_target'] = $companyDetails['monthly_revenue_target'];
         $data['daily_revenue_target'] = $companyDetails['daily_revenue_target'];
         $data['terms_and_conditions'] = $companyDetails['terms_and_conditions'];
+        $data['admin_email'] = $companyDetails['admin_email'];
         return $data;
     }
 

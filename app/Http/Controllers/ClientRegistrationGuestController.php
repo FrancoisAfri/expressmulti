@@ -72,11 +72,11 @@ class ClientRegistrationGuestController extends Controller
      */
     public function store(NewClientRequest $request)
     {
-
         $clientID = $this->clientService->persistClientTempData($request);
         activity()->log('New Client Registration');
+		Alert::toast('Your applicaton have been submitted for approval', 'success');
 		//return redirect("/make-payment/$clientID");
-		return redirect("/create-new-tenant/$clientID");
+		return redirect("/new_client_registration");
     }
 
     /**

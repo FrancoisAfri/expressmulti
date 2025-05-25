@@ -115,8 +115,6 @@ class CompanyService
             // Main system
             $client = Patient::latest()->first();
             $client->load('packages','contacts');
-			
-
         }
         else
         {
@@ -125,7 +123,6 @@ class CompanyService
             $client->load('packages','contacts');
         }
 
-        	
         $data['client'] = $client;
         $data['packages'] = Packages::getPackages();
         return $data;

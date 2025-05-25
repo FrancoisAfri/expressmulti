@@ -41,9 +41,9 @@
                     @if( $client->payment_status == 1 ??  '')
                         <div class="col-lg-12">
                             <div class="card-box ribbon-box">
-                                <h4 class="text-danger float-left mt-0">Account Subcription Required</h4>
+                                <h4 class="text-danger float-left mt-0">Account suspnded</h4>
                                 <div class="ribbon-content">
-                                    <p class="mb-0 align-content-center">You haven't subscribed.</p>
+                                    <p class="mb-0 align-content-center">Your account has been suspnded please contact system administrator.</p>
                                 </div>
                             </div>
                         </div>
@@ -227,7 +227,7 @@
                     <button type="submit" class="btn w-sm btn-success waves-effect waves-light">Save
                     </button>
                 </div> 
-                    @if( $client->payment_status == 1  ??  '')
+                   <!--  @if( $client->payment_status == 1  ??  '')
 						@if( $client->packages->package_type == 1  ??  '')
 							<div class="text-lg-right">
 								<a href="https://payf.st/yfx5i" target="_blank">
@@ -245,7 +245,7 @@
 								</a>
 							</div>
 						@endif
-                    @endif
+                    @endif   -->
             </form>
         </div>
         <br><br>

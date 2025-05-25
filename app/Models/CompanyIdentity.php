@@ -23,7 +23,7 @@ class CompanyIdentity extends Model
         , 'header_acronym_bold','header_acronym_regular', 'company_logo'
         , 'sys_theme_color', 'mailing_name', 'mailing_address', 'support_email'
         ,'company_website','password_expiring_month','system_background_image',
-        'login_background_image','monthly_revenue_target','daily_revenue_target'
+        'login_background_image','monthly_revenue_target','daily_revenue_target','admin_email','debit_order_form'
     ];
 
     protected static $logAttributes = ['company_name', 'full_company_name', 'company_logo', 'type', 'status'];
@@ -236,6 +236,7 @@ class CompanyIdentity extends Model
         $settings['system_background_image_url'] = ($companyDetails && $companyDetails->system_background_image_url) ? $companyDetails->system_background_image_url : '';
         $settings['login_background_image_url'] = ($companyDetails && $companyDetails->login_background_image_url) ? $companyDetails->login_background_image_url : '';
         $settings['terms_and_conditions'] = ($companyDetails && $companyDetails->terms_and_conditions) ? $companyDetails->terms_and_conditions : $terms;
+        $settings['admin_email'] = ($companyDetails && $companyDetails->admin_email) ? $companyDetails->admin_email : '';
 
         if ($settingName != null) {
             if (array_key_exists($settingName, $settings)) return $settings[$settingName];

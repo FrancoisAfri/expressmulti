@@ -22,13 +22,14 @@ class EmailInvoiceToAllClients
 
     public function EmailInvoiceToAllClientsDependingOnTheirSubscriptionBasedOnSubscription()
     {
+		$componyDetails = $this->CompanyIdentityDetails();
         // Fetch all patients with their packages and creation dates
         $patients = Patient::with(['packages' => function($query) {
             $query->select('package_id', 'package_type', 'package_price', 'created_at');
         }])->get();
 
         $currentDate = new DateTime();
-
+		$adminEmails = $componyDetails['admin_email'];
         foreach ($patients as $patient) {
             // Get the package details
             $package = $patient->packages->first(); // Assuming each patient has only one package
@@ -45,7 +46,7 @@ class EmailInvoiceToAllClients
                 $data = $this->prepareInvoiceData($patient, $invoiceNumber, $packagePrice);
 
                 $pdf = PDF::loadView('invoice.invoice_demo', $data)->setPaper([0, 0, 609.4488, 935.433], 'landscape');
-                $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf);
+                $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf, $adminEmails);
             } elseif ($packageType == 'yearly') {
                 // Calculate subscription duration
                 $interval = $currentDate->diff($creationDate);
@@ -56,13 +57,11 @@ class EmailInvoiceToAllClients
                     $data = $this->prepareInvoiceData($patient, $invoiceNumber, $packagePrice);
 
                     $pdf = PDF::loadView('invoice.invoice_demo', $data);
-                    $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf);
+                    $this->sendInvoiceEmail($patient, $invoiceNumber, $pdf, $adminEmails);
                 }
             }
         }
     }
-
-
 
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
@@ -107,12 +106,15 @@ class EmailInvoiceToAllClients
         $data['firstname'] = $details->patient->first_name;
         $data['surname'] = $details->patient->surname;
         $data['logo'] = $componyDetails['logo'];
+        $data['admin_email'] = $componyDetails['admin_email'];
 
         Mail::send('Email.invoice', $data, function ($message) use ($details, $invoiceNUmber, $data, $pdf) {
-            $message->to($data["email"], $data["email"])
-                ->subject('Invoice for ' . $details->patient->first_name)
-                ->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNUmber . '.pdf');
-        });
+			$message->to($data["email"], $data["email"])
+				->cc($data["admin_email"]) // <-- Add this line for CC
+				->subject('Invoice for ' . $details->patient->first_name)
+				->attachData($pdf->output(), 'Billing_invoice_' . $invoiceNUmber . '.pdf');
+		});
+
 
     }
 
@@ -201,10 +203,11 @@ class EmailInvoiceToAllClients
      * @param \Barryvdh\DomPDF\PDF $pdf
      * @return void
      */
-    public function sendInvoiceEmail($data, $client, string $invoiceNumber, \Barryvdh\DomPDF\PDF $pdf): void
+    public function sendInvoiceEmail($data, $client, string $invoiceNumber, \Barryvdh\DomPDF\PDF $pdf, $adminEmail): void
     {
         Mail::send('Email.invoice', $data, function ($message) use ($client, $invoiceNumber, $pdf) {
             $message->to($client->contacts->email, $client->contacts->name)
+				->cc($adminEmail) // <-- Add this line for CC
                 ->subject('Invoice for ' . $client->name)
                 ->attachData($pdf->output(), 'Invoice_' . $invoiceNumber . '.pdf');
         });
