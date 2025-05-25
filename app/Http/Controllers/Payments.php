@@ -249,7 +249,7 @@ class Payments extends Controller {
 		// create new account and domain
 		$url = $this->clientService->persistClient($clientID);
 
-		activity()->log('New Client Registration Successful> please check your email.');
+		activity()->log('New Client Registration Successful! please check your email.');
 		//return redirect("/make-payment/$clientID");
 		return redirect("/new_client_registration");
     }

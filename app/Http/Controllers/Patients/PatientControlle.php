@@ -12,6 +12,7 @@ use App\Models\ContactPerson;
 use App\Models\Packages;
 use App\Models\Patient;
 use App\Models\Companies_temp;
+use App\Models\ContactPersonTemp;
 use App\Models\Url;
 use App\Models\Province;
 use App\Services\CommunicationService;
@@ -372,5 +373,47 @@ class PatientControlle extends Controller
         $data['clients'] = Companies_temp::getPatientDetails();
 
         return view('client.client_management_approval')->with($data);
+    }
+	/// approve client 
+	public function approveClient($id): RedirectResponse
+    {
+
+		$client = Companies_temp::getPatientByUuid($id);
+		return $client;
+        $this->ClientService->approveClient($client);
+        Alert::toast('Client have been approved Successfully ', 'success');
+        activity()->log('Client status changed');
+        return back();
+    }
+	
+	
+	// decline client
+	public function declineClient($id): RedirectResponse
+    {
+		$client = Companies_temp::getPatientByUuid($id);
+        $this->ClientService->declineClient($client);
+        Alert::toast('Client have been declined Successfully ', 'success');
+        activity()->log('Client status changed');
+        return back();
+    }
+	// temp Show
+	public function showTemp($id)
+    {
+
+        $data = $this->breadcrumb(
+            'Client ',
+            'Client page for Client details settings',
+            'client_details',
+            'Client Profile',
+            'Client Management'
+        );
+
+        $client = Companies_temp::getPatientByUuid($id);
+
+		$data['client'] = $client ;
+		$data['contactPersons'] = ContactPersonTemp::where('company_id', $client->id)->get();
+		$data['packages'] = Packages::getPackages();
+
+		return view('client.client_management_edit_temp')->with($data);
     }
 }

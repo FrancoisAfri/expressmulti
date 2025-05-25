@@ -220,7 +220,11 @@ Route::group(['prefix' => 'clients', 'middleware' => ['web', 'auth', 'auth.lock'
 	Route::PATCH('update/package/{package}', [PatientControlle::class, 'packageUpdate'])
         ->name('package.update');
 	Route::get('approvals', [PatientControlle::class, 'approvals'])
-        ->name('client.approal');
+        ->name('client-temp.index');
+	Route::get('profile_management/approve/{client}', [PatientControlle::class, 'approveClient'])
+        ->name('clientManagement.approve');
+	Route::get('profile_management/decline/{client}', [PatientControlle::class, 'declineClient'])
+        ->name('clientManagement.decline');
 });
 // call check page usage middleware
 Route::middleware('check.page.usage')->get('/restaurant/terminal', [RestaurantController::class, 'showTerminal']);
@@ -361,6 +365,8 @@ Route::group(['prefix' => 'restaurant', 'middleware' => ['web', 'auth', 'auth.lo
 
     Route::post('client/edit_company_details/{client}', [ClientController::class, 'editCompanyDetails'])
         ->name('edit_client.store');
+	Route::get('client_details_tmp/show/{patient}', [PatientControlle::class, 'showTemp'])
+        ->name('client_details_temp.show');
 });
 
 // Api for services

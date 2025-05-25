@@ -134,7 +134,7 @@ class ClientService
 
 	public function persistClient($companyID)
     {
-		
+		die;
         $clientRecord = $this->SaveCompany($companyID);
 
         /*
@@ -619,5 +619,19 @@ class ClientService
         ]);
         return $record;
     }
-
+	// approve company
+	public function approveClient($client)
+    {
+        $url = $this->persistClient($client->id);
+		return $url;
+    }
+	// decline company
+	public function declineClient($client)
+    {
+		$company = Companies_temp::find($client->id);
+		$contactTemp = ContactPersonTemp::where('company_id',$company->id)->first();
+		//$company->delete();
+		//$contactTemp->delete();
+		return 1;
+    }
 }

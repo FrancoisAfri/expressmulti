@@ -19,11 +19,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="card-box">
-                    <a class="btn btn-sm btn-blue waves-effect waves-light float-right"
-                       href="{{ URL::route('client-temp.index') }}">
-                        <i class="mdi mdi-plus-circle"></i>
-                        Add Client
-                    </a>
                     <h4 class="header-title mb-4">Client Management</h4>
                     <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
                            id="tickets-table">
@@ -35,7 +30,6 @@
                             <th> Phone</th>
                             <th> Address</th>
                             <th> Package</th>
-                            <th> Status</th>
                             <th class="hidden-sm">Action</th>
                         </tr>
                         </thead>
@@ -44,7 +38,7 @@
                             <tr>
                                 <td>
                                     <b>
-                                        <a href="{{route('client_details.show', $client->uuid)}}"
+                                        <a href="{{route('client_details_temp.show', $client->uuid)}}"
                                            class="btn btn-soft-primary btn-rounded btn-sm waves-effect waves-light">
                                             <i class="mdi mdi-hospital-box-outline mr-2 text-muted font-18 vertical-middle"></i>
                                             View Client Record</a>
@@ -76,26 +70,22 @@
 									</span>
                                 </td>
                                 <td>
-									<span>
-										@if($client->is_active == 1)
-											<span class="badge badge-success">Active</span>
-										@elseif($client->is_active == 0)
-											<span class="badge bg-soft-danger text-danger">No-Active</span>
-										@endif
-									</span>
-                                </td>
-                                <td>
                                     <div class="btn-group dropdown">
                                         <a href="#"
                                            class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm"
                                            data-toggle="dropdown" aria-expanded="false"><i
                                                 class="mdi mdi-arrange-bring-to-front"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <button onclick="postData({{$client->id}}, 'actdeac');"
+                                            <button onclick="postData('{{$client->uuid}}', 'approve');"
                                                     class="dropdown-item" data-toggle="tooltip"
                                                     title='change Active status'><i
                                                     class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
-                                                {{(!empty($client->is_active) && $client->is_active == 1) ? "De-Activate" : "Activate"}}
+                                                Approve
+                                            </button>
+											<button onclick="postData('{{$client->uuid}}', 'decline');"
+                                                    class="dropdown-item" data-toggle="tooltip"
+                                                    title='change Active status'><i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i>
+                                                Decline
                                             </button>
                                         </div>
                                     </div>
@@ -130,6 +120,7 @@
     <script>
         function deleteRecord(id) {
             location.href = "{{route('client_details.destroy', '')}}" + "/" + id;
+
         }
 
         $(document).ready(function () {
@@ -147,23 +138,11 @@
 
         function postData(id, data) {
 
-            if (data == 'actdeac')
-                location.href = "{{route('clientManagement.activate', '')}}" + "/" + id;
+            if (data == 'approve')
+                location.href = "{{route('clientManagement.approve', '')}}" + "/" + id;
+			else if (data == 'decline')
+				location.href = "{{route('clientManagement.decline', '')}}" + "/" + id;
         }
-
-        $(function () {
-
-			$('#add-contact-person').on('click', function () {
-                let strUrl = '{{ route('contact_person.store') }}';
-                let modalID = 'add-new-contact-person-modal';
-                let formName = 'add-contact-person-form';
-                let submitBtnID = 'add-contact-person';
-                let redirectUrl = '{{route('clientManagement.index')}}';
-                let successMsgTitle = 'Record Added!';
-                let successMsg = 'Record has been saved successfully.';
-                modalFormDataSubmit(strUrl, formName, modalID, submitBtnID, redirectUrl, successMsgTitle, successMsg);
-            });
-        });
     </script>
 @endsection
 
