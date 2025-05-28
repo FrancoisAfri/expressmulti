@@ -66,6 +66,8 @@ class EmailInvoiceToAllClients
     public function EmailInvoiceToAllClientsDependingOnTheirSubscription()
     {
 		ini_set('memory_limit', '100M');
+		$componyDetails = $this->CompanyIdentityDetails();
+		$adminEmails = !empty($componyDetails['admin_email']) ? $componyDetails['admin_email'] : '';
         $type = 1;
         $companies =  Patient::getAllActiveClients();
 
@@ -88,7 +90,7 @@ class EmailInvoiceToAllClients
             $data['company'] = $company;
             $pdf = PDF::loadView('invoice.test', $data)->setPaper('a4', 'landscape');
             // Send email with the PDF attachment
-            $this->sendInvoiceEmail($data, $company, $invoiceNumber, $pdf);
+            $this->sendInvoiceEmail($data, $company, $invoiceNumber, $pdf, $adminEmails);
 			$pdf = '';
         }
     }
@@ -193,6 +195,7 @@ class EmailInvoiceToAllClients
         $data['monthly_revenue_target'] = $companyDetails['monthly_revenue_target'];
         $data['daily_revenue_target'] = $companyDetails['daily_revenue_target'];
         $data['terms_and_conditions'] = $companyDetails['terms_and_conditions'];
+        $data['admin_email'] = $companyDetails['admin_email'];
         return $data;
     }
 

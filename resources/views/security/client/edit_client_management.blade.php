@@ -38,16 +38,16 @@
                         </ul>
                     </div>
                 @endif
-                    @if( $client->payment_status == 1 ??  '')
-                        <div class="col-lg-12">
-                            <div class="card-box ribbon-box">
-                                <h4 class="text-danger float-left mt-0">Account suspnded</h4>
-                                <div class="ribbon-content">
-                                    <p class="mb-0 align-content-center">Your account has been suspnded please contact system administrator.</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+				@if (!$client->is_active)
+					<div class="col-lg-12">
+						<div class="card-box ribbon-box">
+							<h4 class="text-danger float-left mt-0">Account suspended</h4>
+							<div class="ribbon-content">
+								<p class="mb-0 align-content-center">Your account has been suspended please contact the system administrator.</p>
+							</div>
+						</div>
+					</div>
+				@endif
                 <div class="row">
                     {{ csrf_field() }}
                     <div class="col-lg-6">
