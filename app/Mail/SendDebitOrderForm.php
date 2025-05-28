@@ -10,7 +10,7 @@ use App\Models\CompanyIdentity;
 
 class SendDebitOrderForm extends Mailable
 {
-    use Queueable, SerializesModels , CompanyIdentityTrait;
+    use Queueable, SerializesModels;
 	public $first_name;
     /**
      * Create a new message instance.
