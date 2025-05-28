@@ -213,7 +213,7 @@
                     </div> <!-- end col-->
                 </div>
                 <div class="text-center mb-3">
-                    <button type="submit"  class="btn w-sm btn-success waves-effect waves-light">Save
+                    <button type="submit" id="saveButton" class="btn w-sm btn-success waves-effect waves-light">Save
                     </button>
                 </div>
             </form>
@@ -266,6 +266,14 @@
             });
         })
 		document.querySelector('form').addEventListener('submit', function(e) {
+			var form = this;
+
+			// If form is not valid, don't disable the button
+			if (!form.checkValidity()) {
+				// Allow the browser to show the validation messages
+				return;
+			}
+
 			var saveButton = document.getElementById('saveButton');
 			saveButton.disabled = true;
 			saveButton.innerHTML = 'Saving...'; // Optional: change the button text while saving
