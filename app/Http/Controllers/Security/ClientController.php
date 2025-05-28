@@ -202,6 +202,25 @@ class ClientController extends Controller
 
     public function editCompany()
     {
+		/*  @if( $client->payment_status == 1  ??  '')
+			@if( $client->packages->package_type == 1  ??  '')
+				<div class="text-lg-right">
+					<a href="https://payf.st/yfx5i" target="_blank">
+						<button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light">
+							<i class="mdi mdi-basket mr-1"></i> Subcribe (Monthy Subcription)
+						</button>
+					</a>
+				</div>
+			@else 
+				<div class="text-lg-right">
+					<a href="https://payf.st/yfx5i" target="_blank">
+						<button type="button" class="btn btn-block btn-lg btn-danger waves-effect waves-light">
+							<i class="mdi mdi-basket mr-1"></i> Subscribe (Yearly Subscription)
+						</button>
+					</a>
+				</div>
+			@endif
+		@endif   */
         $data =  $this->companyService->renderEditCompanyPage();
 		//return $data;
         return view('security.client.edit_client_management')->with($data);
