@@ -33,15 +33,14 @@
                                     <th style="vertical-align: middle; text-align: center;">Write</th>
                                     <th style="vertical-align: middle; text-align: center;">Modify </th>
                                     <th style="vertical-align: middle; text-align: center;">Admin </th>
-                                    <th style="vertical-align: middle; text-align: center;">SuperUser </th>
-
+									@if ($rights == 1)
+										<th style="vertical-align: middle; text-align: center;">SuperUser </th>
+									@endif
                                 </tr>
                                 </thead>
-
                                 <tbody>
                                 @foreach ($users as $key => $employee)
                                     <tr>
-
                                         <td>
                                             {{ $employee->first_name .' ' . $employee->surname ?? ''}}
                                         </td>
@@ -61,13 +60,13 @@
                                         <td style="vertical-align: middle; text-align: center;">
                                             <label class="radio-inline" style="padding-left: 0px;"><input type="radio" id="{{ $employee->id . '_rdo_admin' }}" name="{{ "access_level[" . $employee->uid . "]" }}" value="4" {{ $employee->access_level == 4 ? ' checked' : '' }}></label>
                                         </td>
-                                        <td style="vertical-align: middle; text-align: center;">
-                                            <label class="radio-inline" style="padding-left: 0px;"><input type="radio" id="{{ $employee->id . '_rdo_superuser' }}" name="{{ "access_level[" . $employee->uid . "]" }}" value="5" {{ $employee->access_level == 5 ? ' checked' : '' }}></label>
-                                        </td>
-
+										@if ($rights == 1)
+											<td style="vertical-align: middle; text-align: center;">
+												<label class="radio-inline" style="padding-left: 0px;"><input type="radio" id="{{ $employee->id . '_rdo_superuser' }}" name="{{ "access_level[" . $employee->uid . "]" }}" value="5" {{ $employee->access_level == 5 ? ' checked' : '' }}></label>
+											</td>
+										@endif
                                     </tr>
                                 @endforeach
-
                                 </tbody>
                             </table>
                                 <br>
@@ -86,9 +85,7 @@
                 </div>
                 <!-- end row -->
     @endsection
-
 @stop
-
 @section('page_script')
     <!-- third party js -->
 

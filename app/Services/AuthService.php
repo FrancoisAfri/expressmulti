@@ -138,16 +138,9 @@ class AuthService
         $person->status = 1;
         $user->addPerson($person);
 
-
         PasswordHistory::createPassword($user->id ,$password);
 
         $token = str::random(60);
-        //Create Password Reset Token
-//        DB::table('password_resets')->insert([
-//            'email' => $request['email'],
-//            'token' => $token,
-//            'created_at' => Carbon::now()
-//        ]);
 
         //Assign roles
         $user->assignRole($request->input('roles'));

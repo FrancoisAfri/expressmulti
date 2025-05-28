@@ -38,7 +38,7 @@ class ModuleAccessController extends Controller
      */
     public function index()
     {
-
+		
         $data = $this->breadcrumb(
             'Settings Modules',
             'Admin page for security related settings',
@@ -91,7 +91,14 @@ class ModuleAccessController extends Controller
             'Settings',
             'Users Access'
         );
+		// check if user can see super user button
+		$centralDomains = env('CENTRAL_DOMAINS');
+        // get host url
+        $host = request()->getHost();
+		if ($host == $centralDomains) $rights = 1;
+        else  $rights = 0;
 
+        $data['rights'] = $rights;
         $data['module'] = modules::getModuleByUuid($id);
         $data['users'] = $moduleService->getAllUsersByModuleAccess();
 

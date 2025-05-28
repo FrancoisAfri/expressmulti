@@ -110,7 +110,6 @@ class ClientService
      */
     public function persistClientTempData($request)
     {
-
 		$contactNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('contact_number'));
 		$cellNumber = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('cell_number'));
 		$mobile = str_replace(['(', ')', ' ', '-'], ['', '', '', ''], $request->post('phone_number'));
@@ -146,7 +145,6 @@ class ClientService
 
 	public function persistClient($companyID)
     {
-		
         $clientRecord = $this->SaveCompany($companyID);
         /*
          * create a new database
@@ -176,7 +174,6 @@ class ClientService
      */
     public function updateClientDetails($request, $id)
     {
-
         try {
 
             DB::beginTransaction();
@@ -191,9 +188,7 @@ class ClientService
         } catch (Exception $e) {
             DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
         }
-
     }
-
 
     /**
      * @param $id
@@ -201,7 +196,6 @@ class ClientService
      */
     public function destroyPatientRecords($id)
     {
-
         try {
             $patient = Patient::find($id);
             $patient->delete();
@@ -214,8 +208,6 @@ class ClientService
         } catch (\Exception $exp) {
             DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
         }
-
-
     }
 
     /**
@@ -450,7 +442,6 @@ class ClientService
 			PasswordSecurity::addExpiryDate($user->id);
 			// save rights 
 			$this->moduleService::giveUserAccessAllModules($user->id, 4);
-			//$this->moduleService::giveUserAccess($user->id, 2, 4);
 			// send email
 			$forgotPassword =  new ForgotPasswordController();
 			$forgotPassword->sendResetEmail($user->email , $random_pass ,$user,$domain);
