@@ -32,12 +32,10 @@ class ClientApplicationApproval extends Mailable
     {
         $companyDetails = CompanyIdentity::systemSettings();
         $companyName = $companyDetails['company_name'];
-		$adminEmails = $companyDetails['admin_email'];
         $subject = "New client regitration on $companyName.";
 
         $data['support_email'] = $companyDetails['support_email'];
         $data['company_name'] = $companyName;
-        $data['admin_email'] = $adminEmails;
         $data['full_company_name'] = $companyDetails['full_company_name'];
         $data['company_logo'] = url('/') . $companyDetails['company_logo_url'];
         $data['dashboard_url'] = url('/clients/approvals');

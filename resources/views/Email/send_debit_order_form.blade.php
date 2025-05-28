@@ -215,7 +215,7 @@
                                             <tr>
                                                 <td valign="top" style="padding-bottom:20px; background-color:#ffffff;">
                                                    Good day {{$first_name}},<br><br>
-                                                   Thank you for your interest in our service. Please fill the form attached, email it back to {{$adminEmail}}
+                                                   Thank you for your interest in our service. Please fill the form attached, email it back to {{$admin_email}}
                                                 </td>
                                             </tr>
                                             <tr>
