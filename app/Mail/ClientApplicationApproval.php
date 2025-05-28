@@ -10,7 +10,7 @@ use App\CompanyIdentity;
 
 class ClientApplicationApproval extends Mailable
 {
-    use Queueable, SerializesModels , CompanyIdentityTrait;
+    use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
